@@ -1,11 +1,13 @@
 import {Route, Routes} from "react-router-dom";
 import Login from "../pages/Login.jsx";
+import PassChange from "../components/modal/PassChange.jsx";
 
 function AppRoutes(){
     return(
         <Routes>
             {/*로그인*/}
             <Route path={`/login`} element={<Login />} />
+            <Route path={`/pass`} element={<PassChange />} />
 
             {/*리포트*/}
             <Route path={`/reports`} />

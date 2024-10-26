@@ -1,4 +1,7 @@
+
 function Login(){
+
+
 
     return (
         <div className={`flex flex-col justify-center items-center h-screen w-screen`}>
@@ -9,8 +12,6 @@ function Login(){
             <button className={`flex w-96 h-12 my-10 rounded-lg bg-erp-green font-medium items-center justify-center text-white`}>로그인</button>
         </div>
     )
-
-
 }
 
 export default Login;
