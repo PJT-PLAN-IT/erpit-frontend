@@ -14,7 +14,9 @@ function BuyerList() {
                 </div>
                 <Buttons style={`green-sm`} word={`add`} className={`flex`}/>
             </div>
-            <BuyerTables/>
+            <div>
+                <BuyerTables/>
+            </div>
         </>
     )
 }

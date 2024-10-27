@@ -23,6 +23,307 @@ const BuyerTables = () => {
             "zipCode": "06134",
             "address": "서울 강남구 테스트의 테스트",
             "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        }
+        ,
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
+        },
+        {
+            "buyerId": 1,
+            "buyerCd": "CIP0002",
+            "buyerNm": "테스트중",
+            "tel": "02-561-1911",
+            "email": "infoprotect@choongang.co.kr",
+            "zipCode": "06134",
+            "address": "서울 강남구 테스트의 테스트",
+            "addDate": "2024.10.30"
         }
     ];
 
@@ -50,8 +351,6 @@ const BuyerTables = () => {
                 </tr>
             ))}
             </tbody>
-
-
         </table>
 
     )
