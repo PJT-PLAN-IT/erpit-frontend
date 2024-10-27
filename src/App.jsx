@@ -1,5 +1,8 @@
 import './App.css'
 import AppRoutes from "./routes/Routes.jsx";
+import Header from "./components/Header.jsx";
+import Sidebar from "./components/Sidebar.jsx";
+import MainBasic from "./components/MainBasic.jsx";
 
 function App() {
 
@@ -16,7 +19,7 @@ function App() {
 
     return (
         <>
-            <AppRoutes />
+            <MainBasic />
         </>
     )
 }

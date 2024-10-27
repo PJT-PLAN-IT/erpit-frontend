@@ -6,7 +6,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        'erp-green' : '#004F48'
+        'erp-green' : '#004F48',
+        'erp-deep-green' : '#003834',
+        'erp-mint' : '#BCE5E1',
+        'erp-gray' : '#979797',
+        'erp-soft-gray' : '#F3F5F7'
       },
     },
   },
