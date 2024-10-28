@@ -9,10 +9,10 @@ function ItemList() {
         <>
             <div className={`flex justify-between mb-2`}>
                 <div className={`flex`}>
-                    <Input search={'buyer'}/>
+                    <Input search={'item'}/>
                     <Buttons style={`green-sm`} word={`search`}/>
                 </div>
-                <Buttons style={`green-sm`} word={`add`} className={`flex`}/>
+                <Buttons style={`green-sm`} word={`add`}/>
             </div>
             <ItemTables/>
         </>

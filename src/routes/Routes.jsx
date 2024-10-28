@@ -38,19 +38,19 @@ function AppRoutes() {
 
 
             {/*바이어관리*/}
-            <Route path={`/buyer`} element={<BuyerList />}/>
+            <Route path={`/buyer`} element={<BuyerList/>}/>
 
 
             {/*직원관리*/}
-            <Route path={`/user`} element={<UserList />}/>
+            <Route path={`/user`} element={<UserList/>}/>
 
 
             {/*판매부번관리*/}
-            <Route path={`/item`} element={<ItemList />}/>
+            <Route path={`/item`} element={<ItemList/>}/>
 
 
             {/*바이어별 판매가격 관리*/}
-            <Route path={`/price`} element={<PriceList />}/>
+            <Route path={`/price`} element={<PriceList/>}/>
 
 
         </Routes>
