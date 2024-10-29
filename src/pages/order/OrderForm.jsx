@@ -222,10 +222,7 @@ function OrderForm() {
 
   return (
     <div className="flex">
-      <div
-        className="flex-col bg-erp-soft-gray p-7"
-        style={{ width: "calc(100% - 300px)" }}
-      >
+      <div className="flex-col bg-erp-soft-gray p-7 w-[100%]">
         <div className="flex justify-self-end gap-4 w-[170px] my-10 ">
           <button
             className="border border-erp-gray px-4 bg-white text-black"

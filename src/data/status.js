@@ -1,4 +1,4 @@
-const status = [
+const Status = [
   { id: "CREATE", name: "생성중" },
   { id: "APRV_REQ", name: "승인요청" },
   { id: "APRV_CMPT", name: "승인완료" },
@@ -7,4 +7,4 @@ const status = [
   { id: "FINISH", name: "종결" },
 ];
 
-export { status };
+export { Status };

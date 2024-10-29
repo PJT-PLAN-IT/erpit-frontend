@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import useAxios from "../../hook/useAxios.js";
-import { status } from "../../data/status.js";
+import { useAuth } from "../../context/AuthContext.jsx";
+import { Status } from "../../data/status.js";
 import { months } from "../../data/month.js";
-import Header from "../../components/Header.jsx";
+import { year } from "../../data/year.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, Link } from "react-router-dom";
@@ -11,9 +12,6 @@ function OrderList() {
   const [showModal, setShowModal] = useState(false);
   const [buyerInfo, setBuyerInfo] = useState("");
   const [tableList, setTableList] = useState([]);
-  const navigate = useNavigate();
-  useEffect(() => {}, [tableList]);
-  const { fetchData } = useAxios();
 
   /*검색 상태 저장 */
   const [searchForm, setSearchForm] = useState({
@@ -23,16 +21,49 @@ function OrderList() {
     year: "",
   });
 
+  const navigate = useNavigate();
+  const { fetchData } = useAxios();
+  const { user } = useAuth();
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+
+  useEffect(() => {
+    const getOrderList = async () => {
+      const finalData = {
+        user: "",
+        buyer: "",
+        status: "",
+        month: currentMonth,
+        year: currentYear,
+      };
+      console.log(finalData);
+      try {
+        const result = await fetchData({
+          config: { method: "POST", url: "/api/order/list" },
+          body: finalData,
+        });
+        if (result) {
+          console.log(result.data);
+          setTableList(result.data);
+        }
+      } catch (error) {
+        console.error("디비 접속에 문제: ", error);
+      }
+    };
+    getOrderList();
+  }, [searchForm]);
+
   /*바이어 검색 변화 저장 */
   const handleBuyerChange = (e) => {
     setSearchForm((prev) => ({
       ...prev,
-      buyer: e.target.value,
+      buyer: buyerInfo.buyerCd,
     }));
   };
 
   /*요청상태 검색 변화 저장 */
   const handleStatusChange = (e) => {
+    console.log(e.target.value);
     setSearchForm((prev) => ({
       ...prev,
       orderStatus: e.target.value,
@@ -41,6 +72,7 @@ function OrderList() {
 
   /*월별 검색 변화 저장 */
   const handleMonthChange = (e) => {
+    console.log(e.target.value);
     setSearchForm((prev) => ({
       ...prev,
       month: e.target.value,
@@ -49,6 +81,7 @@ function OrderList() {
 
   /*년도 검색 변화 저장 */
   const handleYearChange = (e) => {
+    console.log(e.target.value);
     setSearchForm((prev) => ({
       ...prev,
       year: e.target.value,
@@ -72,22 +105,22 @@ function OrderList() {
 
   /*오더내역 리스트 검색 기능 */
   const submitForm = async () => {
-    const finalData = {
-      user: "ER20240002",
+    setSearchForm = {
+      user: user.userCd,
       buyer: searchForm.buyer,
       status: searchForm.orderStatus,
       month: searchForm.month,
       year: searchForm.year,
     };
-
+    console.log(searchForm);
     try {
       const result = await fetchData({
         config: { method: "POST", url: "/api/order/list" },
-        body: finalData,
+        body: searchForm,
       });
       if (result) {
         console.log(result.data);
-        setTableList(result.data.orderList);
+        setTableList(result.data);
       }
     } catch (error) {
       console.error("디비 접속에 문제: ", error);
@@ -97,15 +130,19 @@ function OrderList() {
   return (
     <div className="flex bg-gray-100">
       <div className="flex-row w-[100%]">
-        <Header />
         <div className="p-7 ">
           <div className="flex justify-between mt-10 ">
             <form className="flex justify-evenly gap-10 ">
               <div className="flex border">
                 <p className="border-r px-4 bg-erp-mint pt-1">바이어</p>
                 <input
+                  className="w-60 px-1"
                   type="text"
-                  value={buyerInfo}
+                  value={
+                    buyerInfo
+                      ? `${buyerInfo.buyerNm} / ${buyerInfo.buyerCd}`
+                      : ""
+                  }
                   onClick={() => setShowModal(true)}
                   onChange={handleBuyerChange}
                 />
@@ -114,7 +151,7 @@ function OrderList() {
               <div className="border flex">
                 <p className="border-r px-4 bg-erp-mint pt-1">요청상태</p>
                 <select className="px-10" onChange={handleStatusChange}>
-                  {status.map((stat) => (
+                  {Status.map((stat) => (
                     <option
                       key={stat.id}
                       value={stat.id}
@@ -129,14 +166,22 @@ function OrderList() {
               <div className="border flex">
                 <p className="border-r px-4 bg-erp-mint pt-1">년도</p>
                 <select className="px-10" onChange={handleYearChange}>
-                  <option className="hover:bg-gray-400" value={2024}>
-                    2024
-                  </option>
+                  <option defaultChecked disabled={true}></option>
+                  {year.map((year) => (
+                    <option
+                      key={year.id}
+                      value={year.id}
+                      className="hover:bg-gray-400"
+                    >
+                      {year.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="border flex">
                 <p className="border-r px-4 bg-erp-mint pt-1">월 </p>
                 <select className="px-10" onChange={handleMonthChange}>
+                  <option defaultChecked disabled={true}></option>
                   {months.map((month) => (
                     <option
                       key={month.id}
@@ -196,13 +241,13 @@ function OrderList() {
                     onClick={() => showDetailPage(table.id, table.status)}
                     className={table.status === "REJECT" ? "bg-red-400" : ""}
                   >
-                    <td>{index + 1}</td>
-                    <td>{table.orderno}</td>
-                    <td>{table.orderdate}</td>
-                    <td>{table.buyernm}</td>
-                    <td>{table.buyercode}</td>
-                    <td>{table.adddate}</td>
-                    <td>{table.status}</td>
+                    <td className="text-center">{index + 1}</td>
+                    <td className="text-center">{table.orderno}</td>
+                    <td className="text-center">{table.orderdate}</td>
+                    <td className="text-center">{table.buyernm}</td>
+                    <td className="text-center">{table.buyercode}</td>
+                    <td className="text-center">{table.adddate}</td>
+                    <td className="text-center">{table.status}</td>
                   </tr>
                 ))}
               </tbody>
@@ -224,16 +269,20 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     setBuyerValue(e.target.value);
   };
 
+  console.log(buyerValue);
+
   const searchBuyerCode = async () => {
     if (buyerValue) {
       try {
         const result = await fetchData({
-          config: { method: "POST", url: "/buyer/list" },
-          params: { buyer: buyerValue },
+          config: {
+            method: "GET",
+            url: `/api/buyer/list?buyer=${buyerValue}`,
+          },
         });
         if (result) {
           console.log(result.data);
-          setBuyers(result.data.buyerList);
+          setBuyers(result.data);
         }
       } catch (error) {
         console.error("디비 접속에 문제: ", error);
@@ -242,7 +291,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
   };
 
   const addBuyer = (buyer) => {
-    setBuyerInfo(`${buyer.buyernm} / ${buyer.id}`);
+    setBuyerInfo(buyer);
     setShowModal(false);
   };
 
@@ -281,28 +330,42 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
       </div>
 
       {buyers.length ? (
-        <table>
+        <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2">
           <thead>
-            <tr>
-              <th>순번</th>
-              <th>바이어코드</th>
-              <th>바이어명</th>
-              <th>전화번호</th>
-              <th>이메일</th>
-              <th>주소</th>
-              <th>등록일</th>
+            <tr className="border border-erp-gray bg-erp-mint">
+              <th className="border border-erp-gray p-1">순번</th>
+              <th className="border border-erp-gray p-1">바이어코드</th>
+              <th className="border border-erp-gray p-1">바이어명</th>
+              <th className="border border-erp-gray p-1">전화번호</th>
+              <th className="border border-erp-gray p-1">이메일</th>
+              <th className="border border-erp-gray p-1">주소</th>
+              <th className="border border-erp-gray p-1">등록일</th>
             </tr>
           </thead>
           <tbody>
             {buyers.map((buyer, index) => (
-              <tr key={buyer.buyerid} onClick={() => addBuyer(buyer)}>
-                <td>{index + 1}</td>
-                <td>{buyer.buyercd}</td>
-                <td>{buyer.buyernm}</td>
-                <td>{buyer.tel}</td>
-                <td>{buyer.email}</td>
-                <td className="truncate w-48">{buyer.address}</td>
-                <td>{buyer.adddate}</td>
+              <tr key={buyer.buyerId} onClick={() => addBuyer(buyer)}>
+                <td className="border border-erp-gray text-center">
+                  {index + 1}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {buyer.buyerCd}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {buyer.buyerNm}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {buyer.tel}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {buyer.email}
+                </td>
+                <td className="border border-erp-gray text-center truncate w-48">
+                  {buyer.address}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {buyer.addDate}
+                </td>
               </tr>
             ))}
           </tbody>

@@ -7,79 +7,70 @@ import PriceList from "../pages/manages/PriceList.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import NotFound from "../pages/error/Notfound.jsx";
 import Report from "../pages/Report.jsx";
-import {useAuth} from "../context/AuthContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 import OrderForm from "../pages/order/OrderForm.jsx";
 import OrderList from "../pages/order/OrderList.jsx";
 import OrderDetail from "../pages/order/OrderDetail.jsx";
-import OrderEdit from "../pages/order/OrderEdit.jsx";
 import OrderCheck from "../pages/order/OrderCheck.jsx";
 import OrderStatList from "../pages/order/OrderStatList.jsx";
 
 const AppRoutes = () => {
-    const {user} = useAuth();
+  const { user } = useAuth();
 
-    return (
-        <Routes>
-            {/* 로그인 */}
-            <Route path={`/login`} element={<Login/>}/>
+  return (
+    <Routes>
+      {/* 로그인 */}
+      <Route path={`/login`} element={<Login />} />
 
-            {
-              (user.role === 'ROLE_USER' || user.role === 'ROLE_ADMIN') && (
-                  <>
-                      {/* 메인 */}
-                      <Route path={`/`} element={<PrivateRoute/>}>
-                          <Route index={true} element={<Report/>}/>
-                      </Route>
+      {(user.role === "ROLE_USER" || user.role === "ROLE_ADMIN") && (
+        <>
+          {/* 메인 */}
+          <Route path={`/`} element={<PrivateRoute />}>
+            <Route index={true} element={<Report />} />
+          </Route>
 
-                      {/* 리포트 */}
-                      <Route path={`/report`} element={<PrivateRoute/>}>
-                          <Route index={true} element={<Report/>}/>
-                      </Route>
-                  </>
-              )
-            }
+          {/* 리포트 */}
+          <Route path={`/report`} element={<PrivateRoute />}>
+            <Route index={true} element={<Report />} />
+          </Route>
+        </>
+      )}
 
-            
-              {/* 오더 */}
-              <Route path={`/order`} element={<PrivateRoute/>}>
-                  <Route index={true} element={<OrderForm />}/>
-              </Route>
-              <Route path={`/order/list`} element={<PrivateRoute/>}>
-                  <Route index={true} element={<OrderList />} />
-              </Route>
-              <Route path={`/order/detail`} element={<PrivateRoute/>}>
-                  <Route index={true} element={<OrderDetail />}/>
-              </Route>
-              <Route path={`/order/edit`} element={<PrivateRoute/>}>
-                  <Route index={true} element={<OrderEdit />}/>
-              </Route>
-              <Route path={`/orderCheck`} element={<PrivateRoute/>}>
-                  <Route index={true} element={<OrderCheck />}/>
-              </Route>
-              <Route path={`/orderStatList`} element={<PrivateRoute/>}>
-                  <Route index={true} element={<OrderStatList />}/>
-              </Route>
+      {/* 오더 */}
+      <Route path={`/order`} element={<PrivateRoute />}>
+        <Route index={true} element={<OrderForm />} />
+      </Route>
+      <Route path={`/order/list`} element={<PrivateRoute />}>
+        <Route index={true} element={<OrderList />} />
+      </Route>
+      <Route path={`/order/detail`} element={<PrivateRoute />}>
+        <Route index={true} element={<OrderDetail />} />
+      </Route>
+      <Route path={`/order/edit`} element={<PrivateRoute />}></Route>
+      <Route path={`/orderCheck`} element={<PrivateRoute />}>
+        <Route index={true} element={<OrderCheck />} />
+      </Route>
+      <Route path={`/orderStatList`} element={<PrivateRoute />}>
+        <Route index={true} element={<OrderStatList />} />
+      </Route>
 
+      {user.role === "ROLE_ADMIN" && (
+        <>
+          {/* 직원관리 */}
+          <Route path={`/user`} element={<PrivateRoute />}>
+            <Route index={true} element={<UserList />} />
+          </Route>
+        </>
+      )}
+      {/* 바이어관리 */}
+      <Route path={`/buyer`} element={<PrivateRoute />}>
+        <Route index={true} element={<BuyerList />} />
+      </Route>
 
-            {
-                user.role === 'ROLE_ADMIN' && (
-                    <>
-                        {/* 직원관리 */}
-                        <Route path={`/user`} element={<PrivateRoute/>}>
-                            <Route index={true} element={<UserList/>}/>
-                        </Route>
-                    </>
-                )
-            }
-            {/* 바이어관리 */}
-            <Route path={`/buyer`} element={<PrivateRoute/>}>
-                <Route index={true} element={<BuyerList/>}/>
-            </Route>
-
-            {/* 판매부번관리 */}
-            <Route path={`/item`} element={<PrivateRoute/>}>
-                <Route index={true} element={<ItemList/>}/>
-            </Route>
+      {/* 판매부번관리 */}
+      <Route path={`/item`} element={<PrivateRoute />}>
+        <Route index={true} element={<ItemList />} />
+      </Route>
 
       {/* 판매부번관리 */}
       <Route path={`/item`} element={<PrivateRoute />}>
