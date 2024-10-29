@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import Login from "../pages/Login.jsx";
-import PassChange from "../components/modal/PassChange.jsx";
 import BuyerList from "../pages/manages/BuyerList.jsx";
 import UserList from "../pages/manages/UserList.jsx";
 import ItemList from "../pages/manages/ItemList.jsx";
@@ -9,6 +8,12 @@ import PrivateRoute from "./PrivateRoute.jsx";
 import NotFound from "../pages/error/Notfound.jsx";
 import Report from "../pages/Report.jsx";
 import {useAuth} from "../context/AuthContext.jsx";
+import OrderForm from "../pages/order/OrderForm.jsx";
+import OrderList from "../pages/order/OrderList.jsx";
+import OrderDetail from "../pages/order/OrderDetail.jsx";
+import OrderEdit from "../pages/order/OrderEdit.jsx";
+import OrderCheck from "../pages/order/OrderCheck.jsx";
+import OrderStatList from "../pages/order/OrderStatList.jsx";
 
 const AppRoutes = () => {
     const {user} = useAuth();
