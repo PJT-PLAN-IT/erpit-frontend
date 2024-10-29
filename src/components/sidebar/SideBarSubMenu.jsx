@@ -27,12 +27,12 @@ function SidebarSubmenu({ route }) {
       <ul
         className={`overflow-hidden transition-[max-height] duration-300 ease-in-out ${
           isDropdownMenuOpen ? "p-2 mt-2 bg-erp-deep-green" : "max-h-0"
-        } space-y-2 h-[200px]  font-medium text-white  shadow-inner `}
+        } space-y-2  font-medium text-white  shadow-inner `}
         aria-label="submenu"
       >
         {route.routes.map((r) => (
           <li
-            className="px-2 transition-colors duration-150  pt-5"
+            className="px-2 transition-colors duration-150  py-2"
             key={r.name}
           >
             <Link className="w-full" to={r.path}>

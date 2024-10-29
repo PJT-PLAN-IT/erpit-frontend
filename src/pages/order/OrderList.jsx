@@ -128,131 +128,127 @@ function OrderList() {
   };
 
   return (
-    <div className="flex bg-gray-100">
-      <div className="flex-row">
-        <div className="p-7 ">
-          <div className="flex justify-between mt-10 ">
-            <form className="flex justify-evenly gap-10 ">
-              <div className="flex border">
-                <p className="border-r px-4 bg-erp-mint pt-1">바이어</p>
-                <input
-                  className="w-60 px-1"
-                  type="text"
-                  value={
-                    buyerInfo
-                      ? `${buyerInfo.buyerNm} / ${buyerInfo.buyerCd}`
-                      : ""
-                  }
-                  onClick={() => setShowModal(true)}
-                  onChange={handleBuyerChange}
-                />
-              </div>
-
-              <div className="border flex">
-                <p className="border-r px-4 bg-erp-mint pt-1">요청상태</p>
-                <select className="px-10" onChange={handleStatusChange}>
-                  {Status.map((stat) => (
-                    <option
-                      key={stat.id}
-                      value={stat.id}
-                      className="hover:bg-gray-400"
-                    >
-                      {stat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="border flex">
-                <p className="border-r px-4 bg-erp-mint pt-1">년도</p>
-                <select className="px-10" onChange={handleYearChange}>
-                  <option defaultChecked disabled={true}></option>
-                  {year.map((year) => (
-                    <option
-                      key={year.id}
-                      value={year.id}
-                      className="hover:bg-gray-400"
-                    >
-                      {year.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="border flex">
-                <p className="border-r px-4 bg-erp-mint pt-1">월 </p>
-                <select className="px-10" onChange={handleMonthChange}>
-                  <option defaultChecked disabled={true}></option>
-                  {months.map((month) => (
-                    <option
-                      key={month.id}
-                      value={month.id}
-                      className="hover:bg-gray-400"
-                    >
-                      {month.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <button
-                className="border px-4 py-1 bg-erp-green text-white"
-                type="button"
-                onClick={submitForm}
-              >
-                조회
-              </button>
-            </form>
-            <Link to={"/orderForm"}>
-              <button className="border px-4 py-1 bg-erp-green text-white ">
-                등록
-              </button>
-            </Link>
-          </div>
-
-          {showModal && (
-            <>
-              <div
-                className="fixed inset-0 bg-black opacity-50 z-40"
-                onClick={() => setShowModal(false)}
-              ></div>
-              <ShowBuyerModal
-                showModal={showModal}
-                setShowModal={setShowModal}
-                setBuyerInfo={setBuyerInfo}
+    <div className="flex bg-gray-100 ">
+      <div className="flex-row p-7 w-[100%]">
+        <div className="flex justify-between mt-10">
+          <form className="flex justify-evenly gap-10">
+            <div className="flex border">
+              <p className="border-r px-4 bg-erp-mint pt-1">바이어</p>
+              <input
+                className="w-60 px-1"
+                type="text"
+                value={
+                  buyerInfo ? `${buyerInfo.buyerNm} / ${buyerInfo.buyerCd}` : ""
+                }
+                onClick={() => setShowModal(true)}
+                onChange={handleBuyerChange}
               />
-            </>
-          )}
-          <div className="flex items-center justify-center mt-10">
-            <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2">
-              <thead>
-                <tr className="bg-erp-mint">
-                  <th className="p-1 border border-erp-gray">순번</th>
-                  <th className="p-1 border border-erp-gray">오더번호</th>
-                  <th className="p-1 border border-erp-gray">주문일자</th>
-                  <th className="p-1 border border-erp-gray">바이어명</th>
-                  <th className="p-1 border border-erp-gray">바이어코드</th>
-                  <th className="p-1 border border-erp-gray">등록일자</th>
-                  <th className="p-1 border border-erp-gray">요청상태</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tableList.map((table, index) => (
-                  <tr
-                    key={table.orderid}
-                    onClick={() => showDetailPage(table.id, table.status)}
-                    className={table.status === "REJECT" ? "bg-red-400" : ""}
+            </div>
+
+            <div className="border flex">
+              <p className="border-r px-4 bg-erp-mint pt-1">요청상태</p>
+              <select className="px-10" onChange={handleStatusChange}>
+                {Status.map((stat) => (
+                  <option
+                    key={stat.id}
+                    value={stat.id}
+                    className="hover:bg-gray-400"
                   >
-                    <td className="text-center">{index + 1}</td>
-                    <td className="text-center">{table.orderno}</td>
-                    <td className="text-center">{table.orderdate}</td>
-                    <td className="text-center">{table.buyernm}</td>
-                    <td className="text-center">{table.buyercode}</td>
-                    <td className="text-center">{table.adddate}</td>
-                    <td className="text-center">{table.status}</td>
-                  </tr>
+                    {stat.name}
+                  </option>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </select>
+            </div>
+
+            <div className="border flex">
+              <p className="border-r px-4 bg-erp-mint pt-1">년도</p>
+              <select className="px-10" onChange={handleYearChange}>
+                <option defaultChecked disabled={true}></option>
+                {year.map((year) => (
+                  <option
+                    key={year.id}
+                    value={year.id}
+                    className="hover:bg-gray-400"
+                  >
+                    {year.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="border flex">
+              <p className="border-r px-4 bg-erp-mint pt-1">월 </p>
+              <select className="px-10" onChange={handleMonthChange}>
+                <option defaultChecked disabled={true}></option>
+                {months.map((month) => (
+                  <option
+                    key={month.id}
+                    value={month.id}
+                    className="hover:bg-gray-400"
+                  >
+                    {month.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button
+              className="border px-4 py-1 bg-erp-green text-white"
+              type="button"
+              onClick={submitForm}
+            >
+              조회
+            </button>
+          </form>
+          <Link to={"/orderForm"}>
+            <button className="border px-4 py-1 bg-erp-green text-white ">
+              등록
+            </button>
+          </Link>
+        </div>
+
+        {showModal && (
+          <>
+            <div
+              className="fixed inset-0 bg-black opacity-50 z-40"
+              onClick={() => setShowModal(false)}
+            ></div>
+            <ShowBuyerModal
+              showModal={showModal}
+              setShowModal={setShowModal}
+              setBuyerInfo={setBuyerInfo}
+            />
+          </>
+        )}
+        <div className="flex items-center justify-center mt-10">
+          <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2">
+            <thead>
+              <tr className="bg-erp-mint">
+                <th className="p-1 border border-erp-gray">순번</th>
+                <th className="p-1 border border-erp-gray">오더번호</th>
+                <th className="p-1 border border-erp-gray">주문일자</th>
+                <th className="p-1 border border-erp-gray">바이어명</th>
+                <th className="p-1 border border-erp-gray">바이어코드</th>
+                <th className="p-1 border border-erp-gray">등록일자</th>
+                <th className="p-1 border border-erp-gray">요청상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tableList.map((table, index) => (
+                <tr
+                  key={table.orderid}
+                  onClick={() => showDetailPage(table.id, table.status)}
+                  className={table.status === "REJECT" ? "bg-red-300" : ""}
+                >
+                  <td className="text-center">{index + 1}</td>
+                  <td className="text-center">{table.orderno}</td>
+                  <td className="text-center">{table.orderdate}</td>
+                  <td className="text-center">{table.buyernm}</td>
+                  <td className="text-center">{table.buyercode}</td>
+                  <td className="text-center">{table.adddate}</td>
+                  <td className="text-center">{table.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

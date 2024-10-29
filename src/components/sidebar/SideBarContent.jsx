@@ -5,7 +5,7 @@ import SidebarSubmenu from "./SideBarSubMenu.jsx";
 
 function SidebarContent() {
   return (
-    <div className="py-4 text-white bg-erp-green w-[300px] h-[100vh] ">
+    <div className="py-4 text-white bg-erp-green w-[300px] h-[100%] ">
       <Link to={"/"}>
         <h1 className="text-center my-10 text-5xl font-bold">ERP-IT</h1>
       </Link>
