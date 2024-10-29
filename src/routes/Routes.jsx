@@ -15,39 +15,53 @@ import PriceList from "../pages/manages/PriceList.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import NotFound from "../pages/error/Notfound.jsx";
 import Report from "../pages/Report.jsx";
+import {useAuth} from "../context/AuthContext.jsx";
 
 const AppRoutes = () => {
+    const {user} = useAuth();
+
     return (
         <Routes>
             {/* 로그인 */}
             <Route path={`/login`} element={<Login/>}/>
 
-            {/* 메인 */}
-            <Route path={`/`} element={<PrivateRoute/>}>
-                <Route index={true} element={<Report/>}/>
-            </Route>
+            {
+                (user.role === 'ROLE_USER' || user.role === 'ROLE_ADMIN') && (
+                    <>
+                        {/* 메인 */}
+                        <Route path={`/`} element={<PrivateRoute/>}>
+                            <Route index={true} element={<Report/>}/>
+                        </Route>
 
-            {/* 리포트 */}
-            <Route path={`/report`} element={<PrivateRoute/>}>
-                <Route index={true} element={<Report/>}/>
-            </Route>
+                        {/* 리포트 */}
+                        <Route path={`/report`} element={<PrivateRoute/>}>
+                            <Route index={true} element={<Report/>}/>
+                        </Route>
 
-            {/* 오더 */}
-            <Route path={`/order`} element={<PrivateRoute/>}>
-                <Route index={true}/>
-            </Route>
-            <Route path={`/order/detail`} element={<PrivateRoute/>}>
-                <Route index={true}/>
-            </Route>
+                        {/* 오더 */}
+                        <Route path={`/order`} element={<PrivateRoute/>}>
+                            <Route index={true}/>
+                        </Route>
+                        <Route path={`/order/detail`} element={<PrivateRoute/>}>
+                            <Route index={true}/>
+                        </Route>
+                    </>
+                )
+            }
 
+            {
+                user.role === 'ROLE_ADMIN' && (
+                    <>
+                        {/* 직원관리 */}
+                        <Route path={`/user`} element={<PrivateRoute/>}>
+                            <Route index={true} element={<UserList/>}/>
+                        </Route>
+                    </>
+                )
+            }
             {/* 바이어관리 */}
             <Route path={`/buyer`} element={<PrivateRoute/>}>
                 <Route index={true} element={<BuyerList/>}/>
-            </Route>
-
-            {/* 직원관리 */}
-            <Route path={`/user`} element={<PrivateRoute/>}>
-                <Route index={true} element={<UserList/>}/>
             </Route>
 
             {/* 판매부번관리 */}
