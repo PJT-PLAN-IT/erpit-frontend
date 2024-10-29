@@ -1,15 +1,16 @@
-import {useAuth} from "../context/AuthContext.jsx";
-
+import { useAuth } from "../context/AuthContext.jsx";
 const Report = () => {
-    const {user} = useAuth();
+  const { user } = useAuth();
 
-    return (
-        <>
-            Report Page
-            <br/>
-            {user.usercd}
-        </>
-    );
+  return (
+    <>
+      <div>
+        Report Page
+        <br />
+        {user.usercd}
+      </div>
+    </>
+  );
 };
 
 export default Report;

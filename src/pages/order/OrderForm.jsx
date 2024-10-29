@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import axios from "axios";
+import useAxios from "../../hook/useAxios";
 import { rejects } from "../../data/rejects";
-import SidebarContent from "../../components/sidebar/SideBarContent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faCircleMinus } from "@fortawesome/free-solid-svg-icons";
@@ -36,6 +35,7 @@ function OrderForm() {
   const [showModal, setShowModal] = useState(false);
   const [leavePage, setleavepage] = useState(false);
   const [redirect, setRedirect] = useState(false);
+  const { error, fetchData } = useAxios();
 
   /*테이블에 오더가 추가 될때마다 새로고침 */
   useEffect(() => {}, [form.items]);
@@ -148,7 +148,6 @@ function OrderForm() {
 
   /*오더폼 확인 */
   const validateOrderForm = (form) => {
-    // Check if form-level required fields are filled
     if (!form.orderdate) {
       alert("주문 날짜를 입력해주세요");
       return false;
@@ -158,7 +157,6 @@ function OrderForm() {
       return false;
     }
 
-    // Check if all required item fields are filled
     for (const item of form.items) {
       if (item.orderqty === 0 || item.orderqty <= 0) {
         alert("발주 수량을 입력해주세요");
@@ -176,6 +174,7 @@ function OrderForm() {
 
     return true;
   };
+
   /*오더폼 등록 */
   const submitOrderForm = async (form) => {
     const itemLists = form.items.map((item) => ({
@@ -202,14 +201,17 @@ function OrderForm() {
     if (window.confirm("오더를 등록하시겠습니까?")) {
       orderFormInfo.status = "APRV_REQ";
       try {
-        await axios.post("/order", orderFormInfo, {
-          headers: {
-            "Content-Type": "application/json",
-          },
+        const resultData = await fetchData({
+          config: { method: "POST", url: "/order" },
+          body: orderFormInfo,
         });
-        setRedirect(true);
-      } catch (error) {
-        console.error("디비 접속에 문제: ", error);
+        if (resultData) {
+          setRedirect(true);
+        } else if (error) {
+          console.error("Error: ", error);
+        }
+      } catch (err) {
+        console.error("Error: ", err);
       }
     }
   };
@@ -220,7 +222,6 @@ function OrderForm() {
 
   return (
     <div className="flex">
-      <SidebarContent />
       <div
         className="flex-col bg-erp-soft-gray p-7"
         style={{ width: "calc(100% - 300px)" }}
@@ -306,11 +307,11 @@ function OrderForm() {
                 </select>
               </td>
               <>
-                <td className="border border-erp-gray bg-erp-mint text-center">
+                <td className=" border-erp-gray bg-erp-mint text-center">
                   반려사유
                 </td>
                 {form.status === "REJECT" ? (
-                  <td className="border border-erp-gray border border-erp-gray-r-0 flex gap-5 text-center">
+                  <td className=" border-erp-gray border border-erp-gray-r-0 flex gap-5 text-center">
                     <select className="px-10" onChange={handleRejectChange}>
                       {rejects.map((reject) => (
                         <option
@@ -513,6 +514,7 @@ function ItemTable(setForm, form) {
   const [item, setItem] = useState("");
   const [trigger, setTrigger] = useState(0);
   const [searchResult, setSearchResult] = useState([]);
+  const { error, fetchData } = useAxios();
 
   const handleClick = () => {
     setTrigger((prev) => prev + 1);
@@ -524,24 +526,28 @@ function ItemTable(setForm, form) {
   useEffect(() => {
     if (!item) return;
 
-    const fetchData = async () => {
+    const fetchItemTable = async () => {
       const itemquery = {
         item: item,
         buyer: form.buyercode,
       };
+
       try {
-        const response = await axios.post("/item/price/list", itemquery, {
-          headers: {
-            "Content-Type": "application/json",
-          },
+        const response = await fetchData({
+          config: { method: "POST", url: "/api/item/price/list" },
+          body: itemquery,
         });
-        console.log("검색결과:", response.data);
-        setSearchResult(response.data.buyerSalesList);
-      } catch (error) {
-        console.error("오류:", error);
+        if (response) {
+          console.log("검색결과:", response.data);
+          setSearchResult(response.data.buyerSalesList);
+        } else if (error) {
+          console.error("Error: ", error);
+        }
+      } catch (err) {
+        console.error("Error: ", err);
       }
     };
-    fetchData();
+    fetchItemTable();
   }, [item]);
 
   const addToOrderTable = (newItem) => {
@@ -642,6 +648,7 @@ function ItemTable(setForm, form) {
 }
 
 const ShowBuyerModal = (showModal, setShowModal, setBuyerInfo) => {
+  const { fetchData } = useAxios();
   const [buyerValue, setBuyerValue] = useState("");
   const [buyers, setBuyers] = useState([]);
   const search = <FontAwesomeIcon icon={faMagnifyingGlass} />;
@@ -653,11 +660,9 @@ const ShowBuyerModal = (showModal, setShowModal, setBuyerInfo) => {
   const searchBuyerCode = async () => {
     if (buyerValue) {
       try {
-        const result = await axios.get("/buyer/list", {
+        const result = await fetchData("/buyer/list", {
+          config: { method: "POST", url: "/api/auth/login" },
           params: { buyer: buyerValue },
-          headers: {
-            "Content-Type": "application/json",
-          },
         });
         if (result) {
           console.log(result.data);
