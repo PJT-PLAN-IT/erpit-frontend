@@ -129,7 +129,7 @@ function OrderList() {
 
   return (
     <div className="flex bg-gray-100">
-      <div className="flex-row w-[100%]">
+      <div className="flex-row">
         <div className="p-7 ">
           <div className="flex justify-between mt-10 ">
             <form className="flex justify-evenly gap-10 ">
