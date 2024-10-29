@@ -42,8 +42,8 @@ function ItemList() {
     };
 
     return (
-        <>
-            <div className={`flex justify-between mb-2`}>
+        <div className={`flex flex-col p-10`}>
+            <div className={`flex justify-between mb-2 mt-10`}>
                 <div className={`flex`}>
                     <Input search={'item'}/>
                     <Buttons style={`green-sm`} word={`search`}/>
@@ -51,7 +51,7 @@ function ItemList() {
                 <Buttons style={`green-sm`} word={`add`}/>
             </div>
             <ItemTables result={result}/>
-        </>
+        </div>
     )
 }
 

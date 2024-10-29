@@ -1,10 +1,10 @@
 const Buttons = ({style, word, onClick}) => {
 
     const buttonStyle = {
-         'green-sm' : 'm-2 w-16 h-8 bg-erp-green text-white text-xs' ,
-         'green-lg' : 'm-2 w-24 h-8 bg-erp-green text-white text-xs' ,
-         'white-sm' : 'm-2 w-16 h-8 bg-white text-black border border-erp-gray text-xs bold' ,
-        'white-sm-mg-none' : 'w-16 mx-2 h-8 bg-white text-black border border-erp-gray text-xs bold' ,
+         'green-sm' : 'm-2 w-20 h-10 bg-erp-green text-white' ,
+         'green-lg' : 'm-2 w-28 h-10 bg-erp-green text-white' ,
+         'white-sm' : 'm-2 w-20 h-8 bg-white text-black border border-erp-gray bold' ,
+        'white-sm-mg-none' : 'w-20 mx-2 h-10 bg-white text-black border border-erp-gray bold' ,
     };
 
     const buttonWord = {
