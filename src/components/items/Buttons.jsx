@@ -1,13 +1,10 @@
-const Buttons = ({style, word}) => {
-    /**
-     * 사용법
-     * Buttons components를 호출하여 buttonStyle buttonWord 각 아래에 맞추어서 보내면 됨.
-     * @type {{"white-sm": string, "green-sm": string, "green-lg": string}}
-     */
+const Buttons = ({style, word, onClick}) => {
+
     const buttonStyle = {
          'green-sm' : 'm-2 w-16 h-8 bg-erp-green text-white text-xs' ,
          'green-lg' : 'm-2 w-24 h-8 bg-erp-green text-white text-xs' ,
-         'white-sm' : 'm-2 w-16 h-8 bg-white text-black border-2 border-erp-gray text-xs bold' ,
+         'white-sm' : 'm-2 w-16 h-8 bg-white text-black border border-erp-gray text-xs bold' ,
+        'white-sm-mg-none' : 'w-16 mx-2 h-8 bg-white text-black border border-erp-gray text-xs bold' ,
     };
 
     const buttonWord = {
@@ -18,12 +15,14 @@ const Buttons = ({style, word}) => {
         'delete' : '삭제',
         'disabled' : '비활성화 처리',
         'approval' : '결재처리',
-        'pass' : '비밀번호 초기화'
+        'pass' : '비밀번호 초기화',
+        'dup' : '중복확인'
     };
+
 
     return (
         <div>
-            <button className={`${buttonStyle[style]}`}>
+            <button className={`${buttonStyle[style]}`} onClick={onClick}>
                 {buttonWord[word]}
             </button>
         </div>

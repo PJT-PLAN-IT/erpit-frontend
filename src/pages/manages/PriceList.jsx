@@ -12,7 +12,7 @@ function PriceList() {
                     <Input search={'buyer'}/>
                     <Buttons style={`green-sm`} word={`search`}/>
                 </div>
-                <Buttons style={`green-sm`} word={`add`} className={`flex`}/>
+                <Buttons style={`green-sm`} word={`add`}/>
             </div>
             <PriceTables/>
         </>
