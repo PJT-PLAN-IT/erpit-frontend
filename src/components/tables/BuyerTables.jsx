@@ -1,5 +1,4 @@
 const BuyerTables = () => {
-
     const headStyle = 'border border-erp-gray text-center text-xs py-2 font-semibold';
     const tdStyle = 'border border-erp-gray text-center text-xs py-2';
     const trStyle = 'bg-white cursor-pointer hover:bg-gray-200';

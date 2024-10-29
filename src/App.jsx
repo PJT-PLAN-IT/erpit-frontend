@@ -1,12 +1,12 @@
-import './App.css'
+import "./App.css";
 import AppRoutes from "./routes/Routes.jsx";
 
 const App = () => {
-    return (
-        <>
-            <AppRoutes/>
-        </>
-    );
+  return (
+    <>
+      <AppRoutes />
+    </>
+  );
 };
 
 export default App;
