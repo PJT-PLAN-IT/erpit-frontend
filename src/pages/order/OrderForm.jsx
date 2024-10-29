@@ -220,7 +220,6 @@ function OrderForm() {
 
   return (
     <div className="flex">
-      <SidebarContent />
       <div
         className="flex-col bg-erp-soft-gray p-7"
         style={{ width: "calc(100% - 300px)" }}

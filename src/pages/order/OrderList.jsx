@@ -97,7 +97,6 @@ function OrderList() {
 
   return (
     <div className="flex bg-gray-100">
-      <SidebarContent />
 
       <div className="p-7 " style={{ width: "calc(100% - 300px)" }}>
         <div className="flex justify-between mt-10 ">
