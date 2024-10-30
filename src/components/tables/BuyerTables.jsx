@@ -1,35 +1,10 @@
-const BuyerTables = () => {
-    const headStyle = 'border border-erp-gray text-center text-xs py-2 font-semibold';
-    const tdStyle = 'border border-erp-gray text-center text-xs py-2';
+const BuyerTables = ({ data }) => {
+    const headStyle = 'border border-erp-gray text-center py-2 font-semibold';
+    const tdStyle = 'border border-erp-gray text-center text-sm py-3';
     const trStyle = 'bg-white cursor-pointer hover:bg-gray-200';
     const buyer = ['순번', '바이어코드', '바이어명', '전화번호', '이메일', '주소', '등록일'];
-    const data = [
-        {
-            "buyerId": 1,
-            "buyerCd": "CIP0001",
-            "buyerNm": "중앙정보처리학원",
-            "tel": "02-561-1911",
-            "email": "infoprotect@choongang.co.kr",
-            "zipCode": "06134",
-            "address": "서울 강남구 테헤란로7길 7에스코빌딩 5~7층",
-            "addDate": "2024.10.27"
-        },
-        {
-            "buyerId": 1,
-            "buyerCd": "CIP0002",
-            "buyerNm": "테스트중",
-            "tel": "02-561-1911",
-            "email": "infoprotect@choongang.co.kr",
-            "zipCode": "06134",
-            "address": "서울 강남구 테스트의 테스트",
-            "addDate": "2024.10.30"
-        },
-
-    ];
-
-
     return (
-        <div className={`h-[1014px] overflow-y-auto`}>
+        <div className={`h-[1014px] overflow-y-auto mt-20`}>
             <table className={`w-full`}>
                 <thead className={`sticky top-0`}>
                 <tr className={`items-center bg-erp-mint`}>

@@ -1,5 +1,14 @@
 const routes = [
   {
+    name: "리포트",
+    routes: [
+      {
+        path: "/report",
+        name: "월별 리포트",
+      }
+    ],
+  },
+  {
     name: "오더 관리",
     routes: [
       {
@@ -18,15 +27,6 @@ const routes = [
         path: "/orderStatList",
         name: "오더 내역 조회",
       },
-    ],
-  },
-  {
-    name: "리포트",
-    routes: [
-      {
-        path: "/report",
-        name: "월별 리포트",
-      }
     ],
   },
   {
