@@ -14,7 +14,7 @@ function OrderList() {
   const [tableList, setTableList] = useState([]);
 
   /*검색 상태 저장 */
-  const [searchForm, setSearchForm] = useState({
+  let [searchForm, setSearchForm] = useState({
     buyer: "",
     orderStatus: "",
     month: "",

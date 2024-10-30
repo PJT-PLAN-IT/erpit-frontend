@@ -7,8 +7,12 @@ import useAxios from "../../hook/useAxios.js";
 
 function BuyerList() {
     const { error, fetchData } = useAxios();
-    const [basicParam, setbasicParam] = useState();
+    const [basicParam, setBasicParam] = useState();
     // {buyer : "1"}
+    const onSearchParam = (e) => {
+
+    }
+
     const [result, setResult] = useState([]);
     const [insertModalOpen, setInsertModalOpen] = useState(false);
     const openInsertModal= () => {
@@ -48,7 +52,7 @@ function BuyerList() {
         <div className={`flex flex-col p-10`}>
             <div className={`flex justify-between mb-2 mt-10`}>
                 <div className={`flex`}>
-                    <Input search={'buyer'}/>
+                    <Input search={'buyer'} searchData={onSearchParam}/>
                     <Buttons style={`green-sm`} word={`search`}/>
                 </div>
                 <Buttons style={`green-sm`} word={`add`} onClick={openInsertModal}/>

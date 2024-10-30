@@ -1,4 +1,4 @@
-const Buttons = ({style, word, onClick}) => {
+const Buttons = ({style, word}) => {
 
     const buttonStyle = {
          'green-sm' : 'm-2 w-20 h-10 bg-erp-green text-white' ,
@@ -22,7 +22,7 @@ const Buttons = ({style, word, onClick}) => {
 
     return (
         <div>
-            <button className={`${buttonStyle[style]}`} onClick={onClick}>
+            <button className={`${buttonStyle[style]}`}>
                 {buttonWord[word]}
             </button>
         </div>
