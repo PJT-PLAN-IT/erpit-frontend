@@ -11,6 +11,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 import OrderForm from "../pages/order/OrderForm.jsx";
 import OrderList from "../pages/order/OrderList.jsx";
 import OrderDetail from "../pages/order/OrderDetail.jsx";
+import OrderEdit from "../pages/order/OrderEdit.jsx";
 import OrderCheck from "../pages/order/OrderCheck.jsx";
 import OrderStatList from "../pages/order/OrderStatList.jsx";
 
@@ -67,6 +68,9 @@ const AppRoutes = () => {
           </Route>
           <Route path={`/order/detail`} element={<PrivateRoute />}>
             <Route index={true} element={<OrderDetail />} />
+          </Route>
+          <Route path={`/order/edit`} element={<PrivateRoute />}>
+            <Route index={true} element={<OrderEdit />} />
           </Route>
           <Route path={`/orderCheck`} element={<PrivateRoute />}>
             <Route index={true} element={<OrderCheck />} />
