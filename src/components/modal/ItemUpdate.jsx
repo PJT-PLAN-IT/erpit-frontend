@@ -39,6 +39,33 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
         }
     }
 
+    const onCheckDisabled = () =>{
+        if(confirm("비활성화처리 하시겠습니까? ")) {
+            onDeactivateCheck();
+        }
+    }
+
+    //비활성화체크
+    const onDeactivateCheck = async () => {
+        try {
+            const result = await fetchData({
+                config: {method: "PUT", url: "/api/item/deactivate"},
+                body: {
+                    itemid: updateData.itemid,
+                    useyn: 'N'
+                }
+            });
+            if (result) {
+                fetchItemList();
+                setUpdateModalOpen(false);
+            }
+            if (error) {
+                console.error("Error: ", error);
+            }
+        } catch (err) {
+            console.error("Error: ", err);
+        }
+    };
     const onChangeForm = (e) => {
         const {name, value} = e.target;
         setUpdateData({...updateData, [name]: value});
@@ -64,11 +91,24 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
                                             className={`flex-grow px-2 outline-none`}/>
                                     </>
                                     :
-                                    <input
-                                        name={sbj}
-                                        value={updateData[sbj]}
-                                        onChange={onChangeForm}
-                                        className={`flex w-full h-full px-2 outline-none`}/>
+                                    <>
+                                        <input
+                                            name={sbj}
+                                            value={updateData[sbj]}
+                                            onChange={onChangeForm}
+                                            className={`flex w-full h-full px-2 outline-none`}/>
+
+                                    </>
+                                }
+                                {
+                                    sbj === 'useyn' &&
+                                    <div className={`flex items-center`}>
+                                        <Buttons
+                                            word={'disabled'}
+                                            style={'green-lg'}
+                                            onClick={onCheckDisabled}
+                                        />
+                                    </div>
                                 }
                             </td>
                         </tr>

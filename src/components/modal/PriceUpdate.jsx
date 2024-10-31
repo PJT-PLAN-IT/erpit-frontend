@@ -19,7 +19,6 @@ const priceSbj = {
 
 const PriceUpdate = ({updateModalOpen, setUpdateModalOpen, fetchPriceList, updateData}) => {
     const {error, fetchData} = useAxios();
-    const [deactivateCheck, setDeactivateCheck] = useState(true);
 
     if (!updateModalOpen) return false;
 
@@ -73,7 +72,6 @@ const PriceUpdate = ({updateModalOpen, setUpdateModalOpen, fetchPriceList, updat
                                                 word={'disabled'}
                                                 style={'green-lg'}
                                                 onClick={onCheckDisabled}
-                                                disabled={!deactivateCheck}
                                             />
                                         </div>
                                     </>
