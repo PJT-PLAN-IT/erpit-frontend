@@ -56,14 +56,6 @@ function OrderList() {
     if (isInitialLoad) getOrderList();
   }, [isInitialLoad]);
 
-  /*바이어 검색 변화 저장 */
-  // const handleBuyerChange = () => {
-  //   setSearchForm((prev) => ({
-  //     ...prev,
-  //     buyer: buyerInfo?.buyerCd || "",
-  //   }));
-  //   console.log("Updated SearchForm:", searchForm);
-  // };
   useEffect(() => {
     if (buyerInfo?.buyerCd) {
       setSearchForm((prev) => ({

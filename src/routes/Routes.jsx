@@ -72,22 +72,16 @@ const AppRoutes = () => {
           <Route path={`/order/edit`} element={<PrivateRoute />}>
             <Route index={true} element={<OrderEdit />} />
           </Route>
-          <Route path={`/orderCheck`} element={<PrivateRoute />}>
-            <Route index={true} element={<OrderCheck />} />
-          </Route>
-          <Route path={`/orderStatList`} element={<PrivateRoute />}>
-            <Route index={true} element={<OrderStatList />} />
-          </Route>
         </>
       )}
 
       {user.role === "ROLE_ADMIN" && (
         <>
           {/* 관리자 오더  */}
-          <Route path={`/orderCheck`} element={<PrivateRoute />}>
+          <Route path={`/order/check`} element={<PrivateRoute />}>
             <Route index={true} element={<OrderCheck />} />
           </Route>
-          <Route path={`/orderStatList`} element={<PrivateRoute />}>
+          <Route path={`/order/statlist`} element={<PrivateRoute />}>
             <Route index={true} element={<OrderStatList />} />
           </Route>
         </>
