@@ -11,14 +11,4 @@ export default defineConfig({
       plugins: [tailwindcss()],
     }
   },
-  // server: {
-  //   port: 3000,
-  //   proxy: {
-  //     '': {
-  //       target: 'http://localhost:8080',
-  //       changeOrigin: true,
-  //       secure: false, // HTTPS 사용 여부
-  //     },
-  //   },
-  // },
 });

@@ -3,35 +3,53 @@ import Buttons from "../../components/items/Buttons.jsx";
 import ItemTables from "../../components/tables/ItemTables.jsx";
 import useAxios from "../../hook/useAxios.js";
 import {useEffect, useState} from "react";
+import ItemInsert from "../../components/modal/ItemInsert.jsx";
+import ItemUpdate from "../../components/modal/ItemUpdate.jsx";
+
+const initUpdateData = {
+    itemid: '',
+    itemcd: '',
+    itemnm: '',
+    originprice: '',
+    supplyprice: '',
+    unit: '',
+    stock: '',
+    adddate: ''
+};
+
 
 function ItemList() {
     const { error, fetchData } = useAxios();
-    const [basicParam, setbasicParam] = useState(null);
     const [result, setResult] = useState([]);
-    // const [insertModalOpen, setInsertModalOpen] = useState(false);
-    // const openInsertModal= () => {
-    //     setInsertModalOpen(prev => !prev);
-    // };
-    //
-    // const saveFunction = () => {
-    //     openInsertModal();
-    //     console.log("--------저장코드-------");
-    // }
+    const [insertModalOpen, setInsertModalOpen] = useState(false);
+    const [updateModalOpen, setUpdateModalOpen] = useState(false);
+    const [updateData, setUpdateData] = useState(initUpdateData);
+    const [item, setItem] = useState("");
 
     useEffect(() => {
-        getData();
+        fetchItemList();
     }, []);
+    const onSearchParam = (e) => {
+        setItem(e);
+    }
+
+    const reset = () => {
+        setItem("");
+        fetchItemList(true);
+    }
+
+    const searchItem = () => {
+        fetchItemList();
+    }
 
 
-
-    const getData = async () => {
+    const fetchItemList = async (isReset) => {
         try {
             const resultData = await fetchData({
                 config: { method: "GET", url: "/api/item/list" },
-                params: basicParam === null ? null : basicParam
+                params: {item : isReset ? "" : item}
             });
             if (resultData) {
-                console.log("dld",resultData)
                 setResult(resultData.data);
             } else if (error) {
                 console.error("Error: ", error);
@@ -45,12 +63,15 @@ function ItemList() {
         <div className={`flex flex-col p-10`}>
             <div className={`flex justify-between mb-2 mt-10`}>
                 <div className={`flex`}>
-                    <Input search={'item'}/>
-                    <Buttons style={`green-sm`} word={`search`}/>
+                    <Input search={'item'} searchData={onSearchParam} data={item}/>
+                    <Buttons style={`green-sm`} word={`search`} onClick={searchItem}/>
+                    <Buttons style={`white-sm`} word={`reset`} onClick={reset}/>
                 </div>
-                <Buttons style={`green-sm`} word={`add`}/>
+                <Buttons style={`green-sm`} word={`add`} onClick={() => setInsertModalOpen(true)}/>
             </div>
-            <ItemTables result={result}/>
+            <ItemTables data={result} setUpdateModalOpen={setUpdateModalOpen} setUpdateData={setUpdateData}/>
+            <ItemInsert insertModalOpen={insertModalOpen} setInsertModalOpen={setInsertModalOpen} fetchItemList={fetchItemList}/>
+            <ItemUpdate updateModalOpen={updateModalOpen} setUpdateModalOpen={setUpdateModalOpen} fetchItemList={fetchItemList} updateData={updateData} setUpdateData={setUpdateData}/>
         </div>
     )
 }
