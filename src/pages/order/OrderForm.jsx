@@ -19,20 +19,20 @@ function OrderForm() {
     usercd: user.usercd,
     orderdate: "",
     buyercode: "",
-    buyername: "",
-    status: "",
-    reject: "",
-    rejectInfo: "",
+    status: "CREATE",
     items: [],
   });
+
+  console.log(form);
+
   /*테이블에 오더가 추가 될때마다 새로고침 */
   useEffect(() => {}, [form.items]);
-  console.log(!form.buyercode);
+
   useEffect(() => {
-    if (buyerInfo?.buyerCd) {
+    if (buyerInfo?.buyercd) {
       setForm((prev) => ({
         ...prev,
-        buyercode: buyerInfo.buyerCd,
+        buyercode: buyerInfo.buyercd,
       }));
       console.log("Updated searchForm buyer:", buyerInfo.buyerCd);
     }
@@ -50,7 +50,7 @@ function OrderForm() {
     setForm((prevForm) => ({
       ...prevForm,
       items: prevForm.items.map((item) => {
-        if (item.id === id) {
+        if (item.itemcd === id) {
           const updatedItem = { ...item, [field]: value };
           updatedItem.totalprice =
             (updatedItem.setprice + updatedItem.tax) * updatedItem.quantity;
@@ -71,19 +71,28 @@ function OrderForm() {
 
   /*오더 공급가 전체 계산 */
   const calculateTotalSetPrice = () =>
-    form.items.reduce((sum, item) => sum + item.buyersupplyprice, 0);
+    form.items.reduce((sum, item) => sum + item.ordersupplyprice, 0);
 
   /*오더 부가세 전체 계산 */
   const calculateTotalTax = () =>
-    form.items.reduce((sum, item) => sum + item.surtax, 0);
+    form.items.reduce((sum, item) => sum + item.ordersurtax, 0);
+
+  const calculateTotalsupplyPrice = () =>
+    form.items.reduce((sum, item) => sum + item.ordersalesprice, 0);
 
   /*오더 합계금액 전체 계산 */
   const calculateTotalPrice = () =>
-    form.items.reduce((sum, item) => sum + item.salesprice * item.orderqty, 0);
+    form.items.reduce(
+      (sum, item) => sum + item.ordersalesprice * item.orderqty,
+      0
+    );
 
   /*오더 총 합계 계산 */
   const calculateTotalSum = () =>
-    form.items.reduce((sum, item) => sum + item.salesprice * item.orderqty, 0);
+    form.items.reduce(
+      (sum, item) => sum + item.ordersalesprice * item.orderqty,
+      0
+    );
 
   /*오더폼 삭제 */
   const deleteOrderForm = () => {
@@ -97,17 +106,30 @@ function OrderForm() {
   };
 
   if (leavePage) {
-    return <Navigate to="/orderList" replace />;
+    return <Navigate to="/order/list" replace />;
   }
 
-  /*요청상태 검색 변화 저장 */
-  const handleDateChange = (e) => {
+  /*헤더 날짜 변화 저장 */
+  const handleOrderDateChange = (e) => {
     setForm((prev) => ({
       ...prev,
       orderdate: e.target.value,
     }));
   };
 
+  /*오더 날짜 변화 저장 */
+  const handleDateChange = (itemid, event) => {
+    const newItemList = form.items.map((item) =>
+      item.itemcd === itemid
+        ? { ...item, deliverydate: event.target.value || "" }
+        : item
+    );
+
+    setForm((prevDetail) => ({
+      ...prevDetail,
+      items: newItemList,
+    }));
+  };
   /*요청상태 검색 변화 저장 */
   const handleStatusChange = (e) => {
     setForm((prev) => ({
@@ -143,8 +165,10 @@ function OrderForm() {
   /*아이콘  */
   const deleteIcon = <FontAwesomeIcon icon={faCircleMinus} />;
 
+  console.log(form.orderdate);
   /*오더폼 확인 */
-  const validateOrderForm = (form) => {
+  const validateOrderForm = () => {
+    console.log(form.orderdate);
     if (!form.orderdate) {
       alert("주문 날짜를 입력해주세요");
       return false;
@@ -172,49 +196,64 @@ function OrderForm() {
     return true;
   };
 
-  /*오더폼 등록 */
-  const submitOrderForm = async (form) => {
-    const itemLists = form.items.map((item) => ({
-      buyeritemcd: item.itemcd,
-      ordersalesprice: item.salesprice,
-      ordersupplyprice: item.ordersupplyprice,
-      ordersurtax: item.ordersurtax,
-      orderqty: item.orderqty,
-      deliverydate: item.deliverydate,
-    }));
+  const filteredItemList = form.items.map(
+    ({
+      itemcd,
+      ordersupplyprice,
+      ordersurtax,
+      ordersalesprice,
+      orderqty,
+      deliverydate,
+    }) => ({
+      itemcd,
+      ordersupplyprice,
+      ordersurtax,
+      ordersalesprice,
+      orderqty,
+      deliverydate,
+    })
+  );
 
+  console.log(filteredItemList);
+  /*오더폼 등록 */
+  const submitOrderForm = async () => {
     const orderFormInfo = {
       orderdate: form.orderdate,
       usercd: form.usercd,
       buyercd: form.buyercode,
       status: form.status,
-      itemLists: itemLists,
+      orderItemList: filteredItemList,
     };
 
     if (!validateOrderForm(form)) {
       return;
     }
 
-    if (window.confirm("오더를 등록하시겠습니까?")) {
+    const isApproved = window.confirm(
+      "결제요청을 하시겠습니까? 취소 선택시 저장만 됩니다."
+    );
+    if (isApproved) {
       orderFormInfo.status = "APRV_REQ";
-      try {
-        const resultData = await fetchData({
-          config: { method: "POST", url: "/order" },
-          body: orderFormInfo,
-        });
-        if (resultData) {
-          setRedirect(true);
-        } else if (error) {
-          console.error("Error: ", error);
-        }
-      } catch (err) {
-        console.error("Error: ", err);
+    }
+
+    try {
+      const resultData = await fetchData({
+        config: { method: "POST", url: "/api/order" },
+        body: orderFormInfo,
+      });
+      if (resultData?.status === "OK") {
+        setRedirect(true);
+      } else if (error) {
+        console.error("Error: ", error);
+        alert("오더폼을 등록할수 없습니다. 다시 시도해주세요");
       }
+    } catch (err) {
+      console.error("Error: ", err);
     }
   };
 
   if (redirect) {
-    return <Navigate to="/orderList" replace />;
+    return <Navigate to="/order/list" replace />;
   }
 
   return (
@@ -248,7 +287,7 @@ function OrderForm() {
                 <input
                   className="w-[90%]"
                   type="date"
-                  onChange={handleDateChange}
+                  onChange={handleOrderDateChange}
                 />
               </td>
               <td className="border border-erp-gray bg-erp-mint text-center">
@@ -269,10 +308,10 @@ function OrderForm() {
                   className="hover:cursor-pointer"
                   type="text"
                   placeholder="바이어코드 검색"
-                  value={buyerInfo ? `${buyerInfo.buyerCd}` : ""}
+                  value={buyerInfo ? `${buyerInfo.buyercd}` : ""}
                   onClick={() => setShowModal(true)}
                 />
-                {buyerInfo.buyerCd && (
+                {buyerInfo.buyercd && (
                   <button
                     onClick={() => {
                       setBuyerInfo("");
@@ -292,10 +331,10 @@ function OrderForm() {
                   className="hover:cursor-pointer"
                   type="text"
                   placeholder="바이어명 검색"
-                  value={buyerInfo ? `${buyerInfo.buyerNm}` : ""}
+                  value={buyerInfo ? `${buyerInfo.buyernm}` : ""}
                   onClick={() => setShowModal(true)}
                 />
-                {buyerInfo.buyerNm && (
+                {buyerInfo.buyernm && (
                   <button
                     onClick={() => {
                       setBuyerInfo("");
@@ -407,12 +446,12 @@ function OrderForm() {
               </thead>
               <tbody>
                 {form.items.map((item, index) => (
-                  <tr key={item.buyercd}>
+                  <tr key={item.itempriceid}>
                     <td className="text-center border border-erp-gray">
                       {index + 1}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.buyercd}
+                      {item.itemcd}
                     </td>
                     <td className="text-center border border-erp-gray">
                       {item.itemnm}
@@ -425,7 +464,7 @@ function OrderForm() {
                         value={item.orderqty}
                         onChange={(e) =>
                           handleItemChange(
-                            item.id,
+                            item.itemcd,
                             "orderqty",
                             parseInt(e.target.value) || 0
                           )
@@ -443,7 +482,7 @@ function OrderForm() {
                         value={item.ordersupplyprice}
                         onChange={(e) =>
                           handleItemChange(
-                            item.id,
+                            item.itemcd,
                             "ordersupplyprice",
                             parseFloat(e.target.value) || 0
                           )
@@ -452,23 +491,20 @@ function OrderForm() {
                     </td>
                     <td className="text-center border border-erp-gray">
                       {
-                        (item.ordersurtax = (
+                        (item.ordersurtax = Math.round(
                           item.ordersupplyprice / 10
-                        ).toFixed(2))
+                        ))
                       }
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.buyersupplyprice.toLocaleString(undefined, {
+                      {(item.ordersalesprice =
+                        item.ordersupplyprice +
+                        item.ordersurtax).toLocaleString(undefined, {
                         maximumFractionDigits: 3,
                       })}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {(item.salesprice * item.orderqty).toLocaleString(
-                        undefined,
-                        {
-                          maximumFractionDigits: 3,
-                        }
-                      )}
+                      {item.ordersalesprice * item.orderqty}
                     </td>
                     <td className="text-center border border-erp-gray">
                       {item.stock}
@@ -477,10 +513,15 @@ function OrderForm() {
                       {item.unit}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      <input type="date" onChange={handleDateChange} />
+                      <input
+                        type="date"
+                        onChange={(event) =>
+                          handleDateChange(item.itemcd, event)
+                        }
+                      />
                     </td>
                     <td className="text-center  border border-erp-gray">
-                      <button onClick={() => deleteRow(item.id)}>
+                      <button onClick={() => deleteRow(item.itemcd)}>
                         {deleteIcon}
                       </button>
                     </td>
@@ -499,6 +540,9 @@ function OrderForm() {
                   </td>
                   <td className="text-center border border-erp-gray">
                     {calculateTotalTax().toLocaleString()}
+                  </td>
+                  <td className="text-center border border-erp-gray">
+                    {calculateTotalsupplyPrice().toLocaleString()}
                   </td>
                   <td className="text-center border border-erp-gray">
                     {calculateTotalPrice().toLocaleString()}
@@ -531,14 +575,10 @@ function OrderForm() {
 function ItemTable({ setForm, form }) {
   const search = <FontAwesomeIcon icon={faMagnifyingGlass} />;
   const [item, setItem] = useState("");
-  const [trigger, setTrigger] = useState(0);
+
   const [searchResult, setSearchResult] = useState([]);
   const { error, fetchData } = useAxios();
-  const [basicParam, setbasicParam] = useState(null);
 
-  const handleClick = () => {
-    setTrigger((prev) => prev + 1);
-  };
   const handleItem = (e) => {
     if (!form.buyercode) {
       alert("바이어 정보를 입력해주세요");
@@ -548,7 +588,6 @@ function ItemTable({ setForm, form }) {
   };
 
   const fetchItemTable = async () => {
-    setbasicParam({ item: item, buyer: form.buyercode });
     try {
       const response = await fetchData({
         config: {
@@ -571,6 +610,12 @@ function ItemTable({ setForm, form }) {
       orderqty: 0,
       ordersupplyprice: 0,
       ordersurtax: 0,
+      ordersalesprice: 0,
+      originprice: newItem.originPrice,
+      itempriceid: newItem.itemPriceId,
+      itemcd: newItem.itemCd,
+      itemnm: newItem.itemNm,
+      deliverydate: newItem.addDate,
     };
     setForm((prevForm) => ({
       ...prevForm,
@@ -616,28 +661,28 @@ function ItemTable({ setForm, form }) {
                   {index + 1}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.itempriceid}
+                  {result.itemPriceId}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.itemnm}
+                  {result.itemNm}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.buyercd}
+                  {result.buyerCd}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.buyernm}
+                  {result.buyerNm}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.originprice}
+                  {result.originPrice}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.buyersupplyprice}
+                  {result.buyerSupplyPrice}
                 </td>
                 <td className="border border-erp-gray text-center">
                   {result.surtax}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.salesprice}
+                  {result.salesPrice}
                 </td>
                 <td className="border border-erp-gray text-center">
                   {result.unit}
@@ -749,10 +794,10 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
                   {index + 1}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {buyer.buyerCd}
+                  {buyer.buyercd}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {buyer.buyerNm}
+                  {buyer.buyernm}
                 </td>
                 <td className="border border-erp-gray text-center">
                   {buyer.tel}
@@ -764,7 +809,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
                   {buyer.address}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {buyer.addDate}
+                  {buyer.adddate}
                 </td>
               </tr>
             ))}

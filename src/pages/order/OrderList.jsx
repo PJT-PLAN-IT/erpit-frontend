@@ -24,13 +24,14 @@ function OrderList() {
   const navigate = useNavigate();
   const { fetchData } = useAxios();
   const { user } = useAuth();
+  console.log(user);
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
     const getOrderList = async () => {
       const finalData = {
-        user: "",
+        user: user.usercd,
         buyer: "",
         status: "",
         month: currentMonth,
@@ -111,7 +112,7 @@ function OrderList() {
         state: { detailNo: detailNo },
       });
     } else {
-      navigate("order/detail", { state: { detailNo: detailNo } });
+      navigate("/order/detail", { state: { detailNo: detailNo } });
     }
   };
 
@@ -125,6 +126,7 @@ function OrderList() {
       year: searchForm.year,
     };
     console.log(searchOrders);
+
     try {
       const result = await fetchData({
         config: { method: "POST", url: "/api/order/list" },
@@ -134,8 +136,11 @@ function OrderList() {
         console.log(result);
         setTableList(result.data);
       }
+      setIsInitialLoad(true);
     } catch (error) {
       console.error("디비 접속에 문제: ", error);
+    } finally {
+      setIsInitialLoad(false);
     }
   };
 
@@ -192,6 +197,7 @@ function OrderList() {
             <div className=" flex">
               <p className="px-4  pt-1">년도</p>
               <select className="px-10" onChange={handleYearChange}>
+                <option defaultValue={true}></option>
                 {year.map((year) => (
                   <option
                     key={year.id}
@@ -206,7 +212,7 @@ function OrderList() {
             <div className="flex">
               <p className=" px-4 pt-1">월별 </p>
               <select className="px-10" onChange={handleMonthChange}>
-                <option defaultChecked disabled={true}></option>
+                <option defaultValue={true}></option>
                 {months.map((month) => (
                   <option
                     key={month.id}

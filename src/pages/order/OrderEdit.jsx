@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import useAxios from "../../hook/useAxios";
 import { useAuth } from "../../context/AuthContext";
-import { rejects } from "../../data/rejects";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faCircleMinus } from "@fortawesome/free-solid-svg-icons";
@@ -23,7 +22,6 @@ function OrderEdit() {
   console.log(detail);
   const location = useLocation();
   const { detailNo } = location.state || {};
-  const [reject, setReject] = useState("");
   const [leavePage, setleavepage] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const { error, fetchData } = useAxios();
@@ -52,7 +50,7 @@ function OrderEdit() {
   const deleteRow = (id) => {
     setDetail((prevForm) => ({
       ...prevForm,
-      itemList: prevForm.itemList.filter((item) => item.id !== id),
+      itemList: prevForm.itemList.filter((item) => item.orderitemid !== id),
     }));
   };
 
@@ -87,7 +85,7 @@ function OrderEdit() {
 
   /*오더 부가세 전체 계산 */
   const calculateTotalTax = () =>
-    detail.itemList.reduce((sum, item) => sum + Number(item.ordersurtax), 0);
+    detail.itemList.reduce((sum, item) => sum + item.ordersurtax, 0);
 
   const calculateTotalsupplyPrice = () =>
     detail.itemList.reduce((sum, item) => sum + item.ordersupplyprice, 0);
@@ -103,29 +101,80 @@ function OrderEdit() {
       0
     );
 
+  /*반려처리 */
+  const setFinishStatus = async () => {
+    const setFinish = window.confirm(
+      "반려처리 하시겠습니까? 반려처리시 수정불가합니다"
+    );
+
+    if (setFinish) {
+      detail.status = "FINISH";
+      const finishStatus = {
+        orderno: detail.orderno,
+        status: detail.status,
+        rejectcode: detail.rejectcode,
+        rejectreason: detail.rejectreason,
+      };
+      console.log(finishStatus);
+      try {
+        const resultData = await fetchData({
+          config: {
+            method: "PUT",
+            url: "/api/order/status",
+          },
+          body: finishStatus,
+        });
+        console.log(resultData);
+        if (resultData?.status === "OK") {
+          setRedirect(true);
+        }
+      } catch (err) {
+        console.error("Error: ", err);
+      }
+      setleavepage(true);
+    }
+  };
+
   /*오더폼 삭제 */
-  const deleteOrderForm = () => {
+  const deleteOrderForm = async () => {
     const confirmDelete = window.confirm(
       "작성하시던 폼을 삭제하시겠습니까? 삭제시 오더 리스트로 리다이렉팅합니다."
     );
     if (confirmDelete) {
-      setDetail({});
+      try {
+        const resultData = await fetchData({
+          config: {
+            method: "DELETE",
+            url: `/api/order?orderno=${detail.orderno}`,
+          },
+        });
+        if (resultData?.status === "OK") {
+          setRedirect(true);
+        }
+      } catch (err) {
+        console.error("Error: ", err);
+      }
       setleavepage(true);
     }
   };
 
   if (leavePage) {
-    return <Navigate to="/orderList" replace />;
+    return <Navigate to="/order/list" replace />;
   }
 
   /*요청상태 검색 변화 저장 */
-  const handleDateChange = (e) => {
-    setDetail((prev) => ({
-      ...prev,
-      orderdate: e.target.value,
+  const handleDateChange = (itemid, event) => {
+    const newItemList = detail.itemList.map((item) =>
+      item.itemid === itemid
+        ? { ...item, deliverydate: event.target.value || "" }
+        : item
+    );
+
+    setDetail((prevDetail) => ({
+      ...prevDetail,
+      itemList: newItemList,
     }));
   };
-
   /*요청상태 검색 변화 저장 */
   const handleStatusChange = (e) => {
     setDetail((prev) => ({
@@ -144,79 +193,52 @@ function OrderEdit() {
   /*아이콘  */
   const deleteIcon = <FontAwesomeIcon icon={faCircleMinus} />;
 
-  /*오더폼 확인 */
-  const validateOrderForm = (detail) => {
-    if (!detail.orderdate) {
-      alert("주문 날짜를 입력해주세요");
-      return false;
-    }
-    if (!detail.buyercode) {
-      alert("바이어 정보를 입력해주세요");
-      return false;
-    }
+  const filteredItemList = detail.itemList.map(
+    ({ itemnm, originprice, stock, unit, orderno, ...remainingFields }) =>
+      remainingFields
+  );
+  // console.log(filteredItemList);
 
-    for (const item of detail.itemList) {
-      if (item.orderqty === 0 || item.orderqty <= 0) {
-        alert("발주 수량을 입력해주세요");
-        return false;
-      }
-      if (item.ordersalesprice === 0) {
-        alert("공급가를 입력해주세요.");
-        return false;
-      }
-      if (!item.deliverydate) {
-        alert("납품 요청일을 입력해주세요");
-        return false;
-      }
-    }
-
-    return true;
+  const orderFormInfo = {
+    orderno: String(detail.orderno),
+    orderdate: detail.orderdate,
+    usercd: detail.usercd,
+    buyercd: detail.buyercd,
+    status: detail.status,
+    orderItemList: filteredItemList,
   };
-  /*오더폼 등록 */
-  const submitOrderForm = async (detail) => {
-    const itemLists = detail.itemList.map((item) => ({
-      buyeritemcd: item.itemcd,
-      ordersalesprice: item.salesprice,
-      ordersupplyprice: item.ordersupplyprice,
-      ordersurtax: item.ordersurtax,
-      orderqty: item.orderqty,
-      deliverydate: item.deliverydate,
-    }));
+  console.log(orderFormInfo);
 
-    const orderFormInfo = {
-      orderno: detail.orderno,
-      orderdate: detail.orderdate,
-      usercd: detail.usercd,
-      buyercd: detail.buyercd,
-      status: detail.status,
-      itemLists: itemLists,
-    };
+  /*오더폼 수정 */
+  const submitOrderForm = async () => {
+    /*axios */
+    const isApproved = window.confirm(
+      "결제요청을 하시겠습니까? 취소 선택시 저장만 됩니다."
+    );
 
-    if (!validateOrderForm(detail)) {
-      return;
+    if (isApproved) {
+      orderFormInfo.status = "APRV_REQ";
     }
 
-    /*axios */
-    if (window.confirm("오더를 등록하시겠습니까?")) {
-      orderFormInfo.status = "APRV_REQ";
-      try {
-        await axios.post("/order", orderFormInfo, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+    try {
+      const resultData = await fetchData({
+        config: { method: "PUT", url: "/api/order" },
+        body: orderFormInfo,
+      });
+      console.log(resultData);
+      if (resultData?.status === "OK") {
         setRedirect(true);
-      } catch (error) {
-        console.error("디비 접속에 문제: ", error);
+      } else {
+        console.error("Unexpected response: ", resultData);
       }
+    } catch (err) {
+      console.error("Error: ", err);
     }
   };
 
   if (redirect) {
-    return <Navigate to="/orderList" replace />;
+    return <Navigate to="/order/list" replace />;
   }
-  /*테이블에 오더가 추가 될때마다 새로고침 */
-  //   useEffect(() => {}, [detail.itemList]);
 
   return (
     <div className="flex">
@@ -232,7 +254,7 @@ function OrderEdit() {
           ) : (
             <button
               className="border border-erp-gray px-4 bg-white text-black"
-              onClick={deleteOrderForm}
+              onClick={setFinishStatus}
             >
               종결처리
             </button>
@@ -289,14 +311,16 @@ function OrderEdit() {
                         생성중
                       </option>
                       <option
-                        value={detail.status}
+                        value={"APRV_CNCL"}
                         className="border border-erp-gray hover:bg-gray-400"
                       >
                         승인취소
                       </option>
                     </select>
-                  ) : (
+                  ) : detail.status == "REJECT" ? (
                     <p>반려</p>
+                  ) : (
+                    <p>승인취소</p>
                   )}
                 </td>
                 <>
@@ -394,28 +418,25 @@ function OrderEdit() {
                     </td>
                     <td className="text-center border border-erp-gray">
                       {
-                        (item.ordersurtax = (
+                        (item.ordersurtax = Math.round(
                           item.ordersupplyprice / 10
-                        ).toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        }))
+                        ))
                       }
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.ordersupplyprice.toLocaleString(undefined, {
+                      {(item.ordersalesprice =
+                        item.ordersupplyprice +
+                        item.ordersurtax).toLocaleString(undefined, {
                         maximumFractionDigits: 3,
                       })}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {detail.itemList
-                        ? item.ordersalesprice
-                        : (item.salesprice * item.orderqty).toLocaleString(
-                            undefined,
-                            {
-                              maximumFractionDigits: 3,
-                            }
-                          )}
+                      {(item.ordersalesprice * item.orderqty).toLocaleString(
+                        undefined,
+                        {
+                          maximumFractionDigits: 3,
+                        }
+                      )}
                     </td>
                     <td className="text-center border border-erp-gray">
                       {item.stock}
@@ -427,15 +448,22 @@ function OrderEdit() {
                       {detail.itemList ? (
                         <input
                           type="date"
-                          value={item.deliverydate}
-                          onChange={handleDateChange}
+                          value={item.deliverydate || ""}
+                          onChange={(event) =>
+                            handleDateChange(item.itemid, event)
+                          }
                         />
                       ) : (
-                        <input type="date" onChange={handleDateChange} />
+                        <input
+                          type="date"
+                          onChange={(event) =>
+                            handleDateChange(item.itemid, event)
+                          }
+                        />
                       )}
                     </td>
                     <td className="text-center  border border-erp-gray">
-                      <button onClick={() => deleteRow(item.id)}>
+                      <button onClick={() => deleteRow(item.orderitemid)}>
                         {deleteIcon}
                       </button>
                     </td>
@@ -489,29 +517,19 @@ function OrderEdit() {
 function ItemTable({ setDetail, detail }) {
   const search = <FontAwesomeIcon icon={faMagnifyingGlass} />;
   const [item, setItem] = useState("");
-  const [trigger, setTrigger] = useState(0);
   const [searchResult, setSearchResult] = useState([]);
   const { error, fetchData } = useAxios();
-  const [basicParam, setbasicParam] = useState(null);
 
-  const handleClick = () => {
-    setTrigger((prev) => prev + 1);
-  };
   const handleItem = (e) => {
-    if (!detail.buyercode) {
-      alert("바이어 정보를 입력해주세요");
-      return false;
-    }
     setItem(e.target.value);
   };
 
   const fetchItemTable = async () => {
-    setbasicParam({ item: item, buyer: detail.buyercode });
     try {
       const response = await fetchData({
         config: {
           method: "GET",
-          url: `/api/item/price/list?item=${item}&buyer=${detail.buyercode}`,
+          url: `/api/item/price/list?item=${item}&buyer=${detail.buyercd}`,
         },
       });
       if (response) {
@@ -525,11 +543,18 @@ function ItemTable({ setDetail, detail }) {
 
   const addToOrderTable = (newItem) => {
     const updatedItem = {
-      ...newItem,
+      orderitemid: newItem.itemPriceId,
+      itemcd: newItem.itemCd,
+      itemnm: newItem.itemNm,
+      originprice: newItem.originPrice,
+      stock: 100,
+      unit: newItem.unit,
       orderqty: 0,
       ordersupplyprice: 0,
       ordersurtax: 0,
+      deliverydate: "",
     };
+    console.log(updatedItem);
     setDetail((prevForm) => ({
       ...prevForm,
       itemList: [...prevForm.itemList, updatedItem],
@@ -571,35 +596,36 @@ function ItemTable({ setDetail, detail }) {
           <tbody>
             {searchResult.map((result, index) => (
               <tr
-                key={result.itempriceid}
+                className="hover:cursor-pointer hover:bg-gray-200"
+                key={result.itemPriceId}
                 onClick={() => addToOrderTable(result)}
               >
                 <td className="border border-erp-gray text-center">
                   {index + 1}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.itempriceid}
+                  {result.itemPriceId}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.itemnm}
+                  {result.itemNm}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.buyercd}
+                  {result.buyerCd}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.buyernm}
+                  {result.buyerNm}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.originprice}
+                  {result.originPrice}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.buyersupplyprice}
+                  {result.buyerSupplyPrice}
                 </td>
                 <td className="border border-erp-gray text-center">
                   {result.surtax}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.salesprice}
+                  {result.salesPrice}
                 </td>
                 <td className="border border-erp-gray text-center">
                   {result.unit}
