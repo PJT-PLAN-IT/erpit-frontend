@@ -13,6 +13,8 @@ import OrderList from "../pages/order/OrderList.jsx";
 import OrderDetail from "../pages/order/OrderDetail.jsx";
 import OrderCheck from "../pages/order/OrderCheck.jsx";
 import OrderStatList from "../pages/order/OrderStatList.jsx";
+import ItemInsert from "../components/modal/ItemInsert.jsx";
+import PriceInsert from "../pages/manages/PriceInsert.jsx";
 
 const AppRoutes = () => {
   const { user } = useAuth();
@@ -86,6 +88,10 @@ const AppRoutes = () => {
           <Route path={`/orderStatList`} element={<PrivateRoute />}>
             <Route index={true} element={<OrderStatList />} />
           </Route>
+            {/* 바이어별 판매가격 관리 */}
+            <Route path={`/price/add`} element={<PrivateRoute />}>
+                <Route index={true} element={<PriceInsert />} />
+            </Route>
         </>
       )}
 

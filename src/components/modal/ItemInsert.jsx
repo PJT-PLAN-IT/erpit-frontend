@@ -65,7 +65,7 @@ const ItemInsert = ({insertModalOpen, setInsertModalOpen, fetchItemList}) => {
 
         try {
             const result = await fetchData({
-                config: {method: "GET", url: "/api/item/check"},
+                config: {method: "GET", url: "/api/Item/check"},
                 params: {
                     itemcd: formData.itemcd
                 }
@@ -90,7 +90,7 @@ const ItemInsert = ({insertModalOpen, setInsertModalOpen, fetchItemList}) => {
 
     return (
         <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center`}>
-            <div className={`bg-white rounded-lg p-6 py-3 w-[450px]`}>
+           <div className={`bg-white rounded-lg p-6 py-3 w-[450px]`}>
                 <h1 className={`flex items-center justify-center font-bold text-2xl my-10`}>판매부번 등록</h1>
                 <table className={`w-full border-erp-gray border-x border-t`}>
                     <tbody>

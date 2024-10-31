@@ -3,8 +3,9 @@ import Buttons from "../../components/items/Buttons.jsx";
 import ItemTables from "../../components/tables/ItemTables.jsx";
 import useAxios from "../../hook/useAxios.js";
 import {useEffect, useState} from "react";
-import ItemInsert from "../../components/modal/ItemInsert.jsx";
 import ItemUpdate from "../../components/modal/ItemUpdate.jsx";
+import ItemInsert from "../../components/modal/ItemInsert.jsx";
+
 
 const initUpdateData = {
     itemid: '',
@@ -19,7 +20,7 @@ const initUpdateData = {
 
 
 function ItemList() {
-    const { error, fetchData } = useAxios();
+    const {error, fetchData} = useAxios();
     const [result, setResult] = useState([]);
     const [insertModalOpen, setInsertModalOpen] = useState(false);
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
@@ -46,8 +47,8 @@ function ItemList() {
     const fetchItemList = async (isReset) => {
         try {
             const resultData = await fetchData({
-                config: { method: "GET", url: "/api/item/list" },
-                params: {item : isReset ? "" : item}
+                config: {method: "GET", url: "/api/item/list"},
+                params: {item: isReset ? "" : item}
             });
             if (resultData) {
                 setResult(resultData.data);
@@ -70,8 +71,10 @@ function ItemList() {
                 <Buttons style={`green-sm`} word={`add`} onClick={() => setInsertModalOpen(true)}/>
             </div>
             <ItemTables data={result} setUpdateModalOpen={setUpdateModalOpen} setUpdateData={setUpdateData}/>
-            <ItemInsert insertModalOpen={insertModalOpen} setInsertModalOpen={setInsertModalOpen} fetchItemList={fetchItemList}/>
-            <ItemUpdate updateModalOpen={updateModalOpen} setUpdateModalOpen={setUpdateModalOpen} fetchItemList={fetchItemList} updateData={updateData} setUpdateData={setUpdateData}/>
+            <ItemInsert insertModalOpen={insertModalOpen} setInsertModalOpen={setInsertModalOpen}
+                        fetchItemList={fetchItemList}/>
+            <ItemUpdate updateModalOpen={updateModalOpen} setUpdateModalOpen={setUpdateModalOpen}
+                        fetchItemList={fetchItemList} updateData={updateData} setUpdateData={setUpdateData}/>
         </div>
     )
 }

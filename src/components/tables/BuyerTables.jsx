@@ -1,24 +1,31 @@
 /* eslint-disable react/prop-types */
-const BuyerTables = ({ data, setUpdateModalOpen, setUpdateData }) => {
+const BuyerTables = ({ data, setUpdateModalOpen, setUpdateData , setSearchBuyerModalOpen}) => {
     const headStyle = 'border border-erp-gray text-center py-2 font-semibold';
     const tdStyle = 'border border-erp-gray text-center text-sm py-3';
     const trStyle = 'bg-white cursor-pointer hover:bg-gray-200';
     const buyer = ['순번', '바이어코드', '바이어명', '전화번호', '이메일', '주소', '등록일'];
 
     const onClickTable = (buyerData) => {
-        setUpdateData(buyerData);
-        setUpdateModalOpen(true);
+        if(setUpdateData){
+            setUpdateData(buyerData);
+        }
+        if(setUpdateModalOpen){
+            setUpdateModalOpen(true);
+        }
+        if(setSearchBuyerModalOpen){
+            setSearchBuyerModalOpen(false);
+        }
     };
 
     return (
-        <div className={`h-[1014px] overflow-y-auto mt-20`}>
+        <div className={`h-[700px] overflow-y-auto mt-20`}>
             <table className={`w-full`}>
                 <thead className={`sticky top-0`}>
-                <tr className={`items-center bg-erp-mint`}>
-                    {buyer.map((sbj, index) => (
-                        <td key={index} className={`${headStyle}`}>{sbj}</td>
-                    ))}
-                </tr>
+                    <tr className={`items-center bg-erp-mint`}>
+                        {buyer.map((sbj, index) => (
+                            <td key={index} className={`${headStyle}`}>{sbj}</td>
+                        ))}
+                    </tr>
                 </thead>
                 <tbody>
                 {data.map((buyer, index) => (

@@ -10,7 +10,7 @@ const UserTables = ({ data, setUpdateModalOpen, setUpdateData }) => {
         setUpdateModalOpen(true);
     };
     return (
-        <div className={`h-[1014px] overflow-y-auto mt-20`}>
+        <div className={`h-[620px] overflow-y-auto mt-20`}>
             <table className={`w-full`}>
                 <thead className={`sticky top-0`}>
                 <tr className={`items-center bg-erp-mint`}>

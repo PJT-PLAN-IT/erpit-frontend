@@ -1,17 +1,24 @@
 /* eslint-disable react/prop-types */
-const ItemTables = ({ data, setUpdateModalOpen, setUpdateData }) => {
+const ItemTables = ({ data, setUpdateModalOpen, setUpdateData, setSearchItemModalOpen }) => {
     const headStyle = 'border border-erp-gray text-center py-2 font-semibold';
     const tdStyle = 'border border-erp-gray text-center text-sm py-3';
     const trStyle = 'bg-white cursor-pointer hover:bg-gray-200';
     const item = ['순번', '판매부번코드', '품명', '원가', '공급가', '단위', '재고', '등록일'];
-    //check : 비활성화인 것에 대한 제어
+
     const onClickTable = (itemData) => {
-        setUpdateData(itemData);
-        setUpdateModalOpen(true);
+        if(setUpdateData){
+            setUpdateData(itemData);
+        }
+        if(setUpdateModalOpen){
+            setUpdateModalOpen(true);
+        }
+        if(setSearchItemModalOpen){
+            setSearchItemModalOpen(false);
+        }
     };
 
     return (
-        <div className={`h-[1014px] overflow-y-auto mt-20`}>
+        <div className={`h-[620px] overflow-y-auto mt-20`}>
             <table className={`w-full`}>
                 <thead className={`sticky top-0`}>
                 <tr className={`items-center bg-erp-mint`}>
