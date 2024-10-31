@@ -1,8 +1,15 @@
-const BuyerTables = ({ data }) => {
+/* eslint-disable react/prop-types */
+const BuyerTables = ({ data, setUpdateModalOpen, setUpdateData }) => {
     const headStyle = 'border border-erp-gray text-center py-2 font-semibold';
     const tdStyle = 'border border-erp-gray text-center text-sm py-3';
     const trStyle = 'bg-white cursor-pointer hover:bg-gray-200';
     const buyer = ['순번', '바이어코드', '바이어명', '전화번호', '이메일', '주소', '등록일'];
+
+    const onClickTable = (buyerData) => {
+        setUpdateData(buyerData);
+        setUpdateModalOpen(true);
+    };
+
     return (
         <div className={`h-[1014px] overflow-y-auto mt-20`}>
             <table className={`w-full`}>
@@ -15,20 +22,26 @@ const BuyerTables = ({ data }) => {
                 </thead>
                 <tbody>
                 {data.map((buyer, index) => (
-                    <tr key={index} className={`${trStyle}`}>
+                    <tr key={index}
+                        className={`${trStyle}`}
+                        onClick={() => onClickTable(buyer)}
+                    >
                         <td className={`${tdStyle}`}>{index + 1}</td>
-                        <td className={`${tdStyle}`}>{buyer.buyerCd}</td>
-                        <td className={`${tdStyle}`}>{buyer.buyerNm}</td>
+                        <td className={`${tdStyle}`}>{buyer.buyercd}</td>
+                        <td className={`${tdStyle}`}>{buyer.buyernm}</td>
                         <td className={`${tdStyle}`}>{buyer.tel}</td>
                         <td className={`${tdStyle}`}>{buyer.email}</td>
-                        <td className={`${tdStyle}`}>({buyer.zipCode}) {buyer.address}</td>
-                        <td className={`${tdStyle}`}>{buyer.addDate}</td>
+                        {buyer.zipcode === '' ?
+                            <td className={`${tdStyle}`}>{buyer.address}, {buyer.addressdetail}</td>
+                            :
+                            <td className={`${tdStyle}`}>({buyer.zipcode}) {buyer.address}, {buyer.addressdetail}</td>
+                        }
+                        <td className={`${tdStyle}`}>{buyer.adddate}</td>
                     </tr>
                 ))}
                 </tbody>
             </table>
         </div>
-
     )
 
 };

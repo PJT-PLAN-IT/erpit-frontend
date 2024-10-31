@@ -45,8 +45,8 @@ function PriceList() {
     };
 
     return (
-        <>
-            <div className={`flex justify-between mb-2`}>
+        <div className={`flex flex-col p-10`}>
+            <div className={`flex justify-between mb-2 mt-10`}>
                 <div className={`flex`}>
                     <Input search={'buyer'}/>
                     <Buttons style={`green-sm`} word={`search`}/>
@@ -54,7 +54,7 @@ function PriceList() {
                 <Buttons style={`green-sm`} word={`add`}/>
             </div>
             <PriceTables result={result}/>
-        </>
+        </div>
     )
 }
 

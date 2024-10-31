@@ -1,12 +1,11 @@
 const ItemTables = ({result}) => {
-
     const headStyle = 'border border-erp-gray text-center py-2 font-semibold';
     const tdStyle = 'border border-erp-gray text-center text-sm py-3';
     const trStyle = 'bg-white cursor-pointer hover:bg-gray-200';
     const item = ['순번', '판매부번코드', '품명', '원가', '공급가', '단위', '재고', '등록일'];
 
     return (
-        <div className={`h-[1014px] overflow-y-auto`}>
+        <div className={`h-[1014px] overflow-y-auto mt-20`}>
             <table className={`w-full`}>
                 <thead className={`sticky top-0`}>
                 <tr className={`items-center bg-erp-mint`}>

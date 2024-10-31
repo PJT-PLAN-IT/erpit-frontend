@@ -1,36 +1,54 @@
+// noinspection SpellCheckingInspection
+
 import BuyerTables from "../../components/tables/BuyerTables.jsx";
 import Input from "../../components/items/Input.jsx";
 import Buttons from "../../components/items/Buttons.jsx";
 import {useEffect, useState} from "react";
 import BuyerInsert from "../../components/modal/BuyerInsert.jsx";
 import useAxios from "../../hook/useAxios.js";
+import BuyerUpdate from "../../components/modal/BuyerUpdate.jsx";
+
+const initUpdateData = {
+    buyerid: '',
+    buyercd: '',
+    buyernm: '',
+    tel: '',
+    email: '',
+    zipcode: '',
+    address: '',
+    addressdetail: ''
+};
 
 function BuyerList() {
-    const { error, fetchData } = useAxios();
-    const [basicParam, setbasicParam] = useState();
-    // {buyer : "1"}
+    const {error, fetchData} = useAxios();
     const [result, setResult] = useState([]);
     const [insertModalOpen, setInsertModalOpen] = useState(false);
-    const openInsertModal= () => {
-        setInsertModalOpen(prev => !prev);
-    };
+    const [updateModalOpen, setUpdateModalOpen] = useState(false);
+    const [updateData, setUpdateData] = useState(initUpdateData);
+    const [buyer, setBuyer] = useState("");
 
-    const saveFunction = () => {
-        openInsertModal();
-        console.log("--------저장코드-------");
+    const onSearchParam = (e) => {
+        setBuyer(e);
+    }
+
+    const reset = () => {
+        setBuyer("");
+        fetchBuyerList(true);
+    }
+
+    const searchBuyer = () => {
+        fetchBuyerList();
     }
 
     useEffect(() => {
-        getData();
+        fetchBuyerList();
     }, []);
 
-
-
-    const getData = async () => {
+    const fetchBuyerList = async (isReset) => {
         try {
             const resultData = await fetchData({
-                config: { method: "GET", url: "/api/buyer/list" },
-                params: basicParam === null ? null : basicParam
+                config: {method: "GET", url: "/api/buyer/list"},
+                params: {buyer: isReset ? "" : buyer}
             });
             if (resultData) {
                 setResult(resultData.data);
@@ -43,18 +61,19 @@ function BuyerList() {
     };
 
 
-
     return (
         <div className={`flex flex-col p-10`}>
             <div className={`flex justify-between mb-2 mt-10`}>
                 <div className={`flex`}>
-                    <Input search={'buyer'}/>
-                    <Buttons style={`green-sm`} word={`search`}/>
+                    <Input search={'buyer'} searchData={onSearchParam} data={buyer}/>
+                    <Buttons style={`green-sm`} word={`search`} onClick={searchBuyer}/>
+                    <Buttons style={`white-sm`} word={`reset`} onClick={reset}/>
                 </div>
-                <Buttons style={`green-sm`} word={`add`} onClick={openInsertModal}/>
+                <Buttons style={`green-sm`} word={`add`} onClick={() => setInsertModalOpen(true)}/>
             </div>
-            <BuyerTables data={result}/>
-            <BuyerInsert isOpen={insertModalOpen} onClose={openInsertModal} onSave={saveFunction}/>
+            <BuyerTables data={result} setUpdateModalOpen={setUpdateModalOpen} setUpdateData={setUpdateData}/>
+            <BuyerInsert insertModalOpen={insertModalOpen} setInsertModalOpen={setInsertModalOpen} fetchBuyerList={fetchBuyerList}/>
+            <BuyerUpdate updateModalOpen={updateModalOpen} setUpdateModalOpen={setUpdateModalOpen} fetchBuyerList={fetchBuyerList} updateData={updateData} setUpdateData={setUpdateData}/>
         </div>
     )
 }
