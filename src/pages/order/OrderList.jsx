@@ -12,7 +12,7 @@ function OrderList() {
   const [showModal, setShowModal] = useState(false);
   const [buyerInfo, setBuyerInfo] = useState("");
   const [tableList, setTableList] = useState([]);
-
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   /*검색 상태 저장 */
   let [searchForm, setSearchForm] = useState({
     buyer: "",
@@ -24,13 +24,14 @@ function OrderList() {
   const navigate = useNavigate();
   const { fetchData } = useAxios();
   const { user } = useAuth();
+  console.log(user);
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
     const getOrderList = async () => {
       const finalData = {
-        user: "",
+        user: user.usercd,
         buyer: "",
         status: "",
         month: currentMonth,
@@ -48,18 +49,22 @@ function OrderList() {
         }
       } catch (error) {
         console.error("디비 접속에 문제: ", error);
+      } finally {
+        setIsInitialLoad(false);
       }
     };
-    getOrderList();
-  }, [searchForm]);
+    if (isInitialLoad) getOrderList();
+  }, [isInitialLoad]);
 
-  /*바이어 검색 변화 저장 */
-  const handleBuyerChange = (e) => {
-    setSearchForm((prev) => ({
-      ...prev,
-      buyer: buyerInfo.buyerCd,
-    }));
-  };
+  useEffect(() => {
+    if (buyerInfo?.buyerCd) {
+      setSearchForm((prev) => ({
+        ...prev,
+        buyer: buyerInfo.buyerCd,
+      }));
+      console.log("Updated searchForm buyer:", buyerInfo.buyerCd);
+    }
+  }, [buyerInfo]);
 
   /*요청상태 검색 변화 저장 */
   const handleStatusChange = (e) => {
@@ -99,32 +104,41 @@ function OrderList() {
         state: { detailNo: detailNo },
       });
     } else {
-      navigate("order/detail", { state: { detailNo: detailNo } });
+      navigate("/order/detail", { state: { detailNo: detailNo } });
     }
   };
 
   /*오더내역 리스트 검색 기능 */
   const submitForm = async () => {
-    setSearchForm = {
-      user: user.userCd,
-      buyer: searchForm.buyer,
-      status: searchForm.orderStatus,
+    const searchOrders = {
+      user: user.usercd,
+      buyer: searchForm.buyer || "",
+      status: searchForm.orderStatus || "",
       month: searchForm.month,
       year: searchForm.year,
     };
-    console.log(searchForm);
+    console.log(searchOrders);
+
     try {
       const result = await fetchData({
         config: { method: "POST", url: "/api/order/list" },
-        body: searchForm,
+        body: searchOrders,
       });
       if (result) {
-        console.log(result.data);
+        console.log(result);
         setTableList(result.data);
       }
+      setIsInitialLoad(true);
     } catch (error) {
       console.error("디비 접속에 문제: ", error);
+    } finally {
+      setIsInitialLoad(false);
     }
+  };
+
+  const getStatName = (statusId) => {
+    const statusObj = Status.find((status) => status.id === statusId);
+    return statusObj ? statusObj.name : statusId;
   };
 
   return (
@@ -132,22 +146,34 @@ function OrderList() {
       <div className="flex-row p-7 w-[100%]">
         <div className="flex justify-between mt-10">
           <form className="flex justify-evenly gap-10">
-            <div className="flex border">
-              <p className="border-r px-4 bg-erp-mint pt-1">바이어</p>
+            <div className="flex ">
+              <p className="px-4  pt-1">바이어</p>
               <input
-                className="w-60 px-1"
+                className="w-60 px-1 border hover:cursor-pointer"
+                placeholder="검색어를 입력하세요"
                 type="text"
                 value={
                   buyerInfo ? `${buyerInfo.buyerNm} / ${buyerInfo.buyerCd}` : ""
                 }
                 onClick={() => setShowModal(true)}
-                onChange={handleBuyerChange}
               />
+              {buyerInfo.buyerCd && (
+                <button
+                  onClick={() => {
+                    setBuyerInfo("");
+                    setSearchForm((prev) => ({ ...prev, buyer: "" }));
+                  }}
+                  className=" px-2 text-black hover:text-gray-600"
+                >
+                  ✕
+                </button>
+              )}
             </div>
 
-            <div className="border flex">
-              <p className="border-r px-4 bg-erp-mint pt-1">요청상태</p>
+            <div className="flex">
+              <p className=" px-4 pt-1">요청상태</p>
               <select className="px-10" onChange={handleStatusChange}>
+                <option defaultChecked>전체</option>
                 {Status.map((stat) => (
                   <option
                     key={stat.id}
@@ -160,10 +186,10 @@ function OrderList() {
               </select>
             </div>
 
-            <div className="border flex">
-              <p className="border-r px-4 bg-erp-mint pt-1">년도</p>
+            <div className=" flex">
+              <p className="px-4  pt-1">년도</p>
               <select className="px-10" onChange={handleYearChange}>
-                <option defaultChecked disabled={true}></option>
+                <option defaultValue={true}></option>
                 {year.map((year) => (
                   <option
                     key={year.id}
@@ -175,10 +201,10 @@ function OrderList() {
                 ))}
               </select>
             </div>
-            <div className="border flex">
-              <p className="border-r px-4 bg-erp-mint pt-1">월 </p>
+            <div className="flex">
+              <p className=" px-4 pt-1">월별 </p>
               <select className="px-10" onChange={handleMonthChange}>
-                <option defaultChecked disabled={true}></option>
+                <option defaultValue={true}></option>
                 {months.map((month) => (
                   <option
                     key={month.id}
@@ -219,36 +245,40 @@ function OrderList() {
           </>
         )}
         <div className="flex items-center justify-center mt-10">
-          <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2">
-            <thead>
-              <tr className="bg-erp-mint">
-                <th className="p-1 border border-erp-gray">순번</th>
-                <th className="p-1 border border-erp-gray">오더번호</th>
-                <th className="p-1 border border-erp-gray">주문일자</th>
-                <th className="p-1 border border-erp-gray">바이어명</th>
-                <th className="p-1 border border-erp-gray">바이어코드</th>
-                <th className="p-1 border border-erp-gray">등록일자</th>
-                <th className="p-1 border border-erp-gray">요청상태</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tableList.map((table, index) => (
-                <tr
-                  key={table.orderid}
-                  onClick={() => showDetailPage(table.id, table.status)}
-                  className={table.status === "REJECT" ? "bg-red-300" : ""}
-                >
-                  <td className="text-center">{index + 1}</td>
-                  <td className="text-center">{table.orderno}</td>
-                  <td className="text-center">{table.orderdate}</td>
-                  <td className="text-center">{table.buyernm}</td>
-                  <td className="text-center">{table.buyercode}</td>
-                  <td className="text-center">{table.adddate}</td>
-                  <td className="text-center">{table.status}</td>
+          {tableList && tableList.length > 0 ? (
+            <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2">
+              <thead>
+                <tr className="bg-erp-mint">
+                  <th className="p-1 border border-erp-gray">순번</th>
+                  <th className="p-1 border border-erp-gray">오더번호</th>
+                  <th className="p-1 border border-erp-gray">주문일자</th>
+                  <th className="p-1 border border-erp-gray">바이어명</th>
+                  <th className="p-1 border border-erp-gray">바이어코드</th>
+                  <th className="p-1 border border-erp-gray">등록일자</th>
+                  <th className="p-1 border border-erp-gray">요청상태</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {tableList.map((table, index) => (
+                  <tr
+                    key={table.orderid}
+                    onClick={() => showDetailPage(table.orderno, table.status)}
+                    className={table.status === "REJECT" ? "bg-red-300" : ""}
+                  >
+                    <td className="text-center">{index + 1}</td>
+                    <td className="text-center">{table.orderno}</td>
+                    <td className="text-center">{table.orderdate}</td>
+                    <td className="text-center">{table.buyernm}</td>
+                    <td className="text-center">{table.buyercode}</td>
+                    <td className="text-center">{table.adddate}</td>
+                    <td className="text-center">{getStatName(table.status)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="mx-auto py-10 text-center">검색결과가 없습니다.</p>
+          )}
         </div>
       </div>
     </div>
@@ -287,6 +317,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
   };
 
   const addBuyer = (buyer) => {
+    console.log("Selected Buyer:", buyer);
     setBuyerInfo(buyer);
     setShowModal(false);
   };
@@ -340,7 +371,11 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
           </thead>
           <tbody>
             {buyers.map((buyer, index) => (
-              <tr key={buyer.buyerId} onClick={() => addBuyer(buyer)}>
+              <tr
+                key={buyer.buyerId}
+                onClick={() => addBuyer(buyer)}
+                className="hover:cursor-pointer"
+              >
                 <td className="border border-erp-gray text-center">
                   {index + 1}
                 </td>
@@ -367,7 +402,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
           </tbody>
         </table>
       ) : (
-        <p className="text-center text-gray-400">검색 결과가 없습니다</p>
+        <p className=" mp-10 mx-auto text-gray-400">검색 결과가 없습니다</p>
       )}
     </div>
   );

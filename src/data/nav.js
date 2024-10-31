@@ -5,7 +5,7 @@ const routes = [
       {
         path: "/report",
         name: "월별 리포트",
-      }
+      },
     ],
   },
   {
@@ -20,11 +20,11 @@ const routes = [
         name: "오더 등록",
       },
       {
-        path: "/orderCheck",
+        path: "/order/statlist",
         name: "요청 오더 조회",
       },
       {
-        path: "/orderStatList",
+        path: "/order/check",
         name: "오더 내역 조회",
       },
     ],
@@ -48,7 +48,7 @@ const routes = [
       {
         path: "/buyer",
         name: "바이어 조회",
-      }
+      },
     ],
   },
   {

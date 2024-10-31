@@ -31,14 +31,16 @@ function SidebarSubmenu({ route }) {
         aria-label="submenu"
       >
         {route.routes.map((r) => (
-          <li
-            className="px-2 transition-colors duration-150  py-2"
-            key={r.name}
-          >
+          <>
             <Link className="w-full" to={r.path}>
-              {r.name}
+              <li
+                className="px-2 transition-colors duration-150  py-2"
+                key={r.name}
+              >
+                {r.name}
+              </li>
             </Link>
-          </li>
+          </>
         ))}
       </ul>
     </li>

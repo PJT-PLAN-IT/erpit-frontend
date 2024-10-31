@@ -11,6 +11,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 import OrderForm from "../pages/order/OrderForm.jsx";
 import OrderList from "../pages/order/OrderList.jsx";
 import OrderDetail from "../pages/order/OrderDetail.jsx";
+import OrderEdit from "../pages/order/OrderEdit.jsx";
 import OrderCheck from "../pages/order/OrderCheck.jsx";
 import OrderStatList from "../pages/order/OrderStatList.jsx";
 import ItemInsert from "../components/modal/ItemInsert.jsx";
@@ -70,11 +71,8 @@ const AppRoutes = () => {
           <Route path={`/order/detail`} element={<PrivateRoute />}>
             <Route index={true} element={<OrderDetail />} />
           </Route>
-          <Route path={`/orderCheck`} element={<PrivateRoute />}>
-            <Route index={true} element={<OrderCheck />} />
-          </Route>
-          <Route path={`/orderStatList`} element={<PrivateRoute />}>
-            <Route index={true} element={<OrderStatList />} />
+          <Route path={`/order/edit`} element={<PrivateRoute />}>
+            <Route index={true} element={<OrderEdit />} />
           </Route>
         </>
       )}
@@ -82,10 +80,10 @@ const AppRoutes = () => {
       {user.role === "ROLE_ADMIN" && (
         <>
           {/* 관리자 오더  */}
-          <Route path={`/orderCheck`} element={<PrivateRoute />}>
+          <Route path={`/order/check`} element={<PrivateRoute />}>
             <Route index={true} element={<OrderCheck />} />
           </Route>
-          <Route path={`/orderStatList`} element={<PrivateRoute />}>
+          <Route path={`/order/statlist`} element={<PrivateRoute />}>
             <Route index={true} element={<OrderStatList />} />
           </Route>
             {/* 바이어별 판매가격 관리 */}

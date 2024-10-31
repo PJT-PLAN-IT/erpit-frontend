@@ -1,45 +1,42 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import useAxios from "../../hook/useAxios";
+import { useAuth } from "../../context/AuthContext";
 import { rejects } from "../../data/rejects";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faCircleMinus } from "@fortawesome/free-solid-svg-icons";
 
 function OrderForm() {
-  const [form, setForm] = useState({
-    orderdate: "",
-    buyercode: "",
-    buyername: "",
-    status: "",
-    reject: "",
-    rejectInfo: "",
-    items: [
-      {
-        buyercd: "ER09036",
-        itemnm: "YAKULT WILL",
-        orderqty: 0,
-        ordersupplyprice: 0,
-        originprice: 300,
-        buyersupplyprice: 0,
-        surtax: 0,
-        salesprice: 0,
-        stock: "300",
-        unit: "6EA",
-        deliverydate: "",
-      },
-    ],
-  });
-
   const [reject, setReject] = useState("");
+  const [buyerInfo, setBuyerInfo] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [leavePage, setleavepage] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const { error, fetchData } = useAxios();
+  const { user } = useAuth();
+  const [form, setForm] = useState({
+    usercd: user.usercd,
+    orderdate: "",
+    buyercode: "",
+    status: "CREATE",
+    items: [],
+  });
+
+  console.log(form);
 
   /*테이블에 오더가 추가 될때마다 새로고침 */
   useEffect(() => {}, [form.items]);
 
+  useEffect(() => {
+    if (buyerInfo?.buyercd) {
+      setForm((prev) => ({
+        ...prev,
+        buyercode: buyerInfo.buyercd,
+      }));
+      console.log("Updated searchForm buyer:", buyerInfo.buyerCd);
+    }
+  }, [buyerInfo]);
   /*아이템 테이블 행 삭제 */
   const deleteRow = (id) => {
     setForm((prevForm) => ({
@@ -53,7 +50,7 @@ function OrderForm() {
     setForm((prevForm) => ({
       ...prevForm,
       items: prevForm.items.map((item) => {
-        if (item.id === id) {
+        if (item.itemcd === id) {
           const updatedItem = { ...item, [field]: value };
           updatedItem.totalprice =
             (updatedItem.setprice + updatedItem.tax) * updatedItem.quantity;
@@ -74,19 +71,28 @@ function OrderForm() {
 
   /*오더 공급가 전체 계산 */
   const calculateTotalSetPrice = () =>
-    form.items.reduce((sum, item) => sum + item.buyersupplyprice, 0);
+    form.items.reduce((sum, item) => sum + item.ordersupplyprice, 0);
 
   /*오더 부가세 전체 계산 */
   const calculateTotalTax = () =>
-    form.items.reduce((sum, item) => sum + item.surtax, 0);
+    form.items.reduce((sum, item) => sum + item.ordersurtax, 0);
+
+  const calculateTotalsupplyPrice = () =>
+    form.items.reduce((sum, item) => sum + item.ordersalesprice, 0);
 
   /*오더 합계금액 전체 계산 */
   const calculateTotalPrice = () =>
-    form.items.reduce((sum, item) => sum + item.salesprice * item.orderqty, 0);
+    form.items.reduce(
+      (sum, item) => sum + item.ordersalesprice * item.orderqty,
+      0
+    );
 
   /*오더 총 합계 계산 */
   const calculateTotalSum = () =>
-    form.items.reduce((sum, item) => sum + item.salesprice * item.orderqty, 0);
+    form.items.reduce(
+      (sum, item) => sum + item.ordersalesprice * item.orderqty,
+      0
+    );
 
   /*오더폼 삭제 */
   const deleteOrderForm = () => {
@@ -100,17 +106,30 @@ function OrderForm() {
   };
 
   if (leavePage) {
-    return <Navigate to="/orderList" replace />;
+    return <Navigate to="/order/list" replace />;
   }
 
-  /*요청상태 검색 변화 저장 */
-  const handleDateChange = (e) => {
+  /*헤더 날짜 변화 저장 */
+  const handleOrderDateChange = (e) => {
     setForm((prev) => ({
       ...prev,
       orderdate: e.target.value,
     }));
   };
 
+  /*오더 날짜 변화 저장 */
+  const handleDateChange = (itemid, event) => {
+    const newItemList = form.items.map((item) =>
+      item.itemcd === itemid
+        ? { ...item, deliverydate: event.target.value || "" }
+        : item
+    );
+
+    setForm((prevDetail) => ({
+      ...prevDetail,
+      items: newItemList,
+    }));
+  };
   /*요청상태 검색 변화 저장 */
   const handleStatusChange = (e) => {
     setForm((prev) => ({
@@ -146,8 +165,10 @@ function OrderForm() {
   /*아이콘  */
   const deleteIcon = <FontAwesomeIcon icon={faCircleMinus} />;
 
+  console.log(form.orderdate);
   /*오더폼 확인 */
-  const validateOrderForm = (form) => {
+  const validateOrderForm = () => {
+    console.log(form.orderdate);
     if (!form.orderdate) {
       alert("주문 날짜를 입력해주세요");
       return false;
@@ -175,55 +196,70 @@ function OrderForm() {
     return true;
   };
 
-  /*오더폼 등록 */
-  const submitOrderForm = async (form) => {
-    const itemLists = form.items.map((item) => ({
-      buyeritemcd: item.itemcd,
-      ordersalesprice: item.salesprice,
-      ordersupplyprice: item.ordersupplyprice,
-      ordersurtax: item.ordersurtax,
-      orderqty: item.orderqty,
-      deliverydate: item.deliverydate,
-    }));
+  const filteredItemList = form.items.map(
+    ({
+      itemcd,
+      ordersupplyprice,
+      ordersurtax,
+      ordersalesprice,
+      orderqty,
+      deliverydate,
+    }) => ({
+      itemcd,
+      ordersupplyprice,
+      ordersurtax,
+      ordersalesprice,
+      orderqty,
+      deliverydate,
+    })
+  );
 
+  console.log(filteredItemList);
+  /*오더폼 등록 */
+  const submitOrderForm = async () => {
     const orderFormInfo = {
       orderdate: form.orderdate,
-      usercd: "ER20240002",
+      usercd: form.usercd,
       buyercd: form.buyercode,
       status: form.status,
-      itemLists: itemLists,
+      orderItemList: filteredItemList,
     };
 
     if (!validateOrderForm(form)) {
       return;
     }
 
-    if (window.confirm("오더를 등록하시겠습니까?")) {
+    const isApproved = window.confirm(
+      "결제요청을 하시겠습니까? 취소 선택시 저장만 됩니다."
+    );
+    if (isApproved) {
       orderFormInfo.status = "APRV_REQ";
-      try {
-        const resultData = await fetchData({
-          config: { method: "POST", url: "/order" },
-          body: orderFormInfo,
-        });
-        if (resultData) {
-          setRedirect(true);
-        } else if (error) {
-          console.error("Error: ", error);
-        }
-      } catch (err) {
-        console.error("Error: ", err);
+    }
+
+    try {
+      const resultData = await fetchData({
+        config: { method: "POST", url: "/api/order" },
+        body: orderFormInfo,
+      });
+      if (resultData?.status === "OK") {
+        setRedirect(true);
+      } else if (error) {
+        console.error("Error: ", error);
+        alert("오더폼을 등록할수 없습니다. 다시 시도해주세요");
       }
+    } catch (err) {
+      console.error("Error: ", err);
     }
   };
 
   if (redirect) {
-    return <Navigate to="/orderList" replace />;
+    return <Navigate to="/order/list" replace />;
   }
 
   return (
     <div className="flex">
       <div className="flex-col bg-erp-soft-gray p-7 w-[100%]">
-        <div className="flex justify-self-end gap-4 w-[170px] my-10 ">
+        <div className="flex justify-self-end gap-4 w-[150px] my-10 pl-12 ">
           <button
             className="border border-erp-gray px-4 bg-white text-black"
             onClick={deleteOrderForm}
@@ -243,9 +279,7 @@ function OrderForm() {
               <td className="border border-erp-gray bg-erp-mint text-center">
                 오더번호
               </td>
-              <td className="border border-erp-gray">
-                {/*생성중 비워저있음 */}
-              </td>
+              <td className="border border-erp-gray bg-gray-300"></td>
               <td className="border border-erp-gray bg-erp-mint text-center">
                 주문일자
               </td>
@@ -253,7 +287,7 @@ function OrderForm() {
                 <input
                   className="w-[90%]"
                   type="date"
-                  onChange={handleDateChange}
+                  onChange={handleOrderDateChange}
                 />
               </td>
               <td className="border border-erp-gray bg-erp-mint text-center">
@@ -265,28 +299,52 @@ function OrderForm() {
               <td className="border border-erp-gray bg-erp-mint text-center">
                 직원코드
               </td>
-              <td>{/*직워코드 자동생성 */}</td>
+              <td>{form.usercd}</td>
               <td className="border border-erp-gray bg-erp-mint text-center ">
                 바이어 코드
               </td>
               <td className="border border-erp-gray">
                 <input
-                  className=""
+                  className="hover:cursor-pointer"
                   type="text"
                   placeholder="바이어코드 검색"
+                  value={buyerInfo ? `${buyerInfo.buyercd}` : ""}
                   onClick={() => setShowModal(true)}
                 />
+                {buyerInfo.buyercd && (
+                  <button
+                    onClick={() => {
+                      setBuyerInfo("");
+                      setForm((prev) => ({ ...prev, buyer: "" }));
+                    }}
+                    className=" px-2 text-black hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+                )}
               </td>
               <td className="border border-erp-gray bg-erp-mint text-center">
                 바이어명
               </td>
               <td className="border border-erp-gray ">
                 <input
-                  className=""
+                  className="hover:cursor-pointer"
                   type="text"
                   placeholder="바이어명 검색"
+                  value={buyerInfo ? `${buyerInfo.buyernm}` : ""}
                   onClick={() => setShowModal(true)}
                 />
+                {buyerInfo.buyernm && (
+                  <button
+                    onClick={() => {
+                      setBuyerInfo("");
+                      setForm((prev) => ({ ...prev, buyer: "" }));
+                    }}
+                    className=" px-2 text-black hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+                )}
               </td>
             </tr>
             <tr className="">
@@ -304,33 +362,35 @@ function OrderForm() {
                 </select>
               </td>
               <>
-                <td className=" border-erp-gray bg-erp-mint text-center">
-                  반려사유
-                </td>
                 {form.status === "REJECT" ? (
-                  <td className=" border-erp-gray border border-erp-gray-r-0 flex gap-5 text-center">
-                    <select className="px-10" onChange={handleRejectChange}>
-                      {rejects.map((reject) => (
-                        <option
-                          key={reject.id}
-                          value={reject.id}
-                          className="border border-erp-gray hover:bg-gray-400"
-                        >
-                          {reject.name}
-                        </option>
-                      ))}
-                    </select>
-                    {form.reject === "ETC" ? (
-                      <input
-                        className="border border-erp-gray w-[200px]"
-                        type="text"
-                        placeholder="기타사유를 입력하세요"
-                        onChange={handleRejectInfoChange}
-                      />
-                    ) : (
-                      ""
-                    )}
-                  </td>
+                  <>
+                    <td className="border border-erp-gray bg-erp-mint text-center">
+                      반려사유
+                    </td>
+                    <td className=" border-erp-gray border flex gap-5 text-center">
+                      <select className="px-10" onChange={handleRejectChange}>
+                        {rejects.map((reject) => (
+                          <option
+                            key={reject.id}
+                            value={reject.id}
+                            className="border border-erp-gray hover:bg-gray-400"
+                          >
+                            {reject.name}
+                          </option>
+                        ))}
+                      </select>
+                      {form.reject === "ETC" ? (
+                        <input
+                          className="border border-erp-gray w-[200px]"
+                          type="text"
+                          placeholder="기타사유를 입력하세요"
+                          onChange={handleRejectInfoChange}
+                        />
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                  </>
                 ) : (
                   ""
                 )}
@@ -348,6 +408,7 @@ function OrderForm() {
               showModal={showModal}
               setShowModal={setShowModal}
               setForm={setForm}
+              setBuyerInfo={setBuyerInfo}
             />
           </>
         )}
@@ -385,12 +446,12 @@ function OrderForm() {
               </thead>
               <tbody>
                 {form.items.map((item, index) => (
-                  <tr key={item.buyercd}>
+                  <tr key={item.itempriceid}>
                     <td className="text-center border border-erp-gray">
                       {index + 1}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.buyercd}
+                      {item.itemcd}
                     </td>
                     <td className="text-center border border-erp-gray">
                       {item.itemnm}
@@ -403,7 +464,7 @@ function OrderForm() {
                         value={item.orderqty}
                         onChange={(e) =>
                           handleItemChange(
-                            item.id,
+                            item.itemcd,
                             "orderqty",
                             parseInt(e.target.value) || 0
                           )
@@ -421,7 +482,7 @@ function OrderForm() {
                         value={item.ordersupplyprice}
                         onChange={(e) =>
                           handleItemChange(
-                            item.id,
+                            item.itemcd,
                             "ordersupplyprice",
                             parseFloat(e.target.value) || 0
                           )
@@ -430,23 +491,20 @@ function OrderForm() {
                     </td>
                     <td className="text-center border border-erp-gray">
                       {
-                        (item.ordersurtax = (
+                        (item.ordersurtax = Math.round(
                           item.ordersupplyprice / 10
-                        ).toFixed(2))
+                        ))
                       }
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.buyersupplyprice.toLocaleString(undefined, {
+                      {(item.ordersalesprice =
+                        item.ordersupplyprice +
+                        item.ordersurtax).toLocaleString(undefined, {
                         maximumFractionDigits: 3,
                       })}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {(item.salesprice * item.orderqty).toLocaleString(
-                        undefined,
-                        {
-                          maximumFractionDigits: 3,
-                        }
-                      )}
+                      {item.ordersalesprice * item.orderqty}
                     </td>
                     <td className="text-center border border-erp-gray">
                       {item.stock}
@@ -455,10 +513,15 @@ function OrderForm() {
                       {item.unit}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      <input type="date" onChange={handleDateChange} />
+                      <input
+                        type="date"
+                        onChange={(event) =>
+                          handleDateChange(item.itemcd, event)
+                        }
+                      />
                     </td>
                     <td className="text-center  border border-erp-gray">
-                      <button onClick={() => deleteRow(item.id)}>
+                      <button onClick={() => deleteRow(item.itemcd)}>
                         {deleteIcon}
                       </button>
                     </td>
@@ -477,6 +540,9 @@ function OrderForm() {
                   </td>
                   <td className="text-center border border-erp-gray">
                     {calculateTotalTax().toLocaleString()}
+                  </td>
+                  <td className="text-center border border-erp-gray">
+                    {calculateTotalsupplyPrice().toLocaleString()}
                   </td>
                   <td className="text-center border border-erp-gray">
                     {calculateTotalPrice().toLocaleString()}
@@ -506,46 +572,37 @@ function OrderForm() {
   );
 }
 
-function ItemTable(setForm, form) {
+function ItemTable({ setForm, form }) {
   const search = <FontAwesomeIcon icon={faMagnifyingGlass} />;
   const [item, setItem] = useState("");
-  const [trigger, setTrigger] = useState(0);
+
   const [searchResult, setSearchResult] = useState([]);
   const { error, fetchData } = useAxios();
 
-  const handleClick = () => {
-    setTrigger((prev) => prev + 1);
-  };
   const handleItem = (e) => {
+    if (!form.buyercode) {
+      alert("바이어 정보를 입력해주세요");
+      return false;
+    }
     setItem(e.target.value);
   };
 
-  useEffect(() => {
-    if (!item) return;
-
-    const fetchItemTable = async () => {
-      const itemquery = {
-        item: item,
-        buyer: form.buyercode,
-      };
-
-      try {
-        const response = await fetchData({
-          config: { method: "POST", url: "/api/item/price/list" },
-          body: itemquery,
-        });
-        if (response) {
-          console.log("검색결과:", response.data);
-          setSearchResult(response.data.buyerSalesList);
-        } else if (error) {
-          console.error("Error: ", error);
-        }
-      } catch (err) {
-        console.error("Error: ", err);
+  const fetchItemTable = async () => {
+    try {
+      const response = await fetchData({
+        config: {
+          method: "GET",
+          url: `/api/item/price/list?item=${item}&buyer=${form.buyercode}`,
+        },
+      });
+      if (response) {
+        console.log("검색결과:", response.data);
+        setSearchResult(response.data);
       }
-    };
-    fetchItemTable();
-  }, [item]);
+    } catch (err) {
+      console.error("Error: ", err);
+    }
+  };
 
   const addToOrderTable = (newItem) => {
     const updatedItem = {
@@ -553,6 +610,12 @@ function ItemTable(setForm, form) {
       orderqty: 0,
       ordersupplyprice: 0,
       ordersurtax: 0,
+      ordersalesprice: 0,
+      originprice: newItem.originPrice,
+      itempriceid: newItem.itemPriceId,
+      itemcd: newItem.itemCd,
+      itemnm: newItem.itemNm,
+      deliverydate: newItem.addDate,
     };
     setForm((prevForm) => ({
       ...prevForm,
@@ -566,7 +629,7 @@ function ItemTable(setForm, form) {
       <div className="flex gap-10 items-center ">
         <p className="text-gray-500">판매부번</p>
         <input type="text" className="p-1" onChange={handleItem} />
-        <button className="-translate-x-16" onClick={handleClick}>
+        <button className="-translate-x-16" onClick={fetchItemTable}>
           {search}
         </button>
       </div>
@@ -587,64 +650,56 @@ function ItemTable(setForm, form) {
           <th className="p-1 border border-erp-gray bg-erp-mint">공급대가</th>
           <th className="p-1 border border-erp-gray bg-erp-mint">단위</th>
         </thead>
-        <tbody>
-          <tr>
-            <td className="border border-erp-gray text-center">1</td>
-            <td className="border border-erp-gray text-center">ER09036</td>
-            <td className="border border-erp-gray text-center">YAKULT WILL</td>
-            <td className="border border-erp-gray text-center">jinbang</td>
-            <td className="border border-erp-gray text-center">Jinbang&Co</td>
-            <td className="border border-erp-gray text-center">600</td>
-            <td className="border border-erp-gray text-center">1000</td>
-            <td className="border border-erp-gray text-center">100</td>
-            <td className="border border-erp-gray text-center">1,100</td>
-            <td className="border border-erp-gray text-center">6EA</td>
-          </tr>
-
-          {searchResult.map((result, index) => (
-            <tr
-              key={result.itempriceid}
-              onClick={() => addToOrderTable(result)}
-            >
-              <td className="border border-erp-gray text-center">
-                {index + 1}
-              </td>
-              <td className="border border-erp-gray text-center">
-                {result.itempriceid}
-              </td>
-              <td className="border border-erp-gray text-center">
-                {result.itemnm}
-              </td>
-              <td className="border border-erp-gray text-center">
-                {result.buyercd}
-              </td>
-              <td className="border border-erp-gray text-center">
-                {result.buyernm}
-              </td>
-              <td className="border border-erp-gray text-center">
-                {result.originprice}
-              </td>
-              <td className="border border-erp-gray text-center">
-                {result.buyersupplyprice}
-              </td>
-              <td className="border border-erp-gray text-center">
-                {result.surtax}
-              </td>
-              <td className="border border-erp-gray text-center">
-                {result.salesprice}
-              </td>
-              <td className="border border-erp-gray text-center">
-                {result.unit}
-              </td>
-            </tr>
-          ))}
-        </tbody>
+        {searchResult && searchResult.length > 0 ? (
+          <tbody>
+            {searchResult.map((result, index) => (
+              <tr
+                key={result.itempriceid}
+                onClick={() => addToOrderTable(result)}
+              >
+                <td className="border border-erp-gray text-center">
+                  {index + 1}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {result.itemPriceId}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {result.itemNm}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {result.buyerCd}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {result.buyerNm}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {result.originPrice}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {result.buyerSupplyPrice}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {result.surtax}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {result.salesPrice}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {result.unit}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        ) : null}
       </table>
+      {(!searchResult || searchResult.length === 0) && (
+        <p className="mx-auto py-5 text-center">검색결과가 없습니다.</p>
+      )}
     </div>
   );
 }
 
-const ShowBuyerModal = (showModal, setShowModal, setBuyerInfo) => {
+const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
   const { fetchData } = useAxios();
   const [buyerValue, setBuyerValue] = useState("");
   const [buyers, setBuyers] = useState([]);
@@ -654,16 +709,20 @@ const ShowBuyerModal = (showModal, setShowModal, setBuyerInfo) => {
     setBuyerValue(e.target.value);
   };
 
+  console.log(buyerValue);
+
   const searchBuyerCode = async () => {
     if (buyerValue) {
       try {
-        const result = await fetchData("/buyer/list", {
-          config: { method: "POST", url: "/api/auth/login" },
-          params: { buyer: buyerValue },
+        const result = await fetchData({
+          config: {
+            method: "GET",
+            url: `/api/buyer/list?buyer=${buyerValue}`,
+          },
         });
         if (result) {
           console.log(result.data);
-          setBuyers(result.data.buyerList);
+          setBuyers(result.data);
         }
       } catch (error) {
         console.error("디비 접속에 문제: ", error);
@@ -672,7 +731,8 @@ const ShowBuyerModal = (showModal, setShowModal, setBuyerInfo) => {
   };
 
   const addBuyer = (buyer) => {
-    setBuyerInfo(`${buyer.buyernm} / ${buyer.id}`);
+    console.log("Selected Buyer:", buyer);
+    setBuyerInfo(buyer);
     setShowModal(false);
   };
 
@@ -711,34 +771,52 @@ const ShowBuyerModal = (showModal, setShowModal, setBuyerInfo) => {
       </div>
 
       {buyers.length ? (
-        <table>
+        <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2">
           <thead>
-            <tr>
-              <th>순번</th>
-              <th>바이어코드</th>
-              <th>바이어명</th>
-              <th>전화번호</th>
-              <th>이메일</th>
-              <th>주소</th>
-              <th>등록일</th>
+            <tr className="border border-erp-gray bg-erp-mint">
+              <th className="border border-erp-gray p-1">순번</th>
+              <th className="border border-erp-gray p-1">바이어코드</th>
+              <th className="border border-erp-gray p-1">바이어명</th>
+              <th className="border border-erp-gray p-1">전화번호</th>
+              <th className="border border-erp-gray p-1">이메일</th>
+              <th className="border border-erp-gray p-1">주소</th>
+              <th className="border border-erp-gray p-1">등록일</th>
             </tr>
           </thead>
           <tbody>
             {buyers.map((buyer, index) => (
-              <tr key={buyer.buyerid} onClick={() => addBuyer(buyer)}>
-                <td>{index + 1}</td>
-                <td>{buyer.buyercd}</td>
-                <td>{buyer.buyernm}</td>
-                <td>{buyer.tel}</td>
-                <td>{buyer.email}</td>
-                <td className="truncate w-48">{buyer.address}</td>
-                <td>{buyer.adddate}</td>
+              <tr
+                key={buyer.buyerId}
+                onClick={() => addBuyer(buyer)}
+                className="hover:cursor-pointer"
+              >
+                <td className="border border-erp-gray text-center">
+                  {index + 1}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {buyer.buyercd}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {buyer.buyernm}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {buyer.tel}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {buyer.email}
+                </td>
+                <td className="border border-erp-gray text-center truncate w-48">
+                  {buyer.address}
+                </td>
+                <td className="border border-erp-gray text-center">
+                  {buyer.adddate}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       ) : (
-        <p className="text-center text-gray-400">검색 결과가 없습니다</p>
+        <p className=" mp-10 mx-auto text-gray-400">검색 결과가 없습니다</p>
       )}
     </div>
   );
