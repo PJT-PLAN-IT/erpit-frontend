@@ -1,19 +1,24 @@
 /* eslint-disable react/prop-types */
+import {useAuth} from "../../context/AuthContext.jsx";
+
 const BuyerTables = ({ data, setUpdateModalOpen, setUpdateData , setSearchBuyerModalOpen}) => {
     const headStyle = 'border border-erp-gray text-center py-2 font-semibold';
     const tdStyle = 'border border-erp-gray text-center text-sm py-3';
     const trStyle = 'bg-white cursor-pointer hover:bg-gray-200';
     const buyer = ['순번', '바이어코드', '바이어명', '전화번호', '이메일', '주소', '등록일'];
+    const { user } = useAuth();
 
     const onClickTable = (buyerData) => {
-        if(setUpdateData){
-            setUpdateData(buyerData);
-        }
-        if(setUpdateModalOpen){
-            setUpdateModalOpen(true);
-        }
-        if(setSearchBuyerModalOpen){
-            setSearchBuyerModalOpen(false);
+        if(user.role ==='ROLE_ADMIN'){
+            if(setUpdateData){
+                setUpdateData(buyerData);
+            }
+            if(setUpdateModalOpen){
+                setUpdateModalOpen(true);
+            }
+            if(setSearchBuyerModalOpen){
+                setSearchBuyerModalOpen(false);
+            }
         }
     };
 

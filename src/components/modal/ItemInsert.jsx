@@ -65,7 +65,7 @@ const ItemInsert = ({insertModalOpen, setInsertModalOpen, fetchItemList}) => {
 
         try {
             const result = await fetchData({
-                config: {method: "GET", url: "/api/Item/check"},
+                config: {method: "GET", url: "/api/item/check"},
                 params: {
                     itemcd: formData.itemcd
                 }

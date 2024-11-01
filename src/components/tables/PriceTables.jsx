@@ -1,13 +1,17 @@
 // eslint-disable-next-line react/prop-types
+import {useAuth} from "../../context/AuthContext.jsx";
+
 const PriceTables = ({ data, setUpdateModalOpen, setUpdateData }) => {
     const headStyle = 'border border-erp-gray text-center py-2 font-semibold';
     const tdStyle = 'border border-erp-gray text-center text-sm py-3';
     const trStyle = 'bg-white cursor-pointer hover:bg-gray-200';
     const price = ['순번', '판매부번코드', '품명', '바이어코드', '바이어명', '공급가', '부가세', '판매가격', '단위', '등록일'];
-
+    const { user } = useAuth();
     const onClickTable = (priceData) => {
-        setUpdateData(priceData);
-        setUpdateModalOpen(true);
+        if(user.role === 'ROLE_ADMIN'){
+            setUpdateData(priceData);
+            setUpdateModalOpen(true);
+        }
     };
 
     return (

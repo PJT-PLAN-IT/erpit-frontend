@@ -5,6 +5,7 @@ import useAxios from "../../hook/useAxios.js";
 import {useEffect, useState} from "react";
 import ItemUpdate from "../../components/modal/ItemUpdate.jsx";
 import ItemInsert from "../../components/modal/ItemInsert.jsx";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 
 const initUpdateData = {
@@ -26,6 +27,7 @@ function ItemList() {
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
     const [updateData, setUpdateData] = useState(initUpdateData);
     const [item, setItem] = useState("");
+    const { user } = useAuth();
 
     useEffect(() => {
         fetchItemList();
@@ -68,7 +70,9 @@ function ItemList() {
                     <Buttons style={`green-sm`} word={`search`} onClick={searchItem}/>
                     <Buttons style={`white-sm`} word={`reset`} onClick={reset}/>
                 </div>
-                <Buttons style={`green-sm`} word={`add`} onClick={() => setInsertModalOpen(true)}/>
+                {user.role ==='ROLE_ADMIN'&& (
+                    <Buttons style={`green-sm`} word={`add`} onClick={() => setInsertModalOpen(true)}/>
+                ) }
             </div>
             <ItemTables data={result} setUpdateModalOpen={setUpdateModalOpen} setUpdateData={setUpdateData}/>
             <ItemInsert insertModalOpen={insertModalOpen} setInsertModalOpen={setInsertModalOpen}

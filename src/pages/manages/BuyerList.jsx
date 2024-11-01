@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 import BuyerInsert from "../../components/modal/BuyerInsert.jsx";
 import useAxios from "../../hook/useAxios.js";
 import BuyerUpdate from "../../components/modal/BuyerUpdate.jsx";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 const initUpdateData = {
     buyerid: '',
@@ -26,6 +27,7 @@ function BuyerList() {
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
     const [updateData, setUpdateData] = useState(initUpdateData);
     const [buyer, setBuyer] = useState("");
+    const { user } = useAuth();
 
     const onSearchParam = (e) => {
         setBuyer(e);
@@ -69,7 +71,9 @@ function BuyerList() {
                     <Buttons style={`green-sm`} word={`search`} onClick={searchBuyer}/>
                     <Buttons style={`white-sm`} word={`reset`} onClick={reset}/>
                 </div>
-                <Buttons style={`green-sm`} word={`add`} onClick={() => setInsertModalOpen(true)}/>
+                {user.role ==='ROLE_ADMIN'&& (
+                    <Buttons style={`green-sm`} word={`add`} onClick={() => setInsertModalOpen(true)}/>
+                )}
             </div>
             <BuyerTables data={result} setUpdateModalOpen={setUpdateModalOpen} setUpdateData={setUpdateData}/>
             <BuyerInsert insertModalOpen={insertModalOpen} setInsertModalOpen={setInsertModalOpen} fetchBuyerList={fetchBuyerList}/>
