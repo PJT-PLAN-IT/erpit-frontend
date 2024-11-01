@@ -611,11 +611,11 @@ function ItemTable({ setForm, form }) {
       ordersupplyprice: 0,
       ordersurtax: 0,
       ordersalesprice: 0,
-      originprice: newItem.originPrice,
-      itempriceid: newItem.itemPriceId,
-      itemcd: newItem.itemCd,
-      itemnm: newItem.itemNm,
-      deliverydate: newItem.addDate,
+      originprice: newItem.originprice,
+      itempriceid: newItem.itempriceId,
+      itemcd: newItem.itemcd,
+      itemnm: newItem.itemnm,
+      deliverydate: newItem.adddate,
     };
     setForm((prevForm) => ({
       ...prevForm,
@@ -661,28 +661,28 @@ function ItemTable({ setForm, form }) {
                   {index + 1}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.itemPriceId}
+                  {result.itempriceid}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.itemNm}
+                  {result.itemnm}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.buyerCd}
+                  {result.buyercd}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.buyerNm}
+                  {result.buyernm}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.originPrice}
+                  {result.originprice}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.buyerSupplyPrice}
+                  {result.buyersupplyprice}
                 </td>
                 <td className="border border-erp-gray text-center">
                   {result.surtax}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.salesPrice}
+                  {result.salesprice}
                 </td>
                 <td className="border border-erp-gray text-center">
                   {result.unit}
