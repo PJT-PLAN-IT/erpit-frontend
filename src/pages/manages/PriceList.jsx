@@ -5,6 +5,7 @@ import useAxios from "../../hook/useAxios.js";
 import {useEffect, useState} from "react";
 import PriceUpdate from "../../components/modal/PriceUpdate.jsx";
 import {useNavigate} from "react-router-dom";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 const initUpdateData = {
     itempriceid: '',
@@ -27,6 +28,7 @@ function PriceList() {
     const [updateData, setUpdateData] = useState(initUpdateData);
     const [buyer, setBuyer] = useState("");
     const [item, setItem] = useState("");
+    const { user } = useAuth();
 
     const onSearchBuyer = (e) => {
         setBuyer(e);
@@ -83,7 +85,9 @@ function PriceList() {
                     <Buttons style={`green-sm`} word={`search`} onClick={searchPrice}/>
                     <Buttons style={`white-sm`} word={`reset`} onClick={reset}/>
                 </div>
+                {user.role ==='ROLE_ADMIN'&& (
                 <Buttons style={`green-sm`} word={`add`} onClick={goInsert}/>
+                ) }
             </div>
             <PriceTables data={result} setUpdateModalOpen={setUpdateModalOpen} setUpdateData={setUpdateData}/>
             <PriceUpdate updateModalOpen={updateModalOpen} setUpdateModalOpen={setUpdateModalOpen}
