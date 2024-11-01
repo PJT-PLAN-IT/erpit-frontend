@@ -13,6 +13,7 @@ function OrderList() {
   const [buyerInfo, setBuyerInfo] = useState("");
   const [tableList, setTableList] = useState([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+
   /*검색 상태 저장 */
   let [searchForm, setSearchForm] = useState({
     buyer: "",
@@ -20,12 +21,13 @@ function OrderList() {
     month: "",
     year: "",
   });
-
+  console.log(searchForm);
   const navigate = useNavigate();
   const { fetchData } = useAxios();
   const { user } = useAuth();
   console.log(user);
   const currentMonth = new Date().getMonth() + 1;
+  console.log(currentMonth);
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
@@ -149,7 +151,7 @@ function OrderList() {
             <div className="flex ">
               <p className="px-4  pt-1">바이어</p>
               <input
-                className="w-60 px-1 border hover:cursor-pointer"
+                className="w-60 px-1 border border-erp-gray hover:cursor-pointer"
                 placeholder="검색어를 입력하세요"
                 type="text"
                 value={
@@ -172,7 +174,10 @@ function OrderList() {
 
             <div className="flex">
               <p className=" px-4 pt-1">요청상태</p>
-              <select className="px-10" onChange={handleStatusChange}>
+              <select
+                className="px-10 border border-erp-gray"
+                onChange={handleStatusChange}
+              >
                 <option defaultChecked>전체</option>
                 {Status.map((stat) => (
                   <option
@@ -188,12 +193,16 @@ function OrderList() {
 
             <div className=" flex">
               <p className="px-4  pt-1">년도</p>
-              <select className="px-10" onChange={handleYearChange}>
-                <option defaultValue={true}></option>
+              <select
+                className="px-10  border border-erp-gray"
+                onChange={handleYearChange}
+                defaultValue={currentYear}
+              >
                 {year.map((year) => (
                   <option
                     key={year.id}
                     value={year.id}
+                    selected={year.id === currentYear}
                     className="hover:bg-gray-400"
                   >
                     {year.name}
@@ -203,12 +212,16 @@ function OrderList() {
             </div>
             <div className="flex">
               <p className=" px-4 pt-1">월별 </p>
-              <select className="px-10" onChange={handleMonthChange}>
-                <option defaultValue={true}></option>
+              <select
+                className="px-10  border border-erp-gray"
+                onChange={handleMonthChange}
+                defaultValue={currentMonth}
+              >
                 {months.map((month) => (
                   <option
                     key={month.id}
                     value={month.id}
+                    selected={month.id === currentMonth}
                     className="hover:bg-gray-400"
                   >
                     {month.name}
@@ -224,7 +237,7 @@ function OrderList() {
               조회
             </button>
           </form>
-          <Link to={"/orderForm"}>
+          <Link to={"/order"}>
             <button className="border px-4 py-1 bg-erp-green text-white ">
               등록
             </button>
@@ -265,13 +278,27 @@ function OrderList() {
                     onClick={() => showDetailPage(table.orderno, table.status)}
                     className={table.status === "REJECT" ? "bg-red-300" : ""}
                   >
-                    <td className="text-center">{index + 1}</td>
-                    <td className="text-center">{table.orderno}</td>
-                    <td className="text-center">{table.orderdate}</td>
-                    <td className="text-center">{table.buyernm}</td>
-                    <td className="text-center">{table.buyercode}</td>
-                    <td className="text-center">{table.adddate}</td>
-                    <td className="text-center">{getStatName(table.status)}</td>
+                    <td className="text-center border border-erp-gray">
+                      {index + 1}
+                    </td>
+                    <td className="text-center border border-erp-gray">
+                      {table.orderno}
+                    </td>
+                    <td className="text-center border border-erp-gray">
+                      {table.orderdate}
+                    </td>
+                    <td className="text-center border border-erp-gray">
+                      {table.buyernm}
+                    </td>
+                    <td className="text-center border border-erp-gray">
+                      {table.buyercode}
+                    </td>
+                    <td className="text-center border border-erp-gray">
+                      {table.adddate}
+                    </td>
+                    <td className="text-center border border-erp-gray">
+                      {getStatName(table.status)}
+                    </td>
                   </tr>
                 ))}
               </tbody>

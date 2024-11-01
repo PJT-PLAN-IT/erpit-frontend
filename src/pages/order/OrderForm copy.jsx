@@ -51,8 +51,8 @@ function OrderForm() {
   const handleItemChange = (id, field, value) => {
     setForm((prevForm) => ({
       ...prevForm,
-      items: prevForm.items.map((item, index) => {
-        if (index === id) {
+      items: prevForm.items.map((item) => {
+        if (item.itemcd === id) {
           const updatedItem = { ...item, [field]: value };
           updatedItem.totalprice =
             (updatedItem.setprice + updatedItem.tax) * updatedItem.quantity;
@@ -121,8 +121,8 @@ function OrderForm() {
 
   /*오더 날짜 변화 저장 */
   const handleDateChange = (itemid, event) => {
-    const newItemList = form.items.map((item, index) =>
-      index === itemid
+    const newItemList = form.items.map((item) =>
+      item.itemcd === itemid
         ? { ...item, deliverydate: event.target.value || "" }
         : item
     );
@@ -472,7 +472,7 @@ function OrderForm() {
                           value={item.orderqty}
                           onChange={(e) =>
                             handleItemChange(
-                              index,
+                              item.itemcd,
                               "orderqty",
                               parseInt(e.target.value) || 0
                             )
@@ -490,7 +490,7 @@ function OrderForm() {
                           value={item.ordersupplyprice}
                           onChange={(e) =>
                             handleItemChange(
-                              index,
+                              item.itemcd,
                               "ordersupplyprice",
                               parseFloat(e.target.value) || 0
                             )
@@ -523,7 +523,9 @@ function OrderForm() {
                       <td className="text-center border border-erp-gray">
                         <input
                           type="date"
-                          onChange={(event) => handleDateChange(index, event)}
+                          onChange={(event) =>
+                            handleDateChange(item.itemcd, event)
+                          }
                         />
                       </td>
                       <td className="text-center  border border-erp-gray">

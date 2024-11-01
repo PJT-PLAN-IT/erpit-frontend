@@ -177,12 +177,16 @@ function OrderStatList() {
 
             <div className=" flex">
               <p className="px-4  pt-1">년도</p>
-              <select className="px-10" onChange={handleYearChange}>
-                <option defaultValue={true}></option>
+              <select
+                className="px-10  border border-erp-gray"
+                onChange={handleYearChange}
+                defaultValue={currentYear}
+              >
                 {year.map((year) => (
                   <option
                     key={year.id}
                     value={year.id}
+                    selected={year.id === currentYear}
                     className="hover:bg-gray-400"
                   >
                     {year.name}
@@ -192,12 +196,16 @@ function OrderStatList() {
             </div>
             <div className="flex">
               <p className=" px-4 pt-1">월별 </p>
-              <select className="px-10" onChange={handleMonthChange}>
-                <option defaultValue={true}></option>
+              <select
+                className="px-10  border border-erp-gray"
+                onChange={handleMonthChange}
+                defaultValue={currentMonth}
+              >
                 {months.map((month) => (
                   <option
                     key={month.id}
                     value={month.id}
+                    selected={month.id === currentMonth}
                     className="hover:bg-gray-400"
                   >
                     {month.name}

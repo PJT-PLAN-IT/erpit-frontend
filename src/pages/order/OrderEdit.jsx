@@ -165,7 +165,7 @@ function OrderEdit() {
   /*요청상태 검색 변화 저장 */
   const handleDateChange = (itemid, event) => {
     const newItemList = detail.itemList.map((item) =>
-      item.itemid === itemid
+      item.orderitemid === itemid
         ? { ...item, deliverydate: event.target.value || "" }
         : item
     );
@@ -450,14 +450,14 @@ function OrderEdit() {
                           type="date"
                           value={item.deliverydate || ""}
                           onChange={(event) =>
-                            handleDateChange(item.itemid, event)
+                            handleDateChange(item.orderitemid, event)
                           }
                         />
                       ) : (
                         <input
                           type="date"
                           onChange={(event) =>
-                            handleDateChange(item.itemid, event)
+                            handleDateChange(item.orderitemid, event)
                           }
                         />
                       )}
@@ -484,10 +484,12 @@ function OrderEdit() {
                     {calculateTotalTax().toLocaleString()}
                   </td>
                   <td className="text-center border border-erp-gray">
-                    {calculateTotalsupplyPrice().toLocaleString()}
+                    {calculateTotalPrice().toLocaleString()}
                   </td>
                   <td className="text-center border border-erp-gray">
-                    {calculateTotalPrice().toLocaleString()}
+                    {calculateTotalSum().toLocaleString(undefined, {
+                      maximumFractionDigits: 3,
+                    })}
                   </td>
                   <td
                     colSpan={2}
@@ -543,10 +545,10 @@ function ItemTable({ setDetail, detail }) {
 
   const addToOrderTable = (newItem) => {
     const updatedItem = {
-      orderitemid: newItem.itemPriceId,
-      itemcd: newItem.itemCd,
-      itemnm: newItem.itemNm,
-      originprice: newItem.originPrice,
+      orderitemid: newItem.itempriceid,
+      itemcd: newItem.itemcd,
+      itemnm: newItem.itemnm,
+      originprice: newItem.originprice,
       stock: 100,
       unit: newItem.unit,
       orderqty: 0,
@@ -597,35 +599,35 @@ function ItemTable({ setDetail, detail }) {
             {searchResult.map((result, index) => (
               <tr
                 className="hover:cursor-pointer hover:bg-gray-200"
-                key={result.itemPriceId}
+                key={result.itempriceid}
                 onClick={() => addToOrderTable(result)}
               >
                 <td className="border border-erp-gray text-center">
                   {index + 1}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.itemPriceId}
+                  {result.itempriceid}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.itemNm}
+                  {result.itemnm}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.buyerCd}
+                  {result.buyercd}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.buyerNm}
+                  {result.buyernm}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.originPrice}
+                  {result.originprice}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.buyerSupplyPrice}
+                  {result.buyersupplyprice}
                 </td>
                 <td className="border border-erp-gray text-center">
                   {result.surtax}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {result.salesPrice}
+                  {result.salesprice}
                 </td>
                 <td className="border border-erp-gray text-center">
                   {result.unit}
