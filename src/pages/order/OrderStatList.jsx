@@ -101,7 +101,7 @@ function OrderStatList() {
   /*오더내역 리스트 검색 기능 */
   const submitForm = async () => {
     const searchOrders = {
-      buyer: searchForm.buyer || "",
+      buyer: buyerInfo.buyercd || "",
       status: searchForm.orderStatus || "",
       month: searchForm.month,
       year: searchForm.year,
@@ -244,7 +244,7 @@ function OrderStatList() {
 
         <div className="flex items-center justify-center mt-10 max-h-[600px] overflow-y-auto bg-gray-100 ">
           {tableList && tableList.length > 0 ? (
-            <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2  ">
+            <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2 bg-white  ">
               <thead className="sticky top-0 border border-erp-gray">
                 <tr className="bg-erp-mint ">
                   <th className="p-1 border border-erp-gray ml-10 w-[10%]">

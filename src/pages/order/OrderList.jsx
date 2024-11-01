@@ -114,7 +114,7 @@ function OrderList() {
   const submitForm = async () => {
     const searchOrders = {
       user: user.usercd,
-      buyer: searchForm.buyer || "",
+      buyer: buyerInfo.buyercd || "",
       status: searchForm.orderStatus || "",
       month: searchForm.month,
       year: searchForm.year,
@@ -155,7 +155,7 @@ function OrderList() {
                 placeholder="검색어를 입력하세요"
                 type="text"
                 value={
-                  buyerInfo ? `${buyerInfo.buyerNm} / ${buyerInfo.buyerCd}` : ""
+                  buyerInfo ? `${buyerInfo.buyernm} / ${buyerInfo.buyercd}` : ""
                 }
                 onClick={() => setShowModal(true)}
               />
@@ -259,7 +259,7 @@ function OrderList() {
         )}
         <div className="flex items-center justify-center mt-10">
           {tableList && tableList.length > 0 ? (
-            <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2">
+            <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2 bg-white">
               <thead>
                 <tr className="bg-erp-mint">
                   <th className="p-1 border border-erp-gray">순번</th>
@@ -407,10 +407,10 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
                   {index + 1}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {buyer.buyerCd}
+                  {buyer.buyercd}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {buyer.buyerNm}
+                  {buyer.buyernm}
                 </td>
                 <td className="border border-erp-gray text-center">
                   {buyer.tel}
@@ -422,7 +422,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
                   {buyer.address}
                 </td>
                 <td className="border border-erp-gray text-center">
-                  {buyer.addDate}
+                  {buyer.adddate}
                 </td>
               </tr>
             ))}
