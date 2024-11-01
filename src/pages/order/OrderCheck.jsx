@@ -174,9 +174,7 @@ function OrderCheck() {
                 </td>
                 <td className="border border-erp-gray ">
                   <select onChange={handleStatusChange}>
-                    <option value={detail.status} defaultChecked={true}>
-                      승인요청
-                    </option>
+                    <option value={"APRV_REQ"}>승인요청</option>
                     <option value={"REJECT"}>반려</option>
                     <option value={"APRV_CMPT"}>승인완료</option>
                   </select>
@@ -198,7 +196,7 @@ function OrderCheck() {
                           </option>
                         ))}
                       </select>
-                      {detail.reject === "ETC" ? (
+                      {detail.rejectcode === "ETC" ? (
                         <input
                           className="border border-erp-gray w-[200px]"
                           type="text"
