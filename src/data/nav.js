@@ -15,10 +15,6 @@ const adminRoutes = [
         path: "/order/statlist",
         name: "요청 오더 조회",
       },
-      {
-        path: "/order/check",
-        name: "오더 내역 조회",
-      },
     ],
   },
   {
