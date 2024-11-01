@@ -221,11 +221,6 @@ function OrderStatList() {
               조회
             </button>
           </form>
-          <Link to={"/orderForm"}>
-            <button className="border px-4 py-1 bg-erp-green text-white ">
-              등록
-            </button>
-          </Link>
         </div>
 
         {showModal && (
