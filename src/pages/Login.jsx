@@ -1,7 +1,7 @@
 // noinspection SpellCheckingInspection,JSIgnoredPromiseFromCall,JSCheckFunctionSignatures
 
 import { useAuth } from "../context/AuthContext.jsx";
-import { Navigate } from "react-router-dom";
+import {Navigate, useNavigate} from "react-router-dom";
 import { useState } from "react";
 import useAxios from "../hook/useAxios.js";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
@@ -23,7 +23,7 @@ const Login = () => {
       [name]: value,
     });
   };
-
+  const navigator = useNavigate();
   const onClickLogin = async () => {
     try {
       const resultData = await fetchData({
@@ -31,13 +31,21 @@ const Login = () => {
         body: input,
       });
       if (resultData) {
-        setUser({
-          usercd: resultData.data.usercd,
-          usernm: resultData.data.usernm,
-          role: resultData.data.role,
-          accessToken: resultData.data.accessToken,
-        });
-        saveAccessToken(resultData.data.accessToken);
+        console.log(resultData.message);
+        if(resultData.message === "password does not match"){
+          alert("로그인 실패!");
+          return;
+        }
+          setUser({
+            usercd: resultData.data.usercd,
+            usernm: resultData.data.usernm,
+            role: resultData.data.role,
+            accessToken: resultData.data.accessToken,
+          });
+          saveAccessToken(resultData.data.accessToken);
+        if (resultData.data.isInitPw === 'Y') {
+          navigator('/passchange');
+        }
       } else if (error) {
         console.error("Error: ", error);
       }
