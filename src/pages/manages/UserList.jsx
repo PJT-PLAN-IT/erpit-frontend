@@ -63,7 +63,7 @@ function UserList() {
         <div className={`flex flex-col p-10`}>
             <div className={`flex justify-between mb-2 mt-10`}>
                 <div className={`flex`}>
-                    <Input search={'emp'} searchData={onSearchParam} data={emp}/>
+                    <Input search={'user'} searchData={onSearchParam} data={emp}/>
                     <Buttons style={`green-sm`} word={`search`} onClick={searchUser}/>
                     <Buttons style={`green-sm`} word={`reset`} onClick={reset}/>
                 </div>

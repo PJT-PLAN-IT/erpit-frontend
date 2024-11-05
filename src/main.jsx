@@ -7,12 +7,12 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <AuthProvider>
-    <div className={`flex h-screen bg-erp-soft-gray`}>
-      <div className={`flex flex-col w-full`}>
+    {/*<div className={`flex h-screen bg-erp-soft-gray`}>*/}
+    {/*  <div className={`flex flex-col w-full`}>*/}
         <BrowserRouter>
           <App />
         </BrowserRouter>
-      </div>
-    </div>
+    {/*  </div>*/}
+    {/*</div>*/}
   </AuthProvider>
 );

@@ -13,7 +13,7 @@ const PrivateRoute = ({sidebar}) => {
                     <SideBarContent/>
                     <div className={`flex flex-col w-full`}>
                         <Header/>
-                        <div className={`m-10`}>
+                        <div className={`m-10 h-full`}>
                             <Outlet/>
                         </div>
                     </div>
