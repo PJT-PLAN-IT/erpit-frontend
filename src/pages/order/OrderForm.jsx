@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import useAxios from "../../hook/useAxios";
@@ -260,145 +262,132 @@ function OrderForm() {
 
   return (
     <div className="flex">
-      <div className="flex-col items-center justify-center bg-erp-soft-gray p-7 w-[100%]  ">
-        <div className="flex justify-self-end gap-4 w-[150px] my-10 pl-12 ">
-          <button
-            className="border border-erp-gray px-4 bg-white text-black"
-            onClick={deleteOrderForm}
-          >
-            삭제
-          </button>
-          <button
-            className="border border-erp-gray px-4 bg-erp-green text-white"
-            onClick={submitOrderForm}
-          >
-            등록
-          </button>
-        </div>
-        <div className="headerTable ">
-          <table className="border border-erp-gray border-collapse w-[100%] mt-10 bg-white">
-            <tr>
-              <td className="border border-erp-gray bg-erp-mint text-center">
-                오더번호
-              </td>
-              <td className="border border-erp-gray bg-gray-300"></td>
-              <td className="border border-erp-gray bg-erp-mint text-center">
-                주문일자
-              </td>
-              <td className="border border-erp-gray">
-                <input
-                  className="w-[90%]"
-                  type="date"
-                  onChange={handleOrderDateChange}
-                />
-              </td>
-              <td className="border border-erp-gray bg-erp-mint text-center">
-                등록일자
-              </td>
-              <td className="border border-erp-gray">{currentDate}</td>
-            </tr>
-            <tr>
-              <td className="border border-erp-gray bg-erp-mint text-center">
-                직원코드
-              </td>
-              <td>{form.usercd}</td>
-              <td className="border border-erp-gray bg-erp-mint text-center ">
-                바이어 코드
-              </td>
-              <td className="border border-erp-gray">
-                <input
-                  className="hover:cursor-pointer"
-                  type="text"
-                  placeholder="바이어코드 검색"
-                  value={buyerInfo ? `${buyerInfo.buyercd}` : ""}
-                  onClick={() => setShowModal(true)}
-                />
-                {buyerInfo.buyercd && (
-                  <button
-                    onClick={() => {
-                      setBuyerInfo("");
-                      setForm((prev) => ({ ...prev, buyer: "" }));
-                    }}
-                    className=" px-2 text-black hover:text-gray-600"
-                  >
-                    ✕
-                  </button>
-                )}
-              </td>
-              <td className="border border-erp-gray bg-erp-mint text-center">
-                바이어명
-              </td>
-              <td className="border border-erp-gray ">
-                <input
-                  className="hover:cursor-pointer"
-                  type="text"
-                  placeholder="바이어명 검색"
-                  value={buyerInfo ? `${buyerInfo.buyernm}` : ""}
-                  onClick={() => setShowModal(true)}
-                />
-                {buyerInfo.buyernm && (
-                  <button
-                    onClick={() => {
-                      setBuyerInfo("");
-                      setForm((prev) => ({ ...prev, buyer: "" }));
-                    }}
-                    className=" px-2 text-black hover:text-gray-600"
-                  >
-                    ✕
-                  </button>
-                )}
-              </td>
-            </tr>
-            <tr className="">
-              <td className="border border-erp-gray bg-erp-mint text-center">
-                상태관리
-              </td>
-              <td className="border border-erp-gray">
-                <select className="px-10" onChange={handleStatusChange}>
-                  <option
-                    value={"CREATE"}
-                    className="border border-erp-gray hover:bg-gray-400"
-                  >
-                    생성중
-                  </option>
-                </select>
-              </td>
-              <>
-                {form.status === "REJECT" ? (
-                  <>
-                    <td className="border border-erp-gray bg-erp-mint text-center">
-                      반려사유
-                    </td>
-                    <td className=" border-erp-gray border flex gap-5 text-center">
-                      <select className="px-10" onChange={handleRejectChange}>
-                        {rejects.map((reject) => (
-                          <option
-                            key={reject.id}
-                            value={reject.id}
-                            className="border border-erp-gray hover:bg-gray-400"
-                          >
-                            {reject.name}
-                          </option>
-                        ))}
-                      </select>
-                      {form.reject === "ETC" ? (
-                        <input
-                          className="border border-erp-gray w-[200px]"
-                          type="text"
-                          placeholder="기타사유를 입력하세요"
-                          onChange={handleRejectInfoChange}
-                        />
-                      ) : (
-                        ""
-                      )}
-                    </td>
-                  </>
-                ) : (
-                  ""
-                )}
-              </>
-            </tr>
-          </table>
+      <div className="flex-col items-center justify-center bg-erp-soft-gray p-7 w-[100%] relative h-max  ">
+        <div className="absolute -top-[20px] left-1/2 -translate-x-1/2 w-[100%]">
+          <div className="flex justify-self-end my-10 pl-12 ">
+            <button
+              className="border border-erp-gray px-4 bg-erp-green text-white"
+              onClick={submitOrderForm}
+            >
+              등록
+            </button>
+          </div>
+          <div className="headerTable ">
+            <table className="border border-erp-gray border-collapse w-[100%] mt-10 bg-white">
+              <tr>
+                <td className="border border-erp-gray bg-erp-mint text-center">
+                  오더번호
+                </td>
+                <td className="border border-erp-gray bg-gray-300"></td>
+                <td className="border border-erp-gray bg-erp-mint text-center">
+                  주문일자
+                </td>
+                <td className="border border-erp-gray">
+                  <input
+                    className="w-[90%]"
+                    type="date"
+                    onChange={handleOrderDateChange}
+                  />
+                </td>
+                <td className="border border-erp-gray bg-erp-mint text-center">
+                  등록일자
+                </td>
+                <td className="border border-erp-gray">{currentDate}</td>
+              </tr>
+              <tr>
+                <td className="border border-erp-gray bg-erp-mint text-center">
+                  직원코드
+                </td>
+                <td>{form.usercd}</td>
+                <td className="border border-erp-gray bg-erp-mint text-center ">
+                  바이어 코드
+                </td>
+                <td className="border border-erp-gray">
+                  <input
+                    className="hover:cursor-pointer"
+                    type="text"
+                    placeholder="바이어코드 검색"
+                    value={buyerInfo ? `${buyerInfo.buyercd}` : ""}
+                    onClick={() => setShowModal(true)}
+                  />
+                  {buyerInfo.buyercd && (
+                    <button
+                      onClick={() => {
+                        setBuyerInfo("");
+                        setForm((prev) => ({ ...prev, buyer: "" }));
+                      }}
+                      className=" px-2 text-black hover:text-gray-600"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </td>
+                <td className="border border-erp-gray bg-erp-mint text-center">
+                  바이어명
+                </td>
+                <td className="border border-erp-gray ">
+                  <input
+                    className="hover:cursor-pointer"
+                    type="text"
+                    placeholder="바이어명 검색"
+                    value={buyerInfo ? `${buyerInfo.buyernm}` : ""}
+                    onClick={() => setShowModal(true)}
+                  />
+                  {buyerInfo.buyernm && (
+                    <button
+                      onClick={() => {
+                        setBuyerInfo("");
+                        setForm((prev) => ({ ...prev, buyer: "" }));
+                      }}
+                      className=" px-2 text-black hover:text-gray-600"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </td>
+              </tr>
+              <tr className="">
+                <td className="border border-erp-gray bg-erp-mint text-center">
+                  상태관리
+                </td>
+                <td className="border border-erp-gray px-2">생성중</td>
+                <>
+                  {form.status === "REJECT" ? (
+                    <>
+                      <td className="border border-erp-gray bg-erp-mint text-center">
+                        반려사유
+                      </td>
+                      <td className=" border-erp-gray border flex gap-5 text-center">
+                        <select className="px-10" onChange={handleRejectChange}>
+                          {rejects.map((reject) => (
+                            <option
+                              key={reject.id}
+                              value={reject.id}
+                              className="border border-erp-gray hover:bg-gray-400"
+                            >
+                              {reject.name}
+                            </option>
+                          ))}
+                        </select>
+                        {form.reject === "ETC" ? (
+                          <input
+                            className="border border-erp-gray w-[200px]"
+                            type="text"
+                            placeholder="기타사유를 입력하세요"
+                            onChange={handleRejectInfoChange}
+                          />
+                        ) : (
+                          ""
+                        )}
+                      </td>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </>
+              </tr>
+            </table>
+          </div>
         </div>
         {showModal && (
           <>
@@ -414,166 +403,163 @@ function OrderForm() {
             />
           </>
         )}
-        <div className=" mt-10 flex-col w-[100%]">
-          <div className="orderListTable mt-5 fixed w-[82.2%]">
-            <h1 className="text-center font-medium text-xl">
-              오더 품목 리스트
-            </h1>
-            <div className="max-h-96 overflow-y-auto">
-              <table className="border border-erp-gray border-collapse w-[100%] my-5 bg-white">
-                <thead className="sticky top-0 border border-erp-green">
-                  <tr>
-                    <th className="border border-erp-gray bg-erp-mint">순번</th>
-                    <th className="border border-erp-gray bg-erp-mint">
-                      판매부번 코드
-                    </th>
-                    <th className="border border-erp-gray bg-erp-mint">품명</th>
-                    <th className="border border-erp-gray bg-erp-mint">
-                      발주수량
-                    </th>
-                    <th className="border border-erp-gray bg-erp-mint">원가</th>
-                    <th className="border border-erp-gray bg-erp-mint">
-                      공급가
-                    </th>
-                    <th className="border border-erp-gray bg-erp-mint">
-                      부가세
-                    </th>
-                    <th className="border border-erp-gray bg-erp-mint">
-                      공급대가
-                    </th>
-                    <th className="border border-erp-gray bg-erp-mint">
-                      합계금액
-                    </th>
-                    <th className="border border-erp-gray bg-erp-mint">재고</th>
-                    <th className="border border-erp-gray bg-erp-mint">단위</th>
-                    <th className="border border-erp-gray bg-erp-mint">
-                      납품요청일
-                    </th>
-                    <th className="border border-erp-gray bg-erp-mint">삭제</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {form.items.map((item, index) => (
-                    <tr key={index}>
-                      <td className="text-center border border-erp-gray">
-                        {index + 1}
-                      </td>
-                      <td className="text-center border border-erp-gray">
-                        {item.itemcd}
-                      </td>
-                      <td className="text-center border border-erp-gray">
-                        {item.itemnm}
-                      </td>
-                      <td className="text-center border border-erp-gray">
-                        <input
-                          className="text-center"
-                          type="text"
-                          min="0"
-                          value={item.orderqty}
-                          onChange={(e) =>
-                            handleItemChange(
-                              index,
-                              "orderqty",
-                              parseInt(e.target.value) || 0
-                            )
-                          }
-                        />
-                      </td>
-                      <td className="text-center border border-erp-gray">
-                        {item.originprice}
-                      </td>
-                      <td className="text-center border border-erp-gray">
-                        <input
-                          className="text-center"
-                          type="text"
-                          min="0"
-                          value={item.ordersupplyprice}
-                          onChange={(e) =>
-                            handleItemChange(
-                              index,
-                              "ordersupplyprice",
-                              parseFloat(e.target.value) || 0
-                            )
-                          }
-                        />
-                      </td>
-                      <td className="text-center border border-erp-gray">
-                        {
-                          (item.ordersurtax = Math.round(
-                            item.ordersupplyprice / 10
-                          ))
+        <div className="orderListTable mt-5 absolute top-[170px] left-1/2 -translate-x-1/2 w-[100%]">
+          <h1 className="text-center font-medium text-xl">오더 품목 리스트</h1>
+          <div className="max-h-60 overflow-y-auto">
+            <table className="border border-erp-gray border-collapse w-[100%] my-5 bg-white">
+              <thead className="sticky top-0 border border-erp-green">
+                <tr>
+                  <th className="border border-erp-gray bg-erp-mint">순번</th>
+                  <th className="border border-erp-gray bg-erp-mint">
+                    판매부번 코드
+                  </th>
+                  <th className="border border-erp-gray bg-erp-mint">품명</th>
+                  <th className="border border-erp-gray bg-erp-mint">
+                    발주수량
+                  </th>
+                  <th className="border border-erp-gray bg-erp-mint">원가</th>
+                  <th className="border border-erp-gray bg-erp-mint">공급가</th>
+                  <th className="border border-erp-gray bg-erp-mint">부가세</th>
+                  <th className="border border-erp-gray bg-erp-mint">
+                    공급대가
+                  </th>
+                  <th className="border border-erp-gray bg-erp-mint">
+                    합계금액
+                  </th>
+                  <th className="border border-erp-gray bg-erp-mint">재고</th>
+                  <th className="border border-erp-gray bg-erp-mint">단위</th>
+                  <th className="border border-erp-gray bg-erp-mint">
+                    납품요청일
+                  </th>
+                  <th className="border border-erp-gray bg-erp-mint">삭제</th>
+                </tr>
+              </thead>
+              <tbody>
+                {form.items.map((item, index) => (
+                  <tr key={index}>
+                    <td className="text-center border border-erp-gray">
+                      {index + 1}
+                    </td>
+                    <td className="text-center border border-erp-gray">
+                      {item.itemcd}
+                    </td>
+                    <td className="text-center border border-erp-gray">
+                      {item.itemnm}
+                    </td>
+                    <td className="text-center border border-erp-gray">
+                      <input
+                        className="m-auto text-center w-[70px] "
+                        type="text"
+                        maxLength="8"
+                        value={item.orderqty}
+                        onChange={(e) =>
+                          handleItemChange(
+                            index,
+                            "orderqty",
+                            parseInt(e.target.value) || 0
+                          )
                         }
-                      </td>
-                      <td className="text-center border border-erp-gray">
-                        {(item.ordersalesprice =
-                          item.ordersupplyprice +
-                          item.ordersurtax).toLocaleString(undefined, {
-                          maximumFractionDigits: 3,
-                        })}
-                      </td>
-                      <td className="text-center border border-erp-gray">
-                        {item.ordersalesprice * item.orderqty}
-                      </td>
-                      <td className="text-center border border-erp-gray">
-                        {item.stock}
-                      </td>
-                      <td className="text-center border border-erp-gray">
-                        {item.unit}
-                      </td>
-                      <td className="text-center border border-erp-gray">
-                        <input
-                          type="date"
-                          onChange={(event) => handleDateChange(index, event)}
-                        />
-                      </td>
-                      <td className="text-center  border border-erp-gray">
-                        <button onClick={() => deleteRow(index)}>
-                          {deleteIcon}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  <tr className="border border-erp-gray-t-2 sticky bottom-0 bg-slate-300 border border-erp-gray">
-                    <td colSpan={3} className="border border-erp-gray"></td>
-                    <td className="text-center border border-erp-gray">
-                      {calculateTotalQuantity()}
+                      />
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {calculateTotalOriginPrice().toLocaleString()}
+                      {item.originprice}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {calculateTotalSetPrice().toLocaleString()}
+                      <input
+                        className=" m-auto text-center  w-[70px]"
+                        type="text"
+                        maxLength="8"
+                        value={item.ordersupplyprice}
+                        onChange={(e) =>
+                          handleItemChange(
+                            index,
+                            "ordersupplyprice",
+                            parseFloat(e.target.value) || 0
+                          )
+                        }
+                      />
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {calculateTotalTax().toLocaleString()}
-                    </td>
-                    <td className="text-center border border-erp-gray">
-                      {calculateTotalsupplyPrice().toLocaleString()}
-                    </td>
-                    <td className="text-center border border-erp-gray">
-                      {calculateTotalPrice().toLocaleString()}
-                    </td>
-                    <td
-                      colSpan={2}
-                      className="text-center border border-erp-gray bg-erp-mint"
-                    >
-                      합계:
-                    </td>
-                    <td
-                      colSpan={3}
-                      className="text-center  border border-erp-gray"
-                    >
-                      {calculateTotalSum().toLocaleString(undefined, {
+                      {(item.ordersurtax = Math.round(
+                        item.ordersupplyprice / 10
+                      )).toLocaleString(undefined, {
                         maximumFractionDigits: 3,
                       })}
                     </td>
+                    <td className="text-center border border-erp-gray">
+                      {(item.ordersalesprice =
+                        item.ordersupplyprice +
+                        item.ordersurtax).toLocaleString(undefined, {
+                        maximumFractionDigits: 3,
+                      })}
+                    </td>
+                    <td className="text-center border border-erp-gray">
+                      {(item.ordersalesprice * item.orderqty).toLocaleString(
+                        undefined,
+                        {
+                          maximumFractionDigits: 3,
+                        }
+                      )}
+                    </td>
+                    <td className="text-center border border-erp-gray">
+                      {item.stock}
+                    </td>
+                    <td className="text-center border border-erp-gray">
+                      {item.unit}
+                    </td>
+                    <td className="text-center border border-erp-gray">
+                      <input
+                        type="date"
+                        onChange={(event) => handleDateChange(index, event)}
+                      />
+                    </td>
+                    <td className="text-center  border border-erp-gray">
+                      <button onClick={() => deleteRow(index)}>
+                        {deleteIcon}
+                      </button>
+                    </td>
                   </tr>
-                </tbody>
-              </table>
-            </div>
+                ))}
+                <tr className="border-erp-gray-t-2 sticky bottom-0 bg-slate-300 border border-erp-gray">
+                  <td colSpan={3} className="border border-erp-gray"></td>
+                  <td className="text-center border border-erp-gray">
+                    {calculateTotalQuantity()}
+                  </td>
+                  <td className="text-center border border-erp-gray">
+                    {calculateTotalOriginPrice().toLocaleString()}
+                  </td>
+                  <td className="text-center border border-erp-gray">
+                    {calculateTotalSetPrice().toLocaleString()}
+                  </td>
+                  <td className="text-center border border-erp-gray">
+                    {calculateTotalTax().toLocaleString()}
+                  </td>
+                  <td className="text-center border border-erp-gray">
+                    {calculateTotalsupplyPrice().toLocaleString()}
+                  </td>
+                  <td className="text-center border border-erp-gray">
+                    {calculateTotalPrice().toLocaleString()}
+                  </td>
+                  <td
+                    colSpan={2}
+                    className="text-center border border-erp-gray bg-erp-mint"
+                  >
+                    합계:
+                  </td>
+                  <td
+                    colSpan={3}
+                    className="text-center  border border-erp-gray"
+                  >
+                    {calculateTotalSum().toLocaleString(undefined, {
+                      maximumFractionDigits: 3,
+                    })}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <ItemTable setForm={setForm} form={form} />
         </div>
+        <ItemTable setForm={setForm} form={form} />
       </div>
     </div>
   );
@@ -582,19 +568,23 @@ function OrderForm() {
 function ItemTable({ setForm, form }) {
   const search = <FontAwesomeIcon icon={faMagnifyingGlass} />;
   const [item, setItem] = useState("");
-
   const [searchResult, setSearchResult] = useState([]);
   const { error, fetchData } = useAxios();
 
   const handleItem = (e) => {
     if (!form.buyercode) {
       alert("바이어 정보를 입력해주세요");
-      return false;
+      setItem("");
+      return;
     }
     setItem(e.target.value);
   };
 
   const fetchItemTable = async () => {
+    if (!form.buyercode) {
+      alert("바이어 정보를 입력해주세요");
+      return false;
+    }
     try {
       const response = await fetchData({
         config: {
@@ -615,7 +605,7 @@ function ItemTable({ setForm, form }) {
     const updatedItem = {
       ...newItem,
       orderqty: 0,
-      ordersupplyprice: 0,
+      ordersupplyprice: newItem.buyersupplyprice,
       ordersurtax: 0,
       ordersalesprice: 0,
       originprice: newItem.originprice,
@@ -630,21 +620,29 @@ function ItemTable({ setForm, form }) {
     }));
   };
 
+  const enterItemTable = (e) => {
+    if (e.key == "Enter") {
+      e.preventDefault();
+      fetchItemTable();
+    }
+  };
   return (
-    <div className="itemTable fixed w-[81.5%] top-[670px] left-[310px] ">
+    <div className="itemTable  absolute top-[450px] left-1/2 -translate-x-1/2 w-[100%]">
       <h1 className="text-center text-xl mt-1">바이어별 판매가 검색</h1>
-      <div className="flex gap-10 items-center ">
+      <div className="flex gap-5 items-center mt-2 ">
         <p className="text-gray-500">판매부번</p>
         <input
           type="text"
           className="p-1 border border-erp-gray"
+          value={item}
           onChange={handleItem}
+          onKeyDown={enterItemTable}
         />
-        <button className="-translate-x-16" onClick={fetchItemTable}>
+        <button className="-translate-x-12" onClick={fetchItemTable}>
           {search}
         </button>
       </div>
-      <div className="max-h-50 overflow-y-auto border mt-5">
+      <div className="max-h-60 overflow-y-auto mt-2">
         <table className="border border-erp-gray border-collapse w-[100%] my-5 bg-white">
           <thead className="sticky top-0 bg-erp-mint">
             <th className="p-1 border border-erp-gray bg-erp-mint">순번</th>
@@ -673,7 +671,7 @@ function ItemTable({ setForm, form }) {
                     {index + 1}
                   </td>
                   <td className="border border-erp-gray text-center">
-                    {result.itempriceid}
+                    {result.itemcd}
                   </td>
                   <td className="border border-erp-gray text-center">
                     {result.itemnm}
@@ -717,7 +715,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
   const [buyerValue, setBuyerValue] = useState("");
   const [buyers, setBuyers] = useState([]);
   const search = <FontAwesomeIcon icon={faMagnifyingGlass} />;
-
+  const [initLoad, setInitLoad] = useState(true);
   const storeBuyerValue = (e) => {
     setBuyerValue(e.target.value);
   };
@@ -743,6 +741,36 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     }
   };
 
+  useEffect(() => {
+    const searchBuyerCode = async () => {
+      try {
+        const result = await fetchData({
+          config: {
+            method: "GET",
+            url: `/api/buyer/list`,
+          },
+        });
+        if (result) {
+          console.log(result.data);
+          setBuyers(result.data);
+        }
+      } catch (error) {
+        console.error("디비 접속에 문제: ", error);
+      }
+    };
+    searchBuyerCode();
+    setInitLoad(false);
+  }, [initLoad]);
+
+  const FindBuyerCode = (e) => {
+    {
+      if (e.key == "Enter") {
+        e.preventDefault();
+        searchBuyerCode();
+      }
+    }
+  };
+
   const addBuyer = (buyer) => {
     console.log("Selected Buyer:", buyer);
     setBuyerInfo(buyer);
@@ -755,83 +783,212 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
         showModal ? "block" : "hidden"
       } fixed inset-0  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 bg-white w-[900px] h-[600px] flex-col p-10`}
     >
-      <h1 className="text-center  mb-10 font-bold">바이어 검색</h1>
-      <button
-        className="absolute top-4 right-4"
-        onClick={() => setShowModal(false)}
-      >
-        닫기
-      </button>
-      <div className="flex justify-around mb-40">
-        <form>
-          <div className="flex justify-between items-center gap-5 ">
-            <p>바이어</p>
-            <input
-              className="border border-erp-gray w-[200px] text-sm p-1"
-              type="text"
-              placeholder="검색어를 입력하세요"
-              onChange={storeBuyerValue}
-            />
-            <button
-              className="-translate-x-11"
-              type="button"
-              onClick={searchBuyerCode}
-            >
-              {search}
-            </button>
-          </div>
-        </form>
-      </div>
-
-      {buyers.length ? (
-        <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2">
-          <thead>
-            <tr className="border border-erp-gray bg-erp-mint">
-              <th className="border border-erp-gray p-1">순번</th>
-              <th className="border border-erp-gray p-1">바이어코드</th>
-              <th className="border border-erp-gray p-1">바이어명</th>
-              <th className="border border-erp-gray p-1">전화번호</th>
-              <th className="border border-erp-gray p-1">이메일</th>
-              <th className="border border-erp-gray p-1">주소</th>
-              <th className="border border-erp-gray p-1">등록일</th>
-            </tr>
-          </thead>
-          <tbody>
-            {buyers.map((buyer, index) => (
-              <tr
-                key={buyer.buyerId}
-                onClick={() => addBuyer(buyer)}
-                className="hover:cursor-pointer"
+      <div className="relative">
+        <h1 className="text-center text-2xl  mb-5 font-bold">바이어 검색</h1>
+        <button
+          className="absolute top-4 right-4"
+          onClick={() => setShowModal(false)}
+        >
+          ✕
+        </button>
+        <div className=" flex justify-start mb-14">
+          <form onSubmit={(e) => e.preventDefault()}>
+            <div className="flex justify-between items-center gap-2 ">
+              <p>바이어</p>
+              <input
+                className="border border-erp-gray w-[200px] text-xs p-1"
+                type="text"
+                placeholder="검색어를 입력하세요"
+                onChange={storeBuyerValue}
+                onKeyDown={FindBuyerCode}
+              />
+              <button
+                className="-translate-x-12 z-50  px-1"
+                type="button"
+                onClick={searchBuyerCode}
               >
-                <td className="border border-erp-gray text-center">
-                  {index + 1}
-                </td>
-                <td className="border border-erp-gray text-center">
-                  {buyer.buyercd}
-                </td>
-                <td className="border border-erp-gray text-center">
-                  {buyer.buyernm}
-                </td>
-                <td className="border border-erp-gray text-center">
-                  {buyer.tel}
-                </td>
-                <td className="border border-erp-gray text-center">
-                  {buyer.email}
-                </td>
-                <td className="border border-erp-gray text-center truncate w-48">
-                  {buyer.address}
-                </td>
-                <td className="border border-erp-gray text-center">
-                  {buyer.adddate}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className=" mp-10 mx-auto text-gray-400">검색 결과가 없습니다</p>
-      )}
+                {search}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {buyers.length ? (
+          <div className="absolute top-24 max-h-[450px] overflow-y-auto w-[100%] ">
+            <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2 ">
+              <thead className="sticky top-0 w-[100%]">
+                <tr className="border border-erp-gray bg-erp-mint">
+                  <th className="border border-erp-gray p-1">순번</th>
+                  <th className="border border-erp-gray p-1">바이어코드</th>
+                  <th className="border border-erp-gray p-1">바이어명</th>
+                  <th className="border border-erp-gray p-1">전화번호</th>
+                  <th className="border border-erp-gray p-1">이메일</th>
+                  <th className="border border-erp-gray p-1">주소</th>
+                  <th className="border border-erp-gray p-1">등록일</th>
+                </tr>
+              </thead>
+              <tbody>
+                {buyers.map((buyer, index) => (
+                  <tr
+                    key={buyer.buyerId}
+                    onClick={() => addBuyer(buyer)}
+                    className="hover:cursor-pointer hover:bg-erp-soft-gray"
+                  >
+                    <td className="border border-erp-gray text-center">
+                      {index + 1}
+                    </td>
+                    <td className="border border-erp-gray text-center">
+                      {buyer.buyercd}
+                    </td>
+                    <td className="border border-erp-gray text-center">
+                      {buyer.buyernm}
+                    </td>
+                    <td className="border border-erp-gray text-center">
+                      {buyer.tel}
+                    </td>
+                    <td className="border border-erp-gray text-center">
+                      {buyer.email}
+                    </td>
+                    <td className="border border-erp-gray text-center truncate w-48">
+                      {buyer.address}
+                    </td>
+                    <td className="border border-erp-gray text-center">
+                      {buyer.adddate}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="mp-10 text-center text-gray-400">
+            검색 결과가 없습니다
+          </p>
+        )}
+      </div>
     </div>
   );
 };
+// const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
+//   const { fetchData } = useAxios();
+//   const [buyerValue, setBuyerValue] = useState("");
+//   const [buyers, setBuyers] = useState([]);
+//   const search = <FontAwesomeIcon icon={faMagnifyingGlass} />;
+
+//   const storeBuyerValue = (e) => {
+//     setBuyerValue(e.target.value);
+//   };
+
+//   console.log(buyerValue);
+
+//   const searchBuyerCode = async () => {
+//     if (buyerValue) {
+//       try {
+//         const result = await fetchData({
+//           config: {
+//             method: "GET",
+//             url: `/api/buyer/list?buyer=${buyerValue}`,
+//           },
+//         });
+//         if (result) {
+//           console.log(result.data);
+//           setBuyers(result.data);
+//         }
+//       } catch (error) {
+//         console.error("디비 접속에 문제: ", error);
+//       }
+//     }
+//   };
+
+//   const addBuyer = (buyer) => {
+//     console.log("Selected Buyer:", buyer);
+//     setBuyerInfo(buyer);
+//     setShowModal(false);
+//   };
+
+//   return (
+//     <div
+//       className={`${
+//         showModal ? "block" : "hidden"
+//       } fixed inset-0  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 bg-white w-[900px] h-[600px] flex-col p-10`}
+//     >
+//       <h1 className="text-center  mb-10 font-bold">바이어 검색</h1>
+//       <button
+//         className="absolute top-4 right-4"
+//         onClick={() => setShowModal(false)}
+//       >
+//         닫기
+//       </button>
+//       <div className="flex justify-around mb-40">
+//         <form>
+//           <div className="flex justify-between items-center gap-5 ">
+//             <p>바이어</p>
+//             <input
+//               className="border border-erp-gray w-[200px] text-sm p-1"
+//               type="text"
+//               placeholder="검색어를 입력하세요"
+//               onChange={storeBuyerValue}
+//             />
+//             <button
+//               className="-translate-x-11"
+//               type="button"
+//               onClick={searchBuyerCode}
+//             >
+//               {search}
+//             </button>
+//           </div>
+//         </form>
+//       </div>
+
+//       {buyers.length ? (
+//         <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2">
+//           <thead>
+//             <tr className="border border-erp-gray bg-erp-mint">
+//               <th className="border border-erp-gray p-1">순번</th>
+//               <th className="border border-erp-gray p-1">바이어코드</th>
+//               <th className="border border-erp-gray p-1">바이어명</th>
+//               <th className="border border-erp-gray p-1">전화번호</th>
+//               <th className="border border-erp-gray p-1">이메일</th>
+//               <th className="border border-erp-gray p-1">주소</th>
+//               <th className="border border-erp-gray p-1">등록일</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {buyers.map((buyer, index) => (
+//               <tr
+//                 key={buyer.buyerId}
+//                 onClick={() => addBuyer(buyer)}
+//                 className="hover:cursor-pointer"
+//               >
+//                 <td className="border border-erp-gray text-center">
+//                   {index + 1}
+//                 </td>
+//                 <td className="border border-erp-gray text-center">
+//                   {buyer.buyercd}
+//                 </td>
+//                 <td className="border border-erp-gray text-center">
+//                   {buyer.buyernm}
+//                 </td>
+//                 <td className="border border-erp-gray text-center">
+//                   {buyer.tel}
+//                 </td>
+//                 <td className="border border-erp-gray text-center">
+//                   {buyer.email}
+//                 </td>
+//                 <td className="border border-erp-gray text-center truncate w-48">
+//                   {buyer.address}
+//                 </td>
+//                 <td className="border border-erp-gray text-center">
+//                   {buyer.adddate}
+//                 </td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       ) : (
+//         <p className=" mp-10 mx-auto text-gray-400">검색 결과가 없습니다</p>
+//       )}
+//     </div>
+//   );
+// };
 export default OrderForm;

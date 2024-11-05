@@ -1,51 +1,47 @@
 import { useState, useEffect } from "react";
 import useAxios from "../../hook/useAxios.js";
-import { useAuth } from "../../context/AuthContext.jsx";
 import { Status } from "../../data/status.js";
 import { months } from "../../data/month.js";
 import { year } from "../../data/year.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function OrderList() {
+function OrderStatList() {
   const [showModal, setShowModal] = useState(false);
   const [buyerInfo, setBuyerInfo] = useState("");
   const [tableList, setTableList] = useState([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const currentMonth = new Date().getMonth() + 1;
-  const currentYear = new Date().getFullYear();
-
   /*검색 상태 저장 */
   let [searchForm, setSearchForm] = useState({
     buyer: "",
     orderStatus: "",
-    month: currentMonth,
-    year: currentYear,
+    month: "",
+    year: "",
   });
 
-  console.log("searchForm:", searchForm);
   const navigate = useNavigate();
   const { fetchData } = useAxios();
-  const { user } = useAuth();
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
 
   useEffect(() => {
     const getOrderList = async () => {
       const finalData = {
-        user: user.usercd,
+        user: "",
         buyer: "",
-        status: "",
+        status: "APRV_REQ",
         month: currentMonth,
         year: currentYear,
       };
-      console.log("initial load Data: ", finalData);
+      console.log(finalData);
       try {
         const result = await fetchData({
           config: { method: "POST", url: "/api/order/list" },
           body: finalData,
         });
         if (result) {
-          console.log("result data from init: ", result.data);
+          console.log("db data:", result.data);
           setTableList(result.data);
         }
       } catch (error) {
@@ -95,30 +91,21 @@ function OrderList() {
   };
 
   /*디테일 페이지로 이동 */
-  const showDetailPage = (detailNo, detailStatus) => {
-    if (
-      detailStatus === "CREATE" ||
-      detailStatus === "APRV_CNCL" ||
-      detailStatus === "REJECT"
-    ) {
-      navigate("/order/edit", {
-        state: { detailNo: detailNo },
-      });
-    } else {
-      navigate("/order/detail", { state: { detailNo: detailNo } });
-    }
+  const showDetailPage = (detailNo) => {
+    navigate("/order/check", {
+      state: { detailNo: detailNo },
+    });
   };
 
   /*오더내역 리스트 검색 기능 */
   const submitForm = async () => {
     const searchOrders = {
-      user: user.usercd,
       buyer: buyerInfo.buyercd || "",
       status: searchForm.orderStatus || "",
       month: searchForm.month,
       year: searchForm.year,
     };
-    console.log("new search req: ", searchOrders);
+    console.log(searchOrders);
 
     try {
       const result = await fetchData({
@@ -145,9 +132,8 @@ function OrderList() {
       month: currentMonth,
       year: currentYear,
     });
-    setBuyerInfo("");
+
     const searchOrders = {
-      user: user.usercd,
       buyer: "",
       status: "",
       month: currentMonth,
@@ -179,11 +165,11 @@ function OrderList() {
     <div className="flex bg-gray-100 ">
       <div className="flex-row p-7 w-[100%]">
         <div className="flex justify-between mt-10">
-          <form className="flex justify-evenly gap-2">
-            <div className="flex -ml-4">
-              <p className="px-4 pt-1">바이어</p>
+          <form className="flex justify-evenly gap-10">
+            <div className="flex ">
+              <p className="px-4  pt-1">바이어</p>
               <input
-                className="w-60 px-1 border border-erp-gray hover:cursor-pointer"
+                className="w-60 px-1 border hover:cursor-pointer"
                 placeholder="검색어를 입력하세요"
                 type="text"
                 value={
@@ -191,30 +177,31 @@ function OrderList() {
                 }
                 onClick={() => setShowModal(true)}
               />
+              {buyerInfo.buyerCd && (
+                <button
+                  onClick={() => {
+                    setBuyerInfo("");
+                    setSearchForm((prev) => ({ ...prev, buyer: "" }));
+                  }}
+                  className=" px-2 text-black hover:text-gray-600"
+                >
+                  ✕
+                </button>
+              )}
             </div>
-            {buyerInfo && (
-              <button
-                onClick={() => {
-                  setBuyerInfo("");
-                  setSearchForm((prev) => ({ ...prev, buyer: "" }));
-                }}
-                className=" px-2 text-black hover:text-gray-600 z-50"
-              >
-                ✕
-              </button>
-            )}
+
             <div className="flex">
               <p className=" px-4 pt-1">요청상태</p>
               <select
                 className="px-10 border border-erp-gray"
                 onChange={handleStatusChange}
-                defaultValue={searchForm.orderStatus}
+                defaultValue={""}
               >
                 {Status.map((stat) => (
                   <option
                     key={stat.id}
                     value={stat.id}
-                    selected={searchForm.orderStatus === stat.id}
+                    selected={searchForm.orderStatus}
                     className="hover:bg-gray-400"
                   >
                     {stat.name}
@@ -222,6 +209,7 @@ function OrderList() {
                 ))}
               </select>
             </div>
+
             <div className=" flex">
               <p className="px-4  pt-1">년도</p>
               <select
@@ -260,28 +248,21 @@ function OrderList() {
                 ))}
               </select>
             </div>
-            <div className="ml-5 flex gap-5">
-              <button
-                className="border px-4 py-1 bg-erp-green text-white"
-                type="button"
-                onClick={submitForm}
-              >
-                조회
-              </button>
-              <button
-                className="border px-4 bg-white border-erp-gray"
-                onClick={resetButton}
-                type="button"
-              >
-                초기화
-              </button>
-            </div>
-          </form>
-          <Link to={"/order"}>
-            <button className="border px-4 py-1 bg-erp-green text-white ">
-              등록
+            <button
+              className="border px-4 py-1 bg-erp-green text-white"
+              type="button"
+              onClick={submitForm}
+            >
+              조회
             </button>
-          </Link>
+            <button
+              className="border px-4 bg-white border-erp-gray"
+              onClick={resetButton}
+              type="button"
+            >
+              초기화
+            </button>
+          </form>
         </div>
 
         {showModal && (
@@ -297,30 +278,41 @@ function OrderList() {
             />
           </>
         )}
-        <div className="flex items-center justify-center mt-10">
+
+        <div className="flex items-center justify-center mt-10 max-h-[600px] overflow-y-auto bg-gray-100 ">
           {tableList && tableList.length > 0 ? (
-            <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2 bg-white">
-              <thead>
-                <tr className="bg-erp-mint">
-                  <th className="p-1 border border-erp-gray">순번</th>
-                  <th className="p-1 border border-erp-gray">오더번호</th>
-                  <th className="p-1 border border-erp-gray">주문일자</th>
-                  <th className="p-1 border border-erp-gray">바이어명</th>
-                  <th className="p-1 border border-erp-gray">바이어코드</th>
-                  <th className="p-1 border border-erp-gray">등록일자</th>
-                  <th className="p-1 border border-erp-gray">요청상태</th>
+            <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2 bg-white  ">
+              <thead className="sticky top-0 border border-erp-gray">
+                <tr className="bg-erp-mint ">
+                  <th className="p-1 border border-erp-gray ml-10 w-[10%]">
+                    순번
+                  </th>
+                  <th className="p-1 border border-erp-gray ml-10 w-[10%]">
+                    오더번호
+                  </th>
+                  <th className="p-1 border border-erp-gray ml-10  w-[15%]">
+                    주문일자
+                  </th>
+                  <th className="p-1 border border-erp-gray ml-10 w-[30%]">
+                    바이어명
+                  </th>
+                  <th className="p-1 border border-erp-gray ml-10 w-[10%]">
+                    바이어코드
+                  </th>
+                  <th className="p-1 border border-erp-gray ml-10 w-[15%]">
+                    등록일자
+                  </th>
+                  <th className="p-1 border border-erp-gray ml-10 w-[10%]">
+                    요청상태
+                  </th>
                 </tr>
               </thead>
-              <tbody>
+
+              <tbody className="">
                 {tableList.map((table, index) => (
                   <tr
                     key={table.orderid}
-                    onClick={() => showDetailPage(table.orderno, table.status)}
-                    className={
-                      table.status === "REJECT"
-                        ? "bg-red-300 hover:bg-red-200 cursor-pointer"
-                        : "hover:bg-erp-soft-gray cursor-pointer"
-                    }
+                    onClick={() => showDetailPage(table.orderno)}
                   >
                     <td className="text-center border border-erp-gray">
                       {index + 1}
@@ -478,7 +470,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
                   <tr
                     key={buyer.buyerId}
                     onClick={() => addBuyer(buyer)}
-                    className="hover:cursor-pointer hover:bg-erp-soft-gray"
+                    className="hover:cursor-pointer"
                   >
                     <td className="border border-erp-gray text-center">
                       {index + 1}
@@ -515,5 +507,4 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     </div>
   );
 };
-
-export default OrderList;
+export default OrderStatList;

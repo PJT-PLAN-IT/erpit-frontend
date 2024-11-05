@@ -94,34 +94,55 @@ function OrderCheck() {
 
   /*결제 확인 */
   const setFinishStatus = async () => {
-    const setFinish = window.confirm("결제하시겠습니까?");
-
-    if (setFinish) {
-      const finishStatus = {
-        orderno: detail.orderno,
-        status: detail.status,
-        rejectcode: detail.rejectcode,
-        rejectreason: detail.rejectreason || "",
-      };
-      console.log(finishStatus);
-      try {
-        const resultData = await fetchData({
-          config: {
-            method: "PUT",
-            url: "/api/order/status",
-          },
-          body: finishStatus,
-        });
-        console.log(resultData);
-        if (resultData?.status === "OK") {
-          setRedirect(true);
-        }
-      } catch (err) {
-        console.error("Error: ", err);
+    const finishStatus = {
+      orderno: detail.orderno,
+      status: detail.status,
+      rejectcode: detail.rejectcode,
+      rejectreason: detail.rejectreason || "",
+    };
+    console.log(finishStatus);
+    try {
+      const resultData = await fetchData({
+        config: {
+          method: "PUT",
+          url: "/api/order/status",
+        },
+        body: finishStatus,
+      });
+      console.log(resultData);
+      if (resultData?.status === "OK") {
+        setRedirect(true);
       }
-      setleavepage(true);
+    } catch (err) {
+      console.error("Error: ", err);
+    }
+    setleavepage(true);
+  };
+
+  /*승인완료 선택시 */
+  const saveAprvStat = () => {
+    const setFinish = window.confirm("오더를 승인하시겠습니까?");
+    if (setFinish) {
+      alert("승인이 완료되었습니다");
+      setDetail((prevDetail) => ({
+        ...prevDetail,
+        status: "APRV_CMPT",
+      }));
+      setFinishStatus();
     }
   };
+
+  /*반려 선택시 */
+  const saveRejStat = () => {
+    const setFinish = window.confirm("오더를 반려하시겠습니까?");
+    if (setFinish) {
+      setDetail((prevDetail) => ({
+        ...prevDetail,
+        status: "REJECT",
+      }));
+    }
+  };
+
   if (leavePage) {
     return <Navigate to="/order/statlist" replace />;
   }
@@ -129,12 +150,18 @@ function OrderCheck() {
   return detail.itemList.length > 0 ? (
     <div className="flex">
       <div className="flex-col bg-erp-soft-gray p-7 w-[100%]">
-        <div className="flex justify-self-end">
+        <div className="flex justify-self-end gap-5">
           <button
             className="border border-erp-gray px-4 bg-erp-green text-white"
-            onClick={setFinishStatus}
+            onClick={saveAprvStat}
           >
-            결제하기
+            승인완료
+          </button>
+          <button
+            className="border border-erp-gray px-4 bg-white"
+            onClick={saveRejStat}
+          >
+            반려
           </button>
         </div>
         <div className="headerTable">
@@ -173,13 +200,14 @@ function OrderCheck() {
                   상태관리
                 </td>
                 <td className="border border-erp-gray ">
-                  <select onChange={handleStatusChange}>
+                  <p>승인요청</p>
+                  {/* <select onChange={handleStatusChange}>
                     <option value={"APRV_REQ"}>승인요청</option>
                     <option value={"REJECT"}>반려</option>
                     <option value={"APRV_CMPT"}>승인완료</option>
-                  </select>
+                  </select> */}
                 </td>
-                {detail.status === "REJECT" ? (
+                {/* {detail.status === "REJECT" ? (
                   <>
                     <td className="border border-erp-gray bg-erp-mint text-center">
                       반려사유
@@ -210,14 +238,16 @@ function OrderCheck() {
                   </>
                 ) : (
                   ""
-                )}
+                )} */}
               </tr>
             </tbody>
           </table>
         </div>
 
         <div className="orderListTable mt-5 ">
-          <h1 className="text-center font-medium text-xl">오더 품목 리스트</h1>
+          <h1 className="text-center font-bold text-2xl mt-10">
+            오더 품목 리스트
+          </h1>
           <div className="max-h-96 overflow-y-auto">
             <table className="border border-erp-gray border-collapse w-[100%] my-5 bg-white">
               <thead>
