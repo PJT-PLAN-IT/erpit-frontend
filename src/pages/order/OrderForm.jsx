@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
@@ -239,26 +240,6 @@ function OrderForm() {
     }
   };
 
-  // const checkOrderQty = (e, item, id) => {
-  //   if (e.target.value >= item.stock) {
-  //     alert(`재고수량을 초과하였습니다. 현재 재고:${item.stock}`);
-  //     e.target.value = 0;
-  //     return false;
-  //   }
-  //   form.items.filter((item) => {
-  //     if (item.itemcd === id) {
-  //       item.leftStock = item.stock - item.orderqty;
-  //       if (e.target.value > item.leftStock) {
-  //         alert(
-  //           `현재 재고 수량은 ${item.leftStock}입니다. 재고수량범위 내에서 발주수량을 지정하세요`
-  //         );
-  //         e.target.value = 0;
-  //         return false;
-  //       }
-  //     }
-  //   });
-  // };
-
   const checkOrderQty = (e, item, id) => {
     const newOrderQty = parseInt(e.target.value.replace(/,/g, "")) || 0;
 
@@ -339,7 +320,7 @@ function OrderForm() {
 
   return (
     <div className="flex">
-      <div className="flex-col items-center justify-center bg-erp-soft-gray p-7 w-[100%] relative h-max  ">
+      <div className="flex-col items-center justify-center bg-erp-soft-gray p-7 w-[100%] relative ">
         <div className="absolute -top-[20px] left-1/2 -translate-x-1/2 w-[100%]">
           <div className="flex justify-self-end my-10 pl-12 ">
             <button
@@ -549,37 +530,6 @@ function OrderForm() {
                         {item.itemnm}
                       </td>
                       <td className="text-center border border-erp-gray  w-[100px]">
-                        {/* <input
-                        className="m-auto text-center w-[70px] "
-                        type="text"
-                        maxLength="8"
-                        value={item.orderqty}
-                        onChange={(e) =>
-                          handleItemChange(
-                            index,
-                            "orderqty",
-                            parseInt(e.target.value) || 0
-                          )
-                        }
-                        onBlur={(e) => {
-                          if (!checkOrderQty(e, item, item.itemcd)) {
-                            handleItemChange(
-                              index,
-                              "orderqty",
-                              parseInt(e.target.value) || 0
-                            );
-                          }
-                        }}
-                        // onChange={(e) => {
-                        //   if (!checkOrderQty(e, item, item.itemcd)) {
-                        //     handleItemChange(
-                        //       index,
-                        //       "orderqty",
-                        //       parseInt(e.target.value) || 0
-                        //     );
-                        //   }
-                        // }}
-                      /> */}
                         <OrderFormInput
                           index={index}
                           item={item}
@@ -599,19 +549,6 @@ function OrderForm() {
                           handleItemChange={handleItemChange}
                           checkOrderQty={checkOrderQty}
                         />
-                        {/* <input
-                        className="m-auto text-center w-[70px]"
-                        type="text"
-                        maxLength="6"
-                        value={item.ordersupplyprice}
-                        onChange={(e) =>
-                          handleItemChange(
-                            index,
-                            "ordersupplyprice",
-                            parseFloat(e.target.value) || 0
-                          )
-                        }
-                      /> */}
                       </td>
                       <td className="text-center border border-erp-gray  w-[100px]">
                         {(item.ordersurtax = Math.round(

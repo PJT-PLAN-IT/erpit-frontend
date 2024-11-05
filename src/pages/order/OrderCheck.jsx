@@ -1,8 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import useAxios from "../../hook/useAxios";
 import { useLocation } from "react-router-dom";
 import { rejects } from "../../data/rejects";
+import { Status } from "../../data/status";
+
 function OrderCheck() {
   const location = useLocation();
   const { detailNo } = location.state || {};
@@ -10,6 +14,7 @@ function OrderCheck() {
   const [loading, setLoading] = useState(true);
   const [redirect, setRedirect] = useState(false);
   const [leavePage, setleavepage] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [reject, setReject] = useState("");
   const { error, fetchData } = useAxios();
 
@@ -133,7 +138,7 @@ function OrderCheck() {
   };
 
   /*반려 선택시 */
-  const saveRejStat = () => {
+  const saveRejStat = (setShowModal) => {
     const setFinish = window.confirm("오더를 반려하시겠습니까?");
     if (setFinish) {
       setDetail((prevDetail) => ({
@@ -141,6 +146,12 @@ function OrderCheck() {
         status: "REJECT",
       }));
     }
+    setShowModal(true);
+  };
+
+  const getStatName = (statusId) => {
+    const statusObj = Status.find((status) => status.id === statusId);
+    return statusObj ? statusObj.name : statusId;
   };
 
   if (leavePage) {
@@ -160,7 +171,7 @@ function OrderCheck() {
             </button>
             <button
               className="border border-erp-gray px-4 bg-white"
-              onClick={saveRejStat}
+              onClick={() => saveRejStat(setShowModal)}
             >
               반려
             </button>
@@ -203,51 +214,32 @@ function OrderCheck() {
                 <td className="border border-erp-gray bg-erp-mint text-center">
                   상태관리
                 </td>
-                <td className="border border-erp-gray ">
-                  <p>승인요청</p>
-                  {/* <select onChange={handleStatusChange}>
-                    <option value={"APRV_REQ"}>승인요청</option>
-                    <option value={"REJECT"}>반려</option>
-                    <option value={"APRV_CMPT"}>승인완료</option>
-                  </select> */}
+
+                <td className="border border-erp-gray">
+                  {getStatName(detail.status)}
                 </td>
-                {/* {detail.status === "REJECT" ? (
-                  <>
-                    <td className="border border-erp-gray bg-erp-mint text-center">
-                      반려사유
-                    </td>
-                    <td className="flex gap-5 text-center">
-                      <select className="px-10" onChange={handleRejectChange}>
-                        {rejects.map((reject) => (
-                          <option
-                            key={reject.id}
-                            value={reject.id}
-                            className="border border-erp-gray hover:bg-gray-400"
-                          >
-                            {reject.name}
-                          </option>
-                        ))}
-                      </select>
-                      {detail.rejectcode === "ETC" ? (
-                        <input
-                          className="border border-erp-gray w-[200px]"
-                          type="text"
-                          placeholder="기타사유를 입력하세요"
-                          onChange={handleRejectInfoChange}
-                        />
-                      ) : (
-                        ""
-                      )}
-                    </td>
-                  </>
-                ) : (
-                  ""
-                )} */}
               </tr>
             </tbody>
           </table>
         </div>
-
+        {showModal && (
+          <>
+            <div
+              className="fixed inset-0 bg-black opacity-50 z-40"
+              onClick={() => setShowModal(false)}
+            ></div>
+            <ShowRejectModal
+              showModal={showModal}
+              setShowModal={setShowModal}
+              setDetail={setDetail}
+              detail={detail}
+              handleRejectChange={handleRejectChange}
+              handleRejectInfoChange={handleRejectInfoChange}
+              rejects={rejects}
+              setFinishStatus={setFinishStatus}
+            />
+          </>
+        )}
         <div className="orderListTable mt-5 ">
           <h1 className="text-center font-bold text-2xl mt-10">
             오더 품목 리스트
@@ -367,5 +359,66 @@ function OrderCheck() {
     "loading"
   );
 }
+
+const ShowRejectModal = ({
+  showModal,
+  setShowModal,
+  setDetail,
+  detail,
+  handleRejectChange,
+  handleRejectInfoChange,
+  setFinishStatus,
+}) => {
+  return (
+    <div
+      className={`${
+        showModal ? "block" : "hidden"
+      } fixed inset-0  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 bg-white w-[400px] h-[200px] flex-col p-10`}
+    >
+      <div className="relative">
+        <div className="flex items-center justify-end ">
+          <button className="" onClick={() => setShowModal(false)}>
+            ✕
+          </button>
+        </div>
+        <h1 className="text-center text-2xl font-bold">반려사유</h1>
+        <div className=" flex justify-center my-5">
+          <select
+            className="px-10 border border-erp-gray p-1"
+            onChange={handleRejectChange}
+          >
+            {rejects.map((reject) => (
+              <option
+                key={reject.id}
+                value={reject.id}
+                className="border border-erp-gray hover:bg-gray-400"
+              >
+                {reject.name}
+              </option>
+            ))}
+          </select>
+          {detail.rejectcode === "ETC" ? (
+            <input
+              className="border border-erp-gray w-[200px]"
+              type="text"
+              placeholder="기타사유를 입력하세요"
+              onChange={handleRejectInfoChange}
+            />
+          ) : (
+            ""
+          )}
+        </div>
+        <div className="flex justify-center items-center my-10">
+          <button
+            className="border border-erp-gray px-4 bg-erp-green text-white"
+            onClick={setFinishStatus}
+          >
+            승인 반려
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default OrderCheck;
