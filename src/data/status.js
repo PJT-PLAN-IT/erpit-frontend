@@ -1,4 +1,5 @@
 const Status = [
+  { id: "", name: "전체" },
   { id: "CREATE", name: "생성중" },
   { id: "APRV_REQ", name: "승인요청" },
   { id: "APRV_CMPT", name: "승인완료" },
