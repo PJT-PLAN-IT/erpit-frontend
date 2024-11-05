@@ -4,7 +4,7 @@ const TopBuyerList = ({topBuyerList}) => {
     return (
         <>
             <div className={`h-full w-full`}>
-                <div className={`bg-white w-full h-full shadow-lg rounded p-5 flex flex-col min-h-[310px]`}>
+                <div className={`bg-white w-full h-full shadow-lg rounded p-5 flex flex-col min-h-[448px]`}>
                     <h1 className={`font-semibold text-2xl text-erp-green pb-10`}>{month}월 바이어별 매출 Top10</h1>
                     <table className={`mx-10`}>
                         <tbody>
@@ -14,7 +14,7 @@ const TopBuyerList = ({topBuyerList}) => {
                                 <td className={`text-lg py-3`}> {index + 1} </td>
                                 <td className={`text-lg py-3`}> {data.buyerCd} </td>
                                 <td className={`text-lg py-3`}> {data.buyerNm} </td>
-                                <td className={`text-lg py-3 text-end`}> {data.buyerSales} 원</td>
+                                <td className={`text-lg py-3 text-end`}> {data.buyerSales.toLocaleString()} 원</td>
                             </tr>
                         ))}
                         </tbody>

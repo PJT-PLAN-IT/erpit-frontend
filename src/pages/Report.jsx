@@ -13,9 +13,9 @@ const Report = () => {
     const initData = {
         year: today.getFullYear(),
         month: today.getMonth() + 1,
-        user: ''
+        user:  user.role ==='ROLE_ADMIN' ? '' : user.usercd
     };
-
+    console.log("??",user.role,",",user.usercd);
     const [chart, setChart] = useState([]);
     const [topBuyerList, setTopBuyerList] = useState([]);
     const [topSalesList, setTopSalesList] = useState([]);
@@ -25,10 +25,12 @@ const Report = () => {
     const [orderPrice, setOrderPrice] = useState(0);
     const [revenue, setRevenue] = useState(0);
     useEffect(() => {
+        console.log(user.role,",",user.usercd);
         fetchReportList();
     }, []);
 
     const fetchReportList = async () => {
+        console.log(search);
         try {
             const resultData = await fetchData({
                 config: {method: "POST", url: "/api/report"},
@@ -59,23 +61,23 @@ const Report = () => {
 
                 </div>
                 <div className={`flex flex-row h-2/3 pb-10`}>
-                    <div className={`w-3/5 mr-20 p-10 py-16 h-full bg-white shadow-lg rounded`}>
+                    <div className={`w-3/5 mr-20 p-10 py-16 h-full bg-white shadow-lg rounded min-h-[468px]`}>
                         <Chart chart={chart}/>
                     </div>
                     <div className={`w-2/5 h-full`}>
-                        <div className={`h-1/3 w-full pb-5`}>
+                        <div className={`h-2/5 w-full pb-5 min-h-[172px]`}>
                             <div className={`bg-white w-full h-full shadow-lg rounded p-5 flex flex-col`}>
                                 <h1 className={`font-semibold text-2xl text-erp-green pb-7`}>{today.getMonth() + 1}월 총 주문 현황</h1>
                                 <div className={`flex-1 flex flex-col space-y-4`}>
                                     <div
                                         className={`border-b border-erp-soft-gray flex flex-row justify-between items-center p-3`}>
                                         <p className={`text-lg`}> 총 주문 건수 </p>
-                                        <p className={`text-lg`}>{orderCount}</p>
+                                        <p className={`text-lg`}>{orderCount.toLocaleString()} 회</p>
                                     </div>
                                     <div
                                         className={`border-b border-erp-soft-gray flex flex-row justify-between items-center p-3`}>
                                         <p className={`text-lg`}> 총 주문 금액 </p>
-                                        <p className={`text-lg`}>{orderPrice} 원</p>
+                                        <p className={`text-lg`}>{orderPrice.toLocaleString()} 원</p>
                                     </div>
                                 </div>
                             </div>
