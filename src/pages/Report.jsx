@@ -9,7 +9,6 @@ import TopBuyerList from "../components/reports/TopBuyerList.jsx";
 const Report = () => {
     const {user} = useAuth();
     const {error, fetchData} = useAxios();
-
     let today = new Date();
     const initData = {
         year: today.getFullYear(),
@@ -55,7 +54,7 @@ const Report = () => {
 
     return (
         <div className={`flex flex-col h-full`}>
-            <div className={`flex flex-col justify-between mb-2 mt-10 h-full`}>
+            <div className={`flex flex-col justify-between h-full`}>
                 <div className={`flex flex-row h-1/10 pb-10`}>
 
                 </div>
@@ -65,17 +64,23 @@ const Report = () => {
                     </div>
                     <div className={`w-2/5 h-full`}>
                         <div className={`h-1/3 w-full pb-5`}>
-                            <div className={`bg-white shadow-lg rounded  w-full h-full p-5`}>
-                                <h1 className={`font-semibold text-2xl text-erp-green pb-7`}>총 주문 현황</h1>
-                                <div className={`flex`}>
-                                <p>총 주문 건수</p><p>{orderCount}</p>
-                                </div>
-                                <div className={`flex`}>
-                                    <p>총 주문 금액</p><p>{orderPrice}</p>
+                            <div className={`bg-white w-full h-full shadow-lg rounded p-5 flex flex-col`}>
+                                <h1 className={`font-semibold text-2xl text-erp-green pb-7`}>{today.getMonth() + 1}월 총 주문 현황</h1>
+                                <div className={`flex-1 flex flex-col space-y-4`}>
+                                    <div
+                                        className={`border-b border-erp-soft-gray flex flex-row justify-between items-center p-3`}>
+                                        <p className={`text-lg`}> 총 주문 건수 </p>
+                                        <p className={`text-lg`}>{orderCount}</p>
+                                    </div>
+                                    <div
+                                        className={`border-b border-erp-soft-gray flex flex-row justify-between items-center p-3`}>
+                                        <p className={`text-lg`}> 총 주문 금액 </p>
+                                        <p className={`text-lg`}>{orderPrice} 원</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                            <TopSalesList topSalesList={topSalesList}/>
+                        <TopSalesList topSalesList={topSalesList}/>
                     </div>
                 </div>
                 <div className={`flex flex-row h-2/3`}>

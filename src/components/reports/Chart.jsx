@@ -29,7 +29,7 @@ const Chart = ({chart}) => {
         labels: labels,
         datasets: [
             {
-                label: '달별 매출',
+                label: '월별 매출',
                 data: sales,
                 backgroundColor: [
                     'rgba(0, 79, 72, 0.5)',
