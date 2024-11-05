@@ -150,20 +150,24 @@ function OrderCheck() {
   return detail.itemList.length > 0 ? (
     <div className="flex">
       <div className="flex-col bg-erp-soft-gray p-7 w-[100%]">
-        <div className="flex justify-self-end gap-5">
-          <button
-            className="border border-erp-gray px-4 bg-erp-green text-white"
-            onClick={saveAprvStat}
-          >
-            승인완료
-          </button>
-          <button
-            className="border border-erp-gray px-4 bg-white"
-            onClick={saveRejStat}
-          >
-            반려
-          </button>
-        </div>
+        {detail.status === "APRV_REQ" ? (
+          <div className="flex justify-self-end gap-5">
+            <button
+              className="border border-erp-gray px-4 bg-erp-green text-white"
+              onClick={saveAprvStat}
+            >
+              승인완료
+            </button>
+            <button
+              className="border border-erp-gray px-4 bg-white"
+              onClick={saveRejStat}
+            >
+              반려
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
         <div className="headerTable">
           <table className="border border-erp-gray border-collapse w-[100%] mt-10 bg-white">
             <tbody>

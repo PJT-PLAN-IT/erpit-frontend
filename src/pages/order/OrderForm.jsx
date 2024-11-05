@@ -15,6 +15,8 @@ function OrderForm() {
   const [showModal, setShowModal] = useState(false);
   const [leavePage, setleavepage] = useState(false);
   const [redirect, setRedirect] = useState(false);
+  const [item, setItem] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
   const { error, fetchData } = useAxios();
   const { user } = useAuth();
   const [form, setForm] = useState({
@@ -98,17 +100,6 @@ function OrderForm() {
       0
     );
 
-  /*오더폼 삭제 */
-  const deleteOrderForm = () => {
-    const confirmDelete = window.confirm(
-      "작성하시던 폼을 삭제하시겠습니까? 삭제시 오더 리스트로 리다이렉팅합니다."
-    );
-    if (confirmDelete) {
-      setForm({});
-      setleavepage(true);
-    }
-  };
-
   if (leavePage) {
     return <Navigate to="/order/list" replace />;
   }
@@ -170,6 +161,7 @@ function OrderForm() {
   const deleteIcon = <FontAwesomeIcon icon={faCircleMinus} />;
 
   console.log(form.orderdate);
+
   /*오더폼 확인 */
   const validateOrderForm = () => {
     console.log(form.orderdate);
@@ -219,6 +211,7 @@ function OrderForm() {
   );
 
   console.log(filteredItemList);
+
   /*오더폼 등록 */
   const submitOrderForm = async () => {
     const orderFormInfo = {
@@ -314,7 +307,10 @@ function OrderForm() {
                     <button
                       onClick={() => {
                         setBuyerInfo("");
-                        setForm((prev) => ({ ...prev, buyer: "" }));
+                        setForm((prev) => ({ ...prev, buyercode: "" }));
+                        setSearchResult([]);
+                        setItem("");
+                        setForm((prev) => ({ ...prev, items: [] }));
                       }}
                       className=" px-2 text-black hover:text-gray-600"
                     >
@@ -338,6 +334,9 @@ function OrderForm() {
                       onClick={() => {
                         setBuyerInfo("");
                         setForm((prev) => ({ ...prev, buyer: "" }));
+                        setSearchResult([]);
+                        setItem("");
+                        setForm((prev) => ({ ...prev, items: [] }));
                       }}
                       className=" px-2 text-black hover:text-gray-600"
                     >
@@ -559,16 +558,29 @@ function OrderForm() {
             </table>
           </div>
         </div>
-        <ItemTable setForm={setForm} form={form} />
+        <ItemTable
+          item={item}
+          setItem={setItem}
+          setForm={setForm}
+          form={form}
+          searchResult={searchResult}
+          setSearchResult={setSearchResult}
+        />
       </div>
     </div>
   );
 }
 
-function ItemTable({ setForm, form }) {
+function ItemTable({
+  item,
+  setItem,
+  setForm,
+  form,
+  searchResult,
+  setSearchResult,
+}) {
   const search = <FontAwesomeIcon icon={faMagnifyingGlass} />;
-  const [item, setItem] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
+
   const { error, fetchData } = useAxios();
 
   const handleItem = (e) => {
@@ -869,126 +881,5 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     </div>
   );
 };
-// const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
-//   const { fetchData } = useAxios();
-//   const [buyerValue, setBuyerValue] = useState("");
-//   const [buyers, setBuyers] = useState([]);
-//   const search = <FontAwesomeIcon icon={faMagnifyingGlass} />;
 
-//   const storeBuyerValue = (e) => {
-//     setBuyerValue(e.target.value);
-//   };
-
-//   console.log(buyerValue);
-
-//   const searchBuyerCode = async () => {
-//     if (buyerValue) {
-//       try {
-//         const result = await fetchData({
-//           config: {
-//             method: "GET",
-//             url: `/api/buyer/list?buyer=${buyerValue}`,
-//           },
-//         });
-//         if (result) {
-//           console.log(result.data);
-//           setBuyers(result.data);
-//         }
-//       } catch (error) {
-//         console.error("디비 접속에 문제: ", error);
-//       }
-//     }
-//   };
-
-//   const addBuyer = (buyer) => {
-//     console.log("Selected Buyer:", buyer);
-//     setBuyerInfo(buyer);
-//     setShowModal(false);
-//   };
-
-//   return (
-//     <div
-//       className={`${
-//         showModal ? "block" : "hidden"
-//       } fixed inset-0  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 bg-white w-[900px] h-[600px] flex-col p-10`}
-//     >
-//       <h1 className="text-center  mb-10 font-bold">바이어 검색</h1>
-//       <button
-//         className="absolute top-4 right-4"
-//         onClick={() => setShowModal(false)}
-//       >
-//         닫기
-//       </button>
-//       <div className="flex justify-around mb-40">
-//         <form>
-//           <div className="flex justify-between items-center gap-5 ">
-//             <p>바이어</p>
-//             <input
-//               className="border border-erp-gray w-[200px] text-sm p-1"
-//               type="text"
-//               placeholder="검색어를 입력하세요"
-//               onChange={storeBuyerValue}
-//             />
-//             <button
-//               className="-translate-x-11"
-//               type="button"
-//               onClick={searchBuyerCode}
-//             >
-//               {search}
-//             </button>
-//           </div>
-//         </form>
-//       </div>
-
-//       {buyers.length ? (
-//         <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2">
-//           <thead>
-//             <tr className="border border-erp-gray bg-erp-mint">
-//               <th className="border border-erp-gray p-1">순번</th>
-//               <th className="border border-erp-gray p-1">바이어코드</th>
-//               <th className="border border-erp-gray p-1">바이어명</th>
-//               <th className="border border-erp-gray p-1">전화번호</th>
-//               <th className="border border-erp-gray p-1">이메일</th>
-//               <th className="border border-erp-gray p-1">주소</th>
-//               <th className="border border-erp-gray p-1">등록일</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {buyers.map((buyer, index) => (
-//               <tr
-//                 key={buyer.buyerId}
-//                 onClick={() => addBuyer(buyer)}
-//                 className="hover:cursor-pointer"
-//               >
-//                 <td className="border border-erp-gray text-center">
-//                   {index + 1}
-//                 </td>
-//                 <td className="border border-erp-gray text-center">
-//                   {buyer.buyercd}
-//                 </td>
-//                 <td className="border border-erp-gray text-center">
-//                   {buyer.buyernm}
-//                 </td>
-//                 <td className="border border-erp-gray text-center">
-//                   {buyer.tel}
-//                 </td>
-//                 <td className="border border-erp-gray text-center">
-//                   {buyer.email}
-//                 </td>
-//                 <td className="border border-erp-gray text-center truncate w-48">
-//                   {buyer.address}
-//                 </td>
-//                 <td className="border border-erp-gray text-center">
-//                   {buyer.adddate}
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       ) : (
-//         <p className=" mp-10 mx-auto text-gray-400">검색 결과가 없습니다</p>
-//       )}
-//     </div>
-//   );
-// };
 export default OrderForm;

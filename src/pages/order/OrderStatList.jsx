@@ -1,16 +1,19 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import useAxios from "../../hook/useAxios.js";
-import { useAuth } from "../../context/AuthContext.jsx";
 import { Status } from "../../data/status.js";
 import { months } from "../../data/month.js";
 import { year } from "../../data/year.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function OrderList() {
   const [showModal, setShowModal] = useState(false);
+  const [showUserModal, setShowUserModal] = useState(false);
   const [buyerInfo, setBuyerInfo] = useState("");
+  const [userInfo, setUserInfo] = useState("");
   const [tableList, setTableList] = useState([]);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const currentMonth = new Date().getMonth() + 1;
@@ -95,24 +98,16 @@ function OrderList() {
   };
 
   /*디테일 페이지로 이동 */
-  const showDetailPage = (detailNo, detailStatus) => {
-    if (
-      detailStatus === "CREATE" ||
-      detailStatus === "APRV_CNCL" ||
-      detailStatus === "REJECT"
-    ) {
-      navigate("/order/edit", {
-        state: { detailNo: detailNo },
-      });
-    } else {
-      navigate("/order/detail", { state: { detailNo: detailNo } });
-    }
+  const showDetailPage = (detailNo) => {
+    navigate("/order/check", {
+      state: { detailNo: detailNo },
+    });
   };
 
   /*오더내역 리스트 검색 기능 */
   const submitForm = async () => {
     const searchOrders = {
-      user: "",
+      user: userInfo.usernm || "",
       buyer: buyerInfo.buyercd || "",
       status: searchForm.orderStatus || "",
       month: searchForm.month,
@@ -140,13 +135,16 @@ function OrderList() {
   /*초기화 버튼 */
   const resetButton = async () => {
     setSearchForm({
+      user: "",
       buyer: "",
       orderStatus: "APRV_REQ",
       month: currentMonth,
       year: currentYear,
     });
     setBuyerInfo("");
+    setUserInfo("");
     const searchOrders = {
+      user: "",
       buyer: "",
       status: "APRV_REQ",
       month: currentMonth,
@@ -177,12 +175,12 @@ function OrderList() {
   return (
     <div className="flex bg-gray-100 ">
       <div className="flex-row p-7 w-[100%]">
-        <div className="flex mt-10">
-          <form className="flex justify-evenly gap-2">
-            <div className="flex -ml-4">
-              <p className="px-4  pt-1">바이어</p>
+        <div className="flex mt-10 w-[100%]">
+          <form className="flex justify-evenly ">
+            <div className="flex">
+              <p className="px-1 pt-1">바이어</p>
               <input
-                className="w-60 px-1 border border-erp-gray hover:cursor-pointer"
+                className="w-50 px-1 border border-erp-gray hover:cursor-pointer"
                 placeholder="검색어를 입력하세요"
                 type="text"
                 value={
@@ -196,6 +194,27 @@ function OrderList() {
                 onClick={() => {
                   setBuyerInfo("");
                   setSearchForm((prev) => ({ ...prev, buyer: "" }));
+                }}
+                className=" px-2 text-black hover:text-gray-600 z-50"
+              >
+                ✕
+              </button>
+            )}
+            <div className="flex ">
+              <p className="px-4  pt-1">사원</p>
+              <input
+                className="w-50 px-1 border border-erp-gray hover:cursor-pointer"
+                placeholder="검색어를 입력하세요"
+                type="text"
+                value={userInfo ? `${userInfo.usernm}/ ${userInfo.usercd}` : ""}
+                onClick={() => setShowUserModal(true)}
+              />
+            </div>
+            {userInfo && (
+              <button
+                onClick={() => {
+                  setUserInfo("");
+                  setSearchForm((prev) => ({ ...prev, user: "" }));
                 }}
                 className=" px-2 text-black hover:text-gray-600 z-50"
               >
@@ -291,6 +310,19 @@ function OrderList() {
             />
           </>
         )}
+        {showUserModal && (
+          <>
+            <div
+              className="fixed inset-0 bg-black opacity-50 z-40"
+              onClick={() => setShowUserModal(false)}
+            ></div>
+            <ShowUserModal
+              showUserModal={showUserModal}
+              setShowUserModal={setShowUserModal}
+              setUserInfo={setUserInfo}
+            />
+          </>
+        )}
         <div className="relative">
           <div className="mt-10 absolute w-[100%] max-h-[75vh] overflow-y-auto">
             {tableList && tableList.length > 0 ? (
@@ -303,6 +335,7 @@ function OrderList() {
                     <th className="p-1 border border-erp-gray">바이어명</th>
                     <th className="p-1 border border-erp-gray">바이어코드</th>
                     <th className="p-1 border border-erp-gray">등록일자</th>
+                    <th className="p-1 border border-erp-gray">작성자</th>
                     <th className="p-1 border border-erp-gray">요청상태</th>
                   </tr>
                 </thead>
@@ -310,9 +343,7 @@ function OrderList() {
                   {tableList.map((table, index) => (
                     <tr
                       key={table.orderid}
-                      onClick={() =>
-                        showDetailPage(table.orderno, table.status)
-                      }
+                      onClick={() => showDetailPage(table.orderno)}
                       className="hover:bg-erp-soft-gray cursor-pointer"
                     >
                       <td className="text-center border border-erp-gray">
@@ -332,6 +363,9 @@ function OrderList() {
                       </td>
                       <td className="text-center border border-erp-gray">
                         {table.adddate}
+                      </td>
+                      <td className="text-center border border-erp-gray">
+                        {table.usernm}
                       </td>
                       <td className="text-center border border-erp-gray">
                         {getStatName(table.status)}
@@ -494,6 +528,165 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
                     </td>
                     <td className="border border-erp-gray text-center">
                       {buyer.adddate}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="mp-10 text-center text-gray-400">
+            검색 결과가 없습니다
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
+const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
+  const { fetchData } = useAxios();
+  const [userValue, setUserValue] = useState("");
+  const [users, setUsers] = useState([]);
+  const search = <FontAwesomeIcon icon={faMagnifyingGlass} />;
+  const [initLoad, setInitLoad] = useState(true);
+  const storeUserValue = (e) => {
+    setUserValue(e.target.value);
+  };
+
+  console.log(userValue);
+
+  const searchUserCode = async () => {
+    if (userValue) {
+      try {
+        const result = await fetchData({
+          config: {
+            method: "GET",
+            url: `/api/user/list?user=${userValue}`,
+          },
+        });
+        if (result) {
+          console.log(result.data);
+          setUsers(result.data);
+        }
+      } catch (error) {
+        console.error("디비 접속에 문제: ", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const searchUserCode = async () => {
+      try {
+        const result = await fetchData({
+          config: {
+            method: "GET",
+            url: `/api/user/list`,
+          },
+        });
+        if (result) {
+          console.log(result.data);
+          setUsers(result.data);
+        }
+      } catch (error) {
+        console.error("디비 접속에 문제: ", error);
+      }
+    };
+    searchUserCode();
+    setInitLoad(false);
+  }, [initLoad]);
+
+  const FindUserCode = (e) => {
+    {
+      if (e.key == "Enter") {
+        e.preventDefault();
+        searchUserCode();
+      }
+    }
+  };
+
+  const addUser = (user) => {
+    console.log("Selected user:", user);
+    setUserInfo(user);
+    setShowUserModal(false);
+  };
+
+  return (
+    <div
+      className={`${
+        showUserModal ? "block" : "hidden"
+      } fixed inset-0  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 bg-white w-[900px] h-[600px] flex-col p-10`}
+    >
+      <div className="relative">
+        <h1 className="text-center text-2xl  mb-5 font-bold">바이어 검색</h1>
+        <button
+          className="absolute top-4 right-4"
+          onClick={() => setShowUserModal(false)}
+        >
+          ✕
+        </button>
+        <div className=" flex justify-start mb-14">
+          <form onSubmit={(e) => e.preventDefault()}>
+            <div className="flex justify-between items-center gap-2 ">
+              <p>바이어</p>
+              <input
+                className="border border-erp-gray w-[200px] text-xs p-1"
+                type="text"
+                placeholder="검색어를 입력하세요"
+                onChange={storeUserValue}
+                onKeyDown={FindUserCode}
+              />
+              <button
+                className="-translate-x-12 z-50  px-1"
+                type="button"
+                onClick={searchUserCode}
+              >
+                {search}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {users.length ? (
+          <div className="absolute top-24 max-h-[450px] overflow-y-auto w-[100%] ">
+            <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2 ">
+              <thead className="sticky top-0 w-[100%]">
+                <tr className="border border-erp-gray bg-erp-mint">
+                  <th className="border border-erp-gray p-1">순번</th>
+                  <th className="border border-erp-gray p-1">사원코드</th>
+                  <th className="border border-erp-gray p-1">사원명</th>
+                  <th className="border border-erp-gray p-1">생년월일</th>
+                  <th className="border border-erp-gray p-1">입사일</th>
+                  <th className="border border-erp-gray p-1">권한</th>
+                  <th className="border border-erp-gray p-1">등록일</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user, index) => (
+                  <tr
+                    key={user.userId}
+                    onClick={() => addUser(user)}
+                    className="hover:cursor-pointer hover:bg-erp-soft-gray"
+                  >
+                    <td className="border border-erp-gray text-center">
+                      {index + 1}
+                    </td>
+                    <td className="border border-erp-gray text-center">
+                      {user.usercd}
+                    </td>
+                    <td className="border border-erp-gray text-center">
+                      {user.usernm}
+                    </td>
+                    <td className="border border-erp-gray text-center">
+                      {user.birthdate}
+                    </td>
+                    <td className="border border-erp-gray text-center">
+                      {user.joindate}
+                    </td>
+                    <td className="border border-erp-gray text-center truncate w-48">
+                      {user.auth}
+                    </td>
+                    <td className="border border-erp-gray text-center">
+                      {user.adddate}
                     </td>
                   </tr>
                 ))}
