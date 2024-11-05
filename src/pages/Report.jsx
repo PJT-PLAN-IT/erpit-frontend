@@ -54,9 +54,12 @@ const Report = () => {
     };
 
     return (
-        <div className={`flex flex-col p-10 h-full`}>
+        <div className={`flex flex-col h-full`}>
             <div className={`flex flex-col justify-between mb-2 mt-10 h-full`}>
-                <div className={`flex flex-row h-1/2 p-10`}>
+                <div className={`flex flex-row h-1/10 pb-10`}>
+
+                </div>
+                <div className={`flex flex-row h-2/3 pb-10`}>
                     <div className={`w-3/5 mr-20 p-10 py-16 h-full bg-white shadow-lg rounded`}>
                         <Chart chart={chart}/>
                     </div>
@@ -75,7 +78,7 @@ const Report = () => {
                             <TopSalesList topSalesList={topSalesList}/>
                     </div>
                 </div>
-                <div className={`flex flex-row h-1/2 p-10`}>
+                <div className={`flex flex-row h-2/3`}>
                     <div className={`w-1/2 mr-20 shadow-lg rounded`}>
                         <TopUsersList topUsersList={topUsersList}/>
                     </div>
