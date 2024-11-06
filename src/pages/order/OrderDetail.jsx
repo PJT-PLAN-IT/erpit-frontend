@@ -103,7 +103,7 @@ function OrderDetail() {
     ) || 0;
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>페이지를 불러오는 중...</div>;
   }
 
   return detail.itemList.length > 0 ? (
@@ -167,7 +167,9 @@ function OrderDetail() {
                       반려사유
                     </td>
                     <td className="flex gap-5 text-center">
-                      {detail.rejectcodenm}
+                      {detail.rejectcode == "ETC"
+                        ? detail.rejectreason
+                        : detail.rejectcodenm}
                     </td>
                   </>
                 ) : (
@@ -221,25 +223,25 @@ function OrderDetail() {
                       {item.itemnm}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.orderqty}
+                      {item.orderqty.toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.originprice}
+                      {item.originprice.toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.ordersupplyprice}
+                      {item.ordersupplyprice.toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.ordersurtax}
+                      {item.ordersurtax.toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.ordersalesprice}
+                      {item.ordersalesprice.toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.ordersalesprice * item.orderqty}
+                      {(item.ordersalesprice * item.orderqty).toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.stock}
+                      {item.stock.toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
                       {item.unit}
@@ -250,7 +252,7 @@ function OrderDetail() {
                   </tr>
                 ))}
 
-                <tr className="border border-erp-gray-t-2">
+                <tr className="border border-erp-gray-t-2 bg-slate-300 ">
                   <td colSpan={3} className="border border-erp-gray"></td>
                   <td className="text-center border border-erp-gray">
                     {calculateTotalQuantity()}
@@ -267,11 +269,9 @@ function OrderDetail() {
                   <td className="text-center border border-erp-gray">
                     {calculateTotalPrice().toLocaleString()}
                   </td>
-                  <td className="text-center border border-erp-gray">
-                    {calculateTotalsupplyPrice().toLocaleString()}
-                  </td>
+
                   <td
-                    colSpan={2}
+                    colSpan={3}
                     className="text-center border border-erp-gray bg-erp-mint"
                   >
                     합계:

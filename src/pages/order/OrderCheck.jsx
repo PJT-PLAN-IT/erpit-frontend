@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
@@ -13,6 +14,7 @@ function OrderCheck() {
   const [detail, setDetail] = useState({});
   const [loading, setLoading] = useState(true);
   const [redirect, setRedirect] = useState(false);
+  const [statusChange, setStatusChange] = useState(false);
   const [leavePage, setleavepage] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [reject, setReject] = useState("");
@@ -68,17 +70,8 @@ function OrderCheck() {
     ) || 0;
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>페이지를 불러오는 중...</div>;
   }
-
-  /*요청상태 검색 변화 저장 */
-  const handleStatusChange = (e) => {
-    console.log(e.target.value);
-    setDetail((prev) => ({
-      ...prev,
-      status: e.target.value,
-    }));
-  };
 
   /*반려 변화 저장 */
   const handleRejectChange = (e) => {
@@ -97,15 +90,27 @@ function OrderCheck() {
     }));
   };
 
+  /*반려 선택시 */
+  const saveRejStat = (setShowModal) => {
+    const setFinish = window.confirm("오더를 반려하시겠습니까?");
+    if (setFinish) {
+      setDetail((prevDetail) => ({
+        ...prevDetail,
+        status: "REJECT",
+      }));
+    }
+    setShowModal(true);
+  };
+
   /*결제 확인 */
   const setFinishStatus = async () => {
     const finishStatus = {
       orderno: detail.orderno,
       status: detail.status,
-      rejectcode: detail.rejectcode,
+      rejectcode: detail.rejectcode || "",
       rejectreason: detail.rejectreason || "",
     };
-    console.log(finishStatus);
+    console.log("finish status", finishStatus);
     try {
       const resultData = await fetchData({
         config: {
@@ -128,25 +133,33 @@ function OrderCheck() {
   const saveAprvStat = () => {
     const setFinish = window.confirm("오더를 승인하시겠습니까?");
     if (setFinish) {
-      alert("승인이 완료되었습니다");
-      setDetail((prevDetail) => ({
-        ...prevDetail,
-        status: "APRV_CMPT",
-      }));
+      const setFinishStatus = async () => {
+        const finishStatus = {
+          orderno: detail.orderno,
+          status: "APRV_CMPT",
+          rejectcode: detail.rejectcode || "",
+          rejectreason: detail.rejectreason || "",
+        };
+        console.log("finish status", finishStatus);
+        try {
+          const resultData = await fetchData({
+            config: {
+              method: "PUT",
+              url: "/api/order/status",
+            },
+            body: finishStatus,
+          });
+          console.log(resultData);
+          if (resultData?.status === "OK") {
+            setRedirect(true);
+          }
+        } catch (err) {
+          console.error("Error: ", err);
+        }
+        setleavepage(true);
+      };
       setFinishStatus();
     }
-  };
-
-  /*반려 선택시 */
-  const saveRejStat = (setShowModal) => {
-    const setFinish = window.confirm("오더를 반려하시겠습니까?");
-    if (setFinish) {
-      setDetail((prevDetail) => ({
-        ...prevDetail,
-        status: "REJECT",
-      }));
-    }
-    setShowModal(true);
   };
 
   const getStatName = (statusId) => {
@@ -218,6 +231,20 @@ function OrderCheck() {
                 <td className="border border-erp-gray">
                   {getStatName(detail.status)}
                 </td>
+                {detail.status === "REJECT" ? (
+                  <>
+                    <td className="border border-erp-gray bg-erp-mint text-center">
+                      반려사유
+                    </td>
+                    <td className="flex gap-5 text-center">
+                      {detail.rejectcode == "ETC"
+                        ? detail.rejectreason
+                        : detail.rejectcodenm}
+                    </td>
+                  </>
+                ) : (
+                  ""
+                )}
               </tr>
             </tbody>
           </table>
@@ -285,22 +312,22 @@ function OrderCheck() {
                       {item.itemnm}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.orderqty}
+                      {item.orderqty.toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.originprice}
+                      {item.originprice.toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.ordersupplyprice}
+                      {item.ordersupplyprice.toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.ordersurtax}
+                      {item.ordersurtax.toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.ordersalesprice}
+                      {item.ordersalesprice.toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.ordersalesprice * item.orderqty}
+                      {(item.ordersalesprice * item.orderqty).toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
                       {item.stock}
@@ -360,6 +387,15 @@ function OrderCheck() {
   );
 }
 
+const closeModal = (setShowModal, setDetail) => {
+  setShowModal(false);
+  setDetail((prev) => ({
+    ...prev,
+    status: "APRV_REQ",
+  }));
+  return false;
+};
+
 const ShowRejectModal = ({
   showModal,
   setShowModal,
@@ -377,7 +413,10 @@ const ShowRejectModal = ({
     >
       <div className="relative">
         <div className="flex items-center justify-end ">
-          <button className="" onClick={() => setShowModal(false)}>
+          <button
+            className=""
+            onClick={() => closeModal(setShowModal, setDetail)}
+          >
             ✕
           </button>
         </div>
@@ -391,6 +430,7 @@ const ShowRejectModal = ({
               <option
                 key={reject.id}
                 value={reject.id}
+                selected={detail.rejectcode === reject.id}
                 className="border border-erp-gray hover:bg-gray-400"
               >
                 {reject.name}

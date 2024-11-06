@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import useAxios from "../../hook/useAxios.js";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -297,10 +299,10 @@ function OrderList() {
             />
           </>
         )}
-        <div className="flex items-center justify-center mt-10">
+        <div className="flex items-center justify-center mt-10 max-h-[770px] overflow-y-auto">
           {tableList && tableList.length > 0 ? (
             <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2 bg-white">
-              <thead>
+              <thead className="sticky top-0">
                 <tr className="bg-erp-mint">
                   <th className="p-1 border border-erp-gray">순번</th>
                   <th className="p-1 border border-erp-gray">오더번호</th>
@@ -311,7 +313,7 @@ function OrderList() {
                   <th className="p-1 border border-erp-gray">요청상태</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="">
                 {tableList.map((table, index) => (
                   <tr
                     key={table.orderid}

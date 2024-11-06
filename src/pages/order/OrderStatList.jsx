@@ -331,11 +331,12 @@ function OrderList() {
                   <tr className="bg-erp-mint">
                     <th className="p-1 border border-erp-gray">순번</th>
                     <th className="p-1 border border-erp-gray">오더번호</th>
+                    <th className="p-1 border border-erp-gray">직원코드</th>
+                    <th className="p-1 border border-erp-gray">직원명</th>
                     <th className="p-1 border border-erp-gray">주문일자</th>
-                    <th className="p-1 border border-erp-gray">바이어명</th>
+                    <th className="p-1 border border-erp-gray">바이어</th>
                     <th className="p-1 border border-erp-gray">바이어코드</th>
-                    <th className="p-1 border border-erp-gray">등록일자</th>
-                    <th className="p-1 border border-erp-gray">작성자</th>
+                    <th className="p-1 border border-erp-gray">요청일자</th>
                     <th className="p-1 border border-erp-gray">요청상태</th>
                   </tr>
                 </thead>
@@ -353,6 +354,12 @@ function OrderList() {
                         {table.orderno}
                       </td>
                       <td className="text-center border border-erp-gray">
+                        {table.usercd}
+                      </td>
+                      <td className="text-center border border-erp-gray">
+                        {table.usernm}
+                      </td>
+                      <td className="text-center border border-erp-gray">
                         {table.orderdate}
                       </td>
                       <td className="text-center border border-erp-gray">
@@ -363,9 +370,6 @@ function OrderList() {
                       </td>
                       <td className="text-center border border-erp-gray">
                         {table.adddate}
-                      </td>
-                      <td className="text-center border border-erp-gray">
-                        {table.usernm}
                       </td>
                       <td className="text-center border border-erp-gray">
                         {getStatName(table.status)}
