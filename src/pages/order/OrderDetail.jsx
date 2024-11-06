@@ -1,12 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import useAxios from "../../hook/useAxios";
-import { useLocation } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 import { Status } from "../../data/status";
 function OrderDetail() {
   const location = useLocation();
   const { detailNo } = location.state || {};
   const [detail, setDetail] = useState({});
   const [loading, setLoading] = useState(true);
+  const [redirect, setRedirect] = useState(false);
+  const [leavePage, setleavepage] = useState(false);
   const { error, fetchData } = useAxios();
 
   useEffect(() => {
@@ -30,6 +34,46 @@ function OrderDetail() {
       getDetail();
     }
   }, [detailNo]);
+
+  /*오더폼 승인취소 */
+  const cancelOrderForm = async () => {
+    const confirmCancel = window.confirm("승인요청을 취소하시겠습니까?");
+    const filteredItemList = detail.itemList.map(
+      ({ itemnm, originprice, stock, unit, orderno, ...remainingFields }) =>
+        remainingFields
+    );
+
+    const orderFormInfo = {
+      orderno: String(detail.orderno),
+      orderdate: detail.orderdate,
+      usercd: detail.usercd,
+      buyercd: detail.buyercd,
+      status: detail.status,
+      orderItemList: filteredItemList,
+    };
+
+    if (confirmCancel) {
+      orderFormInfo.status = "APRV_CNCL";
+      try {
+        const resultData = await fetchData({
+          config: { method: "PUT", url: "/api/order" },
+          body: orderFormInfo,
+        });
+        console.log(resultData);
+        if (resultData?.status === "OK") {
+          setRedirect(true);
+        } else {
+          console.error("Unexpected response: ", resultData);
+        }
+      } catch (err) {
+        console.error("Error: ", err);
+      }
+      setleavepage(true);
+    }
+  };
+  if (leavePage) {
+    return <Navigate to="/order/list" replace />;
+  }
 
   const calculateTotalQuantity = () =>
     detail.itemList?.reduce((sum, item) => sum + item.orderqty, 0) || 0;
@@ -65,6 +109,14 @@ function OrderDetail() {
   return detail.itemList.length > 0 ? (
     <div className="flex">
       <div className="flex-col bg-erp-soft-gray p-7 w-[100%]">
+        <div className="flex justify-end">
+          <button
+            onClick={cancelOrderForm}
+            className="border border-erp-gray px-4 bg-erp-green text-white"
+          >
+            승인취소
+          </button>
+        </div>
         <div className="headerTable">
           <table className="border border-erp-gray border-collapse w-[100%] mt-10 bg-white">
             <tbody>
