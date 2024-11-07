@@ -23,6 +23,11 @@ const UserInsert = ({insertModalOpen, setInsertModalOpen, fetchUserList}) => {
 
     if (!insertModalOpen) return false;
 
+    const insertCheck = () => {
+            if(formData.birthdate === ''){
+                alert("")
+            }
+    }
     //유저 등록
     const saveUser = async () => {
         try {

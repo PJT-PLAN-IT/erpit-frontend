@@ -42,6 +42,12 @@ function BuyerList() {
         fetchBuyerList();
     }
 
+    const onHandleKeyDown = (e) => {
+        if(e.key === 'Enter'){
+            fetchBuyerList();
+        }
+    }
+
     useEffect(() => {
         fetchBuyerList();
     }, []);
@@ -64,10 +70,10 @@ function BuyerList() {
 
 
     return (
-        <div className={`flex flex-col p-10`}>
+        <div className={`flex flex-col px-10`}>
             <div className={`flex justify-between mb-2 mt-10`}>
                 <div className={`flex`}>
-                    <Input search={'buyer'} searchData={onSearchParam} data={buyer}/>
+                    <Input search={'buyer'} searchData={onSearchParam} onKeyDown={onHandleKeyDown} data={buyer}/>
                     <Buttons style={`green-sm`} word={`search`} onClick={searchBuyer}/>
                     <Buttons style={`white-sm`} word={`reset`} onClick={reset}/>
                 </div>

@@ -77,7 +77,7 @@ function PriceList() {
     }
 
     return (
-        <div className={`flex flex-col p-10`}>
+        <div className={`flex flex-col px-10 pb-10`}>
             <div className={`flex justify-between mb-2 mt-10`}>
                 <div className={`flex`}>
                     <Input search={'item'} searchData={onSearchItem} data={item}/>

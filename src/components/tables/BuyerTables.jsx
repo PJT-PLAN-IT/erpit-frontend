@@ -23,7 +23,7 @@ const BuyerTables = ({ data, setUpdateModalOpen, setUpdateData , setSearchBuyerM
     };
 
     return (
-        <div className={`h-[700px] overflow-y-auto mt-20`}>
+        <div className={`h-[700px] overflow-y-auto mt-5`}>
             <table className={`w-full`}>
                 <thead className={`sticky top-0`}>
                     <tr className={`items-center bg-erp-mint`}>
