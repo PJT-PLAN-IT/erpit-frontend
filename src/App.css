@@ -8,3 +8,16 @@
 td {
   padding: 5px;
 }
+
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+::-webkit-scrollbar-track {
+  margin-left: 2px; /* Negative margin moves the scrollbar left */
+  background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #003834;
+}
