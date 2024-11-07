@@ -182,10 +182,10 @@ function OrderList() {
       <div className="flex-row p-7 w-full">
         <div className="flex justify-between mt-10">
           <form className="flex justify-evenly gap-2">
-            <div className="flex -ml-4">
-              <p className="px-4 pt-1">바이어</p>
+            <div className="flex items-center -ml-4">
+              <p className="px-4 pt-1 font-semibold">바이어</p>
               <input
-                className="w-60 px-1 border border-erp-gray hover:cursor-pointer"
+                className="w-60 px-1 m-2 h-10 border border-erp-gray hover:cursor-pointer"
                 placeholder="검색어를 입력하세요"
                 type="text"
                 value={
@@ -205,10 +205,10 @@ function OrderList() {
                 ✕
               </button>
             )}
-            <div className="flex">
-              <p className="px-4 pt-1">요청상태</p>
+            <div className="flex items-center ">
+              <p className="px-4 pt-1 font-semibold">요청상태</p>
               <select
-                className="px-10 border border-erp-gray"
+                className="px-10 m-2 h-10 border border-erp-gray hover:cursor-pointer"
                 onChange={handleStatusChange}
                 defaultValue={searchForm.orderStatus}
               >
@@ -224,10 +224,10 @@ function OrderList() {
                 ))}
               </select>
             </div>
-            <div className="flex">
-              <p className="px-4 pt-1">년도</p>
+            <div className="flex items-center">
+              <p className="px-4 pt-1 font-semibold">년도</p>
               <select
-                className="px-10 border border-erp-gray"
+                className="px-10 m-2 h-10 border border-erp-gray hover:cursor-pointer"
                 onChange={handleYearChange}
                 defaultValue={currentYear}
               >
@@ -243,10 +243,10 @@ function OrderList() {
                 ))}
               </select>
             </div>
-            <div className="flex">
-              <p className="px-4 pt-1">월별</p>
+            <div className="flex items-center">
+              <p className="px-4 pt-1 font-semibold">월별</p>
               <select
-                className="px-10 border border-erp-gray"
+                className="px-10 m-2 h-10 border border-erp-gray hover:cursor-pointer"
                 onChange={handleMonthChange}
                 defaultValue={currentMonth}
               >
@@ -264,14 +264,14 @@ function OrderList() {
             </div>
             <div className="ml-5 flex gap-5">
               <button
-                className="border px-4 py-1 bg-erp-green text-white"
+                className="m-2 w-20 h-10 bg-erp-green text-white"
                 type="button"
                 onClick={submitForm}
               >
                 조회
               </button>
               <button
-                className="border px-4 bg-white border-erp-gray"
+                className="m-2 w-20 h-10 bg-white text-black border border-erp-gray"
                 onClick={resetButton}
                 type="button"
               >
@@ -280,7 +280,7 @@ function OrderList() {
             </div>
           </form>
           <Link to={"/order"}>
-            <button className="border px-4 py-1 bg-erp-green text-white">
+            <button className="m-2 w-20 h-10 bg-erp-green text-white">
               등록
             </button>
           </Link>
@@ -360,184 +360,6 @@ function OrderList() {
         </div>
       </div>
     </div>
-
-    // <div className="flex bg-gray-100 ">
-    //   <div className="flex-row p-7 w-[100%]">
-    //     <div className="flex justify-between mt-10">
-    //       <form className="flex justify-evenly gap-2">
-    //         <div className="flex -ml-4">
-    //           <p className="px-4 pt-1">바이어</p>
-    //           <input
-    //             className="w-60 px-1 border border-erp-gray hover:cursor-pointer"
-    //             placeholder="검색어를 입력하세요"
-    //             type="text"
-    //             value={
-    //               buyerInfo ? `${buyerInfo.buyernm} / ${buyerInfo.buyercd}` : ""
-    //             }
-    //             onClick={() => setShowModal(true)}
-    //           />
-    //         </div>
-    //         {buyerInfo && (
-    //           <button
-    //             onClick={() => {
-    //               setBuyerInfo("");
-    //               setSearchForm((prev) => ({ ...prev, buyer: "" }));
-    //             }}
-    //             className=" px-2 text-black hover:text-gray-600 z-50"
-    //           >
-    //             ✕
-    //           </button>
-    //         )}
-    //         <div className="flex">
-    //           <p className=" px-4 pt-1">요청상태</p>
-    //           <select
-    //             className="px-10 border border-erp-gray"
-    //             onChange={handleStatusChange}
-    //             defaultValue={searchForm.orderStatus}
-    //           >
-    //             {Status.map((stat) => (
-    //               <option
-    //                 key={stat.id}
-    //                 value={stat.id}
-    //                 selected={searchForm.orderStatus === stat.id}
-    //                 className="hover:bg-gray-400"
-    //               >
-    //                 {stat.name}
-    //               </option>
-    //             ))}
-    //           </select>
-    //         </div>
-    //         <div className=" flex">
-    //           <p className="px-4  pt-1">년도</p>
-    //           <select
-    //             className="px-10  border border-erp-gray"
-    //             onChange={handleYearChange}
-    //             defaultValue={currentYear}
-    //           >
-    //             {year.map((year) => (
-    //               <option
-    //                 key={year.id}
-    //                 value={year.id}
-    //                 selected={year.id === searchForm.year}
-    //                 className="hover:bg-gray-400"
-    //               >
-    //                 {year.name}
-    //               </option>
-    //             ))}
-    //           </select>
-    //         </div>
-    //         <div className="flex">
-    //           <p className=" px-4 pt-1">월별 </p>
-    //           <select
-    //             className="px-10  border border-erp-gray"
-    //             onChange={handleMonthChange}
-    //             defaultValue={currentMonth}
-    //           >
-    //             {months.map((month) => (
-    //               <option
-    //                 key={month.id}
-    //                 value={month.id}
-    //                 selected={month.id === searchForm.month}
-    //                 className="hover:bg-gray-400"
-    //               >
-    //                 {month.name}
-    //               </option>
-    //             ))}
-    //           </select>
-    //         </div>
-    //         <div className="ml-5 flex gap-5">
-    //           <button
-    //             className="border px-4 py-1 bg-erp-green text-white"
-    //             type="button"
-    //             onClick={submitForm}
-    //           >
-    //             조회
-    //           </button>
-    //           <button
-    //             className="border px-4 bg-white border-erp-gray"
-    //             onClick={resetButton}
-    //             type="button"
-    //           >
-    //             초기화
-    //           </button>
-    //         </div>
-    //       </form>
-    //       <Link to={"/order"}>
-    //         <button className="border px-4 py-1 bg-erp-green text-white ">
-    //           등록
-    //         </button>
-    //       </Link>
-    //     </div>
-
-    //     {showModal && (
-    //       <>
-    //         <div
-    //           className="fixed inset-0 bg-black opacity-50 z-40"
-    //           onClick={() => setShowModal(false)}
-    //         ></div>
-    //         <ShowBuyerModal
-    //           showModal={showModal}
-    //           setShowModal={setShowModal}
-    //           setBuyerInfo={setBuyerInfo}
-    //         />
-    //       </>
-    //     )}
-    //     <div className="flex items-center justify-center mt-10 max-h-[700px]  overflow-y-auto relative w-[100%]">
-    //       {tableList && tableList.length > 0 ? (
-    //         <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2 bg-white">
-    //           <thead className="sticky top-0 z-20">
-    //             <tr className="bg-erp-mint">
-    //               <th className="p-1 border border-erp-gray">순번</th>
-    //               <th className="p-1 border border-erp-gray">오더번호</th>
-    //               <th className="p-1 border border-erp-gray">주문일자</th>
-    //               <th className="p-1 border border-erp-gray">바이어명</th>
-    //               <th className="p-1 border border-erp-gray">바이어코드</th>
-    //               <th className="p-1 border border-erp-gray">등록일자</th>
-    //               <th className="p-1 border border-erp-gray">요청상태</th>
-    //             </tr>
-    //           </thead>
-    //           <tbody className=" w-[100%]">
-    //             {tableList.map((table, index) => (
-    //               <tr
-    //                 key={table.orderid}
-    //                 onClick={() => showDetailPage(table.orderno, table.status)}
-    //                 className={
-    //                   table.status === "REJECT"
-    //                     ? "bg-red-300 hover:bg-red-200 cursor-pointer"
-    //                     : "hover:bg-erp-soft-gray cursor-pointer"
-    //                 }
-    //               >
-    //                 <td className="text-center border border-erp-gray">
-    //                   {index + 1}
-    //                 </td>
-    //                 <td className="text-center border border-erp-gray">
-    //                   {table.orderno}
-    //                 </td>
-    //                 <td className="text-center border border-erp-gray">
-    //                   {table.orderdate}
-    //                 </td>
-    //                 <td className="text-center border border-erp-gray">
-    //                   {table.buyernm}
-    //                 </td>
-    //                 <td className="text-center border border-erp-gray">
-    //                   {table.buyercode}
-    //                 </td>
-    //                 <td className="text-center border border-erp-gray">
-    //                   {table.adddate}
-    //                 </td>
-    //                 <td className="text-center border border-erp-gray">
-    //                   {getStatName(table.status)}
-    //                 </td>
-    //               </tr>
-    //             ))}
-    //           </tbody>
-    //         </table>
-    //       ) : (
-    //         <p className="mx-auto py-10 text-center">검색결과가 없습니다.</p>
-    //       )}
-    //     </div>
-    //   </div>
-    // </div>
   );
 }
 

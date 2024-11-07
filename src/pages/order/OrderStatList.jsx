@@ -177,10 +177,10 @@ function OrderList() {
       <div className="flex-row p-7 w-[100%]">
         <div className="flex mt-10 w-[100%]">
           <form className="flex justify-evenly ">
-            <div className="flex">
-              <p className="px-1 pt-1">바이어</p>
+            <div className="flex items-center">
+              <p className="pr-4 pt-1 font-semibold">바이어</p>
               <input
-                className="w-50 px-1 border border-erp-gray hover:cursor-pointer"
+                className="w-50 px-1 h-10 border border-erp-gray hover:cursor-pointer"
                 placeholder="검색어를 입력하세요"
                 type="text"
                 value={
@@ -200,10 +200,10 @@ function OrderList() {
                 ✕
               </button>
             )}
-            <div className="flex ">
-              <p className="px-4  pt-1">사원</p>
+            <div className="flex items-center">
+              <p className="px-4 pt-1 font-semibold">사원</p>
               <input
-                className="w-50 px-1 border border-erp-gray hover:cursor-pointer"
+                className="w-50 px-1 h-10 border border-erp-gray hover:cursor-pointer"
                 placeholder="검색어를 입력하세요"
                 type="text"
                 value={userInfo ? `${userInfo.usernm}/ ${userInfo.usercd}` : ""}
@@ -221,10 +221,10 @@ function OrderList() {
                 ✕
               </button>
             )}
-            <div className="flex">
-              <p className=" px-4 pt-1">요청상태</p>
+            <div className="flex items-center">
+              <p className=" px-4 pt-1 font-semibold">요청상태</p>
               <select
-                className="px-10 border border-erp-gray"
+                className="px-10 border h-10 border-erp-gray"
                 onChange={handleStatusChange}
                 defaultValue={searchForm.orderStatus}
               >
@@ -240,10 +240,10 @@ function OrderList() {
                 ))}
               </select>
             </div>
-            <div className=" flex">
-              <p className="px-4  pt-1">년도</p>
+            <div className="flex items-center">
+              <p className="px-4  pt-1 font-semibold">년도</p>
               <select
-                className="px-10  border border-erp-gray"
+                className="px-10 h-10 border border-erp-gray"
                 onChange={handleYearChange}
                 defaultValue={currentYear}
               >
@@ -259,10 +259,10 @@ function OrderList() {
                 ))}
               </select>
             </div>
-            <div className="flex">
-              <p className=" px-4 pt-1">월별 </p>
+            <div className="flex items-center">
+              <p className=" px-4 pt-1 font-semibold">월별 </p>
               <select
-                className="px-10  border border-erp-gray"
+                className="px-10 h-10 border border-erp-gray"
                 onChange={handleMonthChange}
                 defaultValue={currentMonth}
               >
@@ -278,16 +278,16 @@ function OrderList() {
                 ))}
               </select>
             </div>
-            <div className=" ml-5 flex gap-5">
+            <div className=" ml-5 flex">
               <button
-                className="border px-4 py-1 bg-erp-green text-white"
+                className="border px-4 py-1 m-4 h-10 bg-erp-green text-white"
                 type="button"
                 onClick={submitForm}
               >
                 조회
               </button>
               <button
-                className="border px-4 bg-white border-erp-gray"
+                className="border px-4 m-4 h-10 bg-white border-erp-gray"
                 onClick={resetButton}
                 type="button"
               >
