@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 // noinspection SpellCheckingInspection
-
+import {unit} from "../../data/unit.js";
 import Buttons from "../items/Buttons.jsx";
 import useAxios from "../../hook/useAxios.js";
 
@@ -21,6 +21,11 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
 
     //아이템 수정
     const updateFunction = async () => {
+        if(updateData.originprice >= updateData.supplyprice){
+            alert("공급가가 원가보다 적습니다. 다시 설정해주세요");
+            return;
+        }
+
         try {
             const result = await fetchData({
                 config: {method: "PUT", url: "/api/item"},
@@ -39,8 +44,8 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
         }
     }
 
-    const onCheckDisabled = () =>{
-        if(confirm("비활성화처리 하시겠습니까? ")) {
+    const onCheckDisabled = () => {
+        if (confirm("비활성화처리 하시겠습니까? ")) {
             onDeactivateCheck();
         }
     }
@@ -67,8 +72,35 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
         }
     };
     const onChangeForm = (e) => {
-        const {name, value} = e.target;
-        setUpdateData({...updateData, [name]: value});
+        const { name, value } = e.target;
+        let numericValue = 0;
+        const regex = /\D/;
+
+        // if (name === 'originprice' || name === 'supplyprice' || name === 'stock') {
+        //     if(regex.test(value)){
+        //         console.log("qpffb",value);
+        //         numericValue = value.replace(/[^0-9]/g, '');
+        //     }else {
+        //         console.log("dkr",value);
+        //         numericValue = value;
+        //     }
+        //
+        //     if (numericValue) {
+        //         const formattedValue = new Intl.NumberFormat().format(numericValue);
+        //
+        //         setUpdateData(prevData => ({ ...prevData, [name]: formattedValue }));
+        //     }
+        //     else {
+        //         setUpdateData(prevData => ({ ...prevData, [name]: '' }));
+        //     }
+        // }
+        // 단위 선택 처리
+        if (e.target.tagName === 'SELECT') {
+            setUpdateData(prevData => ({ ...prevData, ['unit']: value }));
+        }
+        else {
+            setUpdateData(prevData => ({ ...prevData, [name]: value }));
+        }
     };
 
     return (
@@ -79,27 +111,44 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
                     <tbody>
                     {Object.entries(itemSbj).map(([sbj, data]) => (
                         <tr key={sbj} className={`flex border-erp-gray border-b`}>
-                            <td className={`border-erp-gray border-r bg-erp-mint p-2 flex w-32 justify-center items-center`}> {data} </td>
-                            <td className={`bg-white flex-grow flex items h-12`}>
-                                {sbj === 'itemcd' ?
-                                    <>
-                                        <input
-                                            disabled={true}
-                                            name={sbj}
-                                            value={updateData[sbj]}
-                                            onChange={onChangeForm}
-                                            className={`flex-grow px-2 outline-none`}/>
-                                    </>
-                                    :
-                                    <>
-                                        <input
-                                            name={sbj}
-                                            value={updateData[sbj]}
-                                            onChange={onChangeForm}
-                                            className={`flex w-full h-full px-2 outline-none`}/>
+                            <td className={`border-erp-gray border-r bg-erp-mint p-2 flex w-40 justify-center items-center`}> {data} </td>
 
-                                    </>
+                            <td className={`bg-white flex-grow flex items h-12`}>
+                                {sbj === 'itemcd' &&
+                                    <input disabled={true} name={sbj} value={updateData[sbj]} className={`flex-grow px-2 outline-none`}/>}
+
+                                {sbj === 'itemnm' &&
+                                    <input name={sbj} value={updateData[sbj]} onChange={onChangeForm} className={`flex w-full h-full px-2 outline-none`}/>}
+
+                                {sbj === 'originprice' &&
+                                    <input name={sbj} value={updateData[sbj].toLocaleString()} onChange={onChangeForm} className={`flex w-full h-full px-2 outline-none`}/>}
+
+                                {sbj === 'supplyprice' &&
+                                    <input name={sbj} value={updateData[sbj].toLocaleString()} onChange={onChangeForm} className={`flex w-full h-full px-2 outline-none`}/>}
+                                {sbj === 'unit'
+                                    &&
+                                    // <select name={sbj} value={updateData[sbj]} onChange={onChangeForm} className={`flex w-full h-full px-2 outline-none`}/>
+                                    <select
+                                        className="px-10 border border-erp-gray"
+                                        onChange={onChangeForm}
+                                        defaultValue={updateData[sbj]}
+                                    >
+                                        {unit.map((unit) => (
+                                            <option
+                                                key={unit.id}
+                                                name={unit.id}
+                                                value={unit.id}
+                                            >
+                                                {unit.name}
+                                            </option>
+                                        ))}
+                                    </select>
+
                                 }
+                                {sbj === 'stock'
+                                    &&
+                                    <input name={sbj} value={updateData[sbj].toLocaleString()} onChange={onChangeForm}
+                                           className={`flex w-full h-full px-2 outline-none`}/>}
                                 {
                                     sbj === 'useyn' &&
                                     <div className={`flex items-center`}>

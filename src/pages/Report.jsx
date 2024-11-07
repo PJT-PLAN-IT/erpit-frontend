@@ -5,6 +5,9 @@ import useAxios from "../hook/useAxios.js";
 import TopSalesList from "../components/reports/TopSalesList.jsx";
 import TopUsersList from "../components/reports/TopUsersList.jsx";
 import TopBuyerList from "../components/reports/TopBuyerList.jsx";
+import Buttons from "../components/items/Buttons.jsx";
+import Input from "../components/items/Input.jsx";
+import gifRevenue from "../assets/img/revenue.gif";
 
 const Report = () => {
     const {user} = useAuth();
@@ -55,46 +58,41 @@ const Report = () => {
     };
 
     return (
-        <div className={`flex flex-col h-full`}>
-            <div className={`flex flex-col justify-between h-full`}>
-                <div className={`flex flex-row h-1/10 pb-10`}>
+        <div className="flex flex-col items-center justify-start bg-gray-100 h-full">
+            {/* 첫 번째 박스 */}
+            <div
+                className="w-full h-[5%] bg-amber-300 text-white flex items-center justify-center rounded-lg shadow-lg mb-4">
+                첫 번째 박스 (5%)
+            </div>
 
+            {/* 두 번째 박스 */}
+            <div className="w-full h-[50%] bg-blue-500 text-white flex mb-10">
+                {/* 왼쪽 60% 차지하는 div */}
+                <div className="w-[60%] h-full bg-green-900 flex items-center justify-center">
+                    왼쪽 박스 (60%)
                 </div>
-                <div className={`flex flex-row h-2/3 pb-10`}>
-                    <div className={`w-3/5 mr-20 p-10 py-16 h-full bg-white shadow-lg rounded min-h-[468px]`}>
-                        <Chart chart={chart}/>
+
+                {/* 오른쪽 40% 차지하는 div, 내부에 3개의 세로 정렬된 div */}
+                <div className="w-[40%] h-full flex flex-col justify-between">
+                    <div className="w-full h-[33%] bg-red-300 text-white flex items-center justify-center">
+                        세로 박스 1
                     </div>
-                    <div className={`w-2/5 h-full`}>
-                        <div className={`h-2/5 w-full pb-5 min-h-[172px]`}>
-                            <div className={`bg-white w-full h-full shadow-lg rounded p-5 flex flex-col`}>
-                                <h1 className={`font-semibold text-2xl text-erp-green pb-7`}>{today.getMonth() + 1}월 총 주문 현황</h1>
-                                <div className={`flex-1 flex flex-col space-y-4`}>
-                                    <div
-                                        className={`border-b border-erp-soft-gray flex flex-row justify-between items-center p-3`}>
-                                        <p className={`text-lg`}> 총 주문 건수 </p>
-                                        <p className={`text-lg`}>{orderCount.toLocaleString()} 회</p>
-                                    </div>
-                                    <div
-                                        className={`border-b border-erp-soft-gray flex flex-row justify-between items-center p-3`}>
-                                        <p className={`text-lg`}> 총 주문 금액 </p>
-                                        <p className={`text-lg`}>{orderPrice.toLocaleString()} 원</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <TopSalesList topSalesList={topSalesList}/>
+                    <div className="w-full h-[33%] bg-red-400 text-white flex items-center justify-center">
+                        세로 박스 2
                     </div>
-                </div>
-                <div className={`flex flex-row h-2/3`}>
-                    <div className={`w-1/2 mr-20 shadow-lg rounded`}>
-                        <TopUsersList topUsersList={topUsersList}/>
-                    </div>
-                    <div className={`w-1/2 shadow-lg rounded`}>
-                        <TopBuyerList topBuyerList={topBuyerList}/>
+                    <div className="w-full h-[33%] bg-red-500 text-white flex items-center justify-center">
+                        세로 박스 3
                     </div>
                 </div>
             </div>
+
+            {/* 세 번째 박스 */}
+            <div
+                className="w-full h-[40%] bg-red-500 text-white flex items-center justify-center rounded-lg shadow-lg">
+                세 번째 박스 (45%)
+            </div>
         </div>
+
     );
 };
 
