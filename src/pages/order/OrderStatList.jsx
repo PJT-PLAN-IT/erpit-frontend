@@ -323,12 +323,13 @@ function OrderList() {
             />
           </>
         )}
-        <div className="relative">
-          <div className="mt-10 absolute w-[100%] max-h-[75vh] overflow-y-auto">
-            {tableList && tableList.length > 0 ? (
-              <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2 bg-white">
-                <thead className="sticky top-0">
-                  <tr className="bg-erp-mint">
+
+        <div className="flex items-center justify-center mt-10 relative w-full">
+          {tableList && tableList.length > 0 ? (
+            <div className="overflow-y-auto max-h-[700px] w-full">
+              <table className="border border-erp-gray border-collapse w-full bg-white">
+                <thead className="sticky top-0 z-20 bg-erp-mint">
+                  <tr>
                     <th className="p-1 border border-erp-gray">순번</th>
                     <th className="p-1 border border-erp-gray">오더번호</th>
                     <th className="p-1 border border-erp-gray">직원코드</th>
@@ -378,10 +379,10 @@ function OrderList() {
                   ))}
                 </tbody>
               </table>
-            ) : (
-              <p className="mx-auto py-10 text-center">검색결과가 없습니다.</p>
-            )}
-          </div>
+            </div>
+          ) : (
+            <p className="mx-auto py-10 text-center">검색결과가 없습니다.</p>
+          )}
         </div>
       </div>
     </div>
@@ -479,6 +480,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
                 placeholder="검색어를 입력하세요"
                 onChange={storeBuyerValue}
                 onKeyDown={FindBuyerCode}
+                autoFocus
               />
               <button
                 className="-translate-x-12 z-50  px-1"
@@ -492,9 +494,9 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
         </div>
 
         {buyers.length ? (
-          <div className="absolute top-24 max-h-[450px] overflow-y-auto w-[100%] ">
-            <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2 ">
-              <thead className="sticky top-0 w-[100%]">
+          <div className="absolute top-24 max-h-[450px] overflow-y-auto w-[100%]">
+            <table className="border border-erp-gray border-collapse w-[100%]  p-2 ">
+              <thead className="sticky top-0 w-[100%] border border-erp-gray">
                 <tr className="border border-erp-gray bg-erp-mint">
                   <th className="border border-erp-gray p-1">순번</th>
                   <th className="border border-erp-gray p-1">바이어코드</th>
@@ -633,6 +635,7 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
             <div className="flex justify-between items-center gap-2 ">
               <p>바이어</p>
               <input
+                autoFocus
                 className="border border-erp-gray w-[200px] text-xs p-1"
                 type="text"
                 placeholder="검색어를 입력하세요"

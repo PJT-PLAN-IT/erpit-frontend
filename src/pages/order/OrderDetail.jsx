@@ -108,15 +108,19 @@ function OrderDetail() {
 
   return detail.itemList.length > 0 ? (
     <div className="flex">
-      <div className="flex-col bg-erp-soft-gray p-7 w-[100%]">
-        <div className="flex justify-end">
-          <button
-            onClick={cancelOrderForm}
-            className="border border-erp-gray px-4 bg-erp-green text-white"
-          >
-            승인취소
-          </button>
-        </div>
+      <div className="flex-col bg-erp-soft-gray p-7 w-[100%] ">
+        {detail.status == "APRV_REQ" ? (
+          <div className="flex justify-end ">
+            <button
+              onClick={cancelOrderForm}
+              className="border border-erp-gray px-4 bg-erp-green text-white"
+            >
+              승인취소
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
         <div className="headerTable">
           <table className="border border-erp-gray border-collapse w-[100%] mt-10 bg-white">
             <tbody>
@@ -180,10 +184,10 @@ function OrderDetail() {
           </table>
         </div>
 
-        <div className="orderListTable mt-5 ">
+        <div className="orderListTable mt-10 border border-erp-gray pt-5">
           <h1 className="text-center font-medium text-xl">오더 품목 리스트</h1>
-          <div className="max-h-96 overflow-y-auto">
-            <table className="border border-erp-gray border-collapse w-[100%] my-5 bg-white">
+          <div className="max-h-[600px]  overflow-y-auto">
+            <table className="border border-erp-gray border-collapse w-[100%] mt-5 bg-white">
               <thead>
                 <tr>
                   <th className="border border-erp-gray bg-erp-mint">순번</th>

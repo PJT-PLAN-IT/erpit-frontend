@@ -76,6 +76,12 @@ function OrderCheck() {
   /*반려 변화 저장 */
   const handleRejectChange = (e) => {
     setReject(e.target.value);
+    if (e.target.value != "ETC") {
+      setDetail((prev) => ({
+        ...prev,
+        rejectreason: "",
+      }));
+    }
     setDetail((prev) => ({
       ...prev,
       rejectcode: e.target.value,
@@ -98,6 +104,12 @@ function OrderCheck() {
         ...prevDetail,
         status: "REJECT",
       }));
+    } else {
+      setDetail((prevDetail) => ({
+        ...prevDetail,
+        status: "APRV_REQ",
+      }));
+      return;
     }
     setShowModal(true);
   };
@@ -267,12 +279,12 @@ function OrderCheck() {
             />
           </>
         )}
-        <div className="orderListTable mt-5 ">
-          <h1 className="text-center font-bold text-2xl mt-10">
+        <div className="orderListTable mt-10 border border-erp-gray ">
+          <h1 className="text-center font-bold text-2xl mb-10 mt-5">
             오더 품목 리스트
           </h1>
-          <div className="max-h-96 overflow-y-auto">
-            <table className="border border-erp-gray border-collapse w-[100%] my-5 bg-white">
+          <div className="max-h-[600px] overflow-y-auto  ">
+            <table className="border border-erp-gray border-collapse w-[100%]  bg-white">
               <thead>
                 <tr>
                   <th className="border border-erp-gray bg-erp-mint">순번</th>
@@ -341,7 +353,7 @@ function OrderCheck() {
                   </tr>
                 ))}
 
-                <tr className="border border-erp-gray-t-2">
+                <tr className="border border-erp-gray-t-2 bg-slate-300">
                   <td colSpan={3} className="border border-erp-gray"></td>
                   <td className="text-center border border-erp-gray">
                     {calculateTotalQuantity()}
@@ -392,7 +404,10 @@ const closeModal = (setShowModal, setDetail) => {
   setDetail((prev) => ({
     ...prev,
     status: "APRV_REQ",
+    rejectcode: "",
+    rejectreason: "",
   }));
+
   return false;
 };
 

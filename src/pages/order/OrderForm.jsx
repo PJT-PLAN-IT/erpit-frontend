@@ -29,7 +29,7 @@ function OrderForm() {
     items: [],
   });
 
-  console.log(form);
+  console.log("form: ", form);
 
   /*테이블에 오더가 추가 될때마다 새로고침 */
   useEffect(() => {}, [form.items]);
@@ -46,7 +46,7 @@ function OrderForm() {
 
   /*아이템 테이블 행 삭제 */
   const deleteRow = (id) => {
-    console.log(id);
+    console.log("delete row: ", id);
     setForm((prevForm) => ({
       ...prevForm,
       items: prevForm.items.filter((_, index) => index !== id),
@@ -270,6 +270,34 @@ function OrderForm() {
     };
     setForm({ ...form, items: updatedItemList });
   };
+
+  const checkDateLength = (index) => {
+    const deliveryDate = form.items[index]?.deliverydate || "";
+
+    if (deliveryDate.length < 8 && deliveryDate.length > 1) {
+      console.log(deliveryDate.length);
+      alert(
+        `${index}번의 납품요청일을 포맷에 맞춰 다시 입력하여주세요: YYYYMMDD`
+      );
+      const updatedItemList = [...form.items];
+      updatedItemList[index] = {
+        ...updatedItemList[index],
+        deliverydate: "",
+      };
+      setForm({ ...form, items: updatedItemList });
+    }
+  };
+  const checkOrderDateLength = () => {
+    const orderdate = form.orderdate || "";
+
+    if (orderdate.length < 8 && orderdate.length > 1) {
+      console.log(orderdate.length);
+      alert(`주문일자를 포맷에 맞춰 다시 입력하여주세요: YYYYMMDD`);
+
+      setForm({ ...form, orderdate: "" });
+    }
+  };
+
   /*반려 변화 저장 */
   const handleRejectChange = (e) => {
     setReject(e.target.value);
@@ -297,8 +325,6 @@ function OrderForm() {
   /*아이콘  */
   const deleteIcon = <FontAwesomeIcon icon={faCircleMinus} />;
 
-  console.log(form.orderdate);
-
   function checkDeliveryDates(form) {
     for (let i = 0; i < form.items.length; i++) {
       const item = form.items[i];
@@ -312,7 +338,6 @@ function OrderForm() {
 
   /*오더폼 확인 */
   const validateOrderForm = () => {
-    console.log(form.orderdate);
     if (!form.orderdate) {
       alert("주문 날짜를 입력해주세요");
       return false;
@@ -359,7 +384,7 @@ function OrderForm() {
     })
   );
 
-  console.log(filteredItemList);
+  console.log("item list before submit: ", filteredItemList);
 
   /*오더폼 등록 */
   const submitOrderForm = async () => {
@@ -370,6 +395,8 @@ function OrderForm() {
       status: form.status,
       orderItemList: filteredItemList,
     };
+
+    console.log("submitting details:", orderFormInfo);
 
     if (!validateOrderForm(form)) {
       return;
@@ -387,6 +414,7 @@ function OrderForm() {
         config: { method: "POST", url: "/api/order" },
         body: orderFormInfo,
       });
+      console.log("Response from backend:", resultData);
       if (resultData?.status === "OK") {
         setRedirect(true);
       } else if (error) {
@@ -449,8 +477,38 @@ function OrderForm() {
       setInputValue(rawValue);
     };
 
+    // const handleBlur = (e) => {
+    //   const numericValue = parseInt(inputValue) || 0;
+
+    //   if (field === "orderqty" && !checkOrderQty(e, item, item.itemcd)) {
+    //     setInputValue(formatWithCommas(item[field]));
+    //     return;
+    //   }
+
+    //   handleItemChange(index, field, numericValue);
+    //   setInputValue(formatWithCommas(numericValue));
+    // };
+
     const handleBlur = (e) => {
       const numericValue = parseInt(inputValue) || 0;
+
+      if (field === "ordersupplyprice") {
+        if (numericValue < item.originalSupplyPrice) {
+          alert(
+            `입력하신 공급가가 기존 금액: ${item.originalSupplyPrice} 보다 낮습니다.\n 다시 지정해주세요.`
+          );
+          setInputValue(formatWithCommas(item.ordersupplyprice));
+          handleItemChange(index, field, item.ordersupplyprice);
+          return;
+        } else if (numericValue > item.originalSupplyPrice * 1.5) {
+          alert(
+            `입력하신 공급가는 기존 금액:${item.originalSupplyPrice}의 50%를 초과할 수 없습니다.\n 다시 지정해주세요.`
+          );
+          setInputValue(formatWithCommas(item.ordersupplyprice));
+          handleItemChange(index, field, item.ordersupplyprice);
+          return;
+        }
+      }
 
       if (field === "orderqty" && !checkOrderQty(e, item, item.itemcd)) {
         setInputValue(formatWithCommas(item[field]));
@@ -480,7 +538,7 @@ function OrderForm() {
     <div className="flex">
       <div className="flex-col items-center justify-center bg-erp-soft-gray p-7 w-[100%] relative ">
         <div className="absolute -top-[20px] left-1/2 -translate-x-1/2 w-[100%]">
-          <div className="flex justify-self-end my-10 pl-12 ">
+          <div className="flex justify-self-end my-5 pl-12 ">
             <button
               className="border border-erp-gray px-4 bg-erp-green text-white"
               onClick={submitOrderForm}
@@ -504,6 +562,7 @@ function OrderForm() {
                     type="text"
                     onChange={(e) => handleOrderDateChange(e)}
                     value={form.orderdate || ""}
+                    onBlur={() => checkOrderDateLength()}
                   />
                 </td>
                 <td className="border border-erp-gray bg-erp-mint text-center">
@@ -743,6 +802,7 @@ function OrderForm() {
                             type="text"
                             onChange={(event) => handleDateChange(index, event)}
                             value={item.deliverydate || ""}
+                            onBlur={() => checkDateLength(index)}
                           />
                         </td>
                         <td className="text-center  border border-erp-gray  w-[50px]">
@@ -856,6 +916,7 @@ function ItemTable({
       ...newItem,
       orderqty: 0,
       ordersupplyprice: newItem.buyersupplyprice,
+      originalSupplyPrice: newItem.buyersupplyprice,
       ordersurtax: 0,
       ordersalesprice: 0,
       originprice: newItem.originprice,
@@ -974,8 +1035,6 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     setBuyerValue(e.target.value);
   };
 
-  console.log(buyerValue);
-
   const searchBuyerCode = async () => {
     if (buyerValue) {
       try {
@@ -986,7 +1045,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
           },
         });
         if (result) {
-          console.log(result.data);
+          console.log("buyer:", result.data);
           setBuyers(result.data);
         }
       } catch (error) {

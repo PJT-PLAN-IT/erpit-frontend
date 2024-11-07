@@ -108,18 +108,17 @@ function OrderEdit() {
   /*반려처리 */
   const setFinishStatus = async () => {
     const setFinish = window.confirm(
-      "반려처리 하시겠습니까? 반려처리시 수정불가합니다"
+      "종결처리 하시겠습니까? 종결처리시 수정불가합니다"
     );
 
     if (setFinish) {
-      detail.status = "FINISH";
       const finishStatus = {
         orderno: detail.orderno,
-        status: detail.status,
-        rejectcode: detail.rejectcode,
-        rejectreason: detail.rejectreason,
+        status: "FINISH",
+        rejectcode: detail.rejectcode || "",
+        rejectreason: detail.rejectreason || "",
       };
-      console.log(finishStatus);
+      console.log("반려처리:", finishStatus);
       try {
         const resultData = await fetchData({
           config: {
@@ -303,6 +302,8 @@ function OrderEdit() {
 
     if (isApproved) {
       orderFormInfo.status = "APRV_REQ";
+    } else {
+      return;
     }
 
     try {
@@ -372,8 +373,38 @@ function OrderEdit() {
       setInputValue(rawValue);
     };
 
+    // const handleBlur = (e) => {
+    //   const numericValue = parseInt(inputValue) || 0;
+
+    //   if (field === "orderqty" && !checkOrderQty(e, item, item.itemcd)) {
+    //     setInputValue(formatWithCommas(item[field]));
+    //     return;
+    //   }
+
+    //   handleItemChange(index, field, numericValue);
+    //   setInputValue(formatWithCommas(numericValue));
+    // };
+
     const handleBlur = (e) => {
       const numericValue = parseInt(inputValue) || 0;
+
+      if (field === "ordersupplyprice") {
+        if (numericValue < item.originalSupplyPrice) {
+          alert(
+            `입력하신 공급가가 기존 금액: ${item.originalSupplyPrice} 보다 낮습니다.\n 다시 지정해주세요.`
+          );
+          setInputValue(formatWithCommas(item.ordersupplyprice));
+          handleItemChange(index, field, item.ordersupplyprice);
+          return;
+        } else if (numericValue > item.originalSupplyPrice * 1.5) {
+          alert(
+            `입력하신 공급가는 기존 금액:${item.originalSupplyPrice}의 50%를 초과할 수 없습니다.\n 다시 지정해주세요.`
+          );
+          setInputValue(formatWithCommas(item.ordersupplyprice));
+          handleItemChange(index, field, item.ordersupplyprice);
+          return;
+        }
+      }
 
       if (field === "orderqty" && !checkOrderQty(e, item, item.itemcd)) {
         setInputValue(formatWithCommas(item[field]));
@@ -394,6 +425,23 @@ function OrderEdit() {
       />
     );
   }
+
+  const checkDateLength = (index) => {
+    const deliveryDate = detail.itemList[index]?.deliverydate || "";
+
+    if (deliveryDate.length < 8 && deliveryDate.length > 1) {
+      console.log(deliveryDate.length);
+      alert(
+        `${index}번의 납품요청일을 포맷에 맞춰 다시 입력하여주세요: YYYYMMDD`
+      );
+      const updatedItemList = [...detail.itemList];
+      updatedItemList[index] = {
+        ...updatedItemList[index],
+        deliverydate: "",
+      };
+      setDetail({ ...detail, itemList: updatedItemList });
+    }
+  };
 
   const getStatName = (statusId) => {
     const statusObj = Status.find((status) => status.id === statusId);
@@ -607,6 +655,7 @@ function OrderEdit() {
                             className="border w-[100%] border-erp-gray"
                             type="text"
                             onChange={(event) => handleDateChange(index, event)}
+                            onBlur={() => checkDateLength(index)}
                             value={item.deliverydate || ""}
                           />
                         </td>
