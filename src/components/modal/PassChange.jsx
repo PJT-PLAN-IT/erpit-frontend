@@ -84,11 +84,18 @@ const PassChange = () => {
             <div className={`flex text-xs text-erp-green`}>
                 {check}
             </div>
-            <button
-                onClick={onClickPass}
-                disabled={disabled}
-                className={`flex w-96 h-12 my-10 rounded-lg bg-erp-green font-medium items-center justify-center text-white`}>저장
-            </button>
+            {disabled ?
+                <button
+                    onClick={onClickPass}
+                    disabled={disabled}
+                    className={`flex w-96 h-12 my-10 rounded-lg bg-erp-gray font-medium items-center justify-center text-white`}>저장
+                </button>
+                :
+                <button
+                    onClick={onClickPass}
+                    disabled={disabled}
+                    className={`flex w-96 h-12 my-10 rounded-lg bg-erp-green font-medium items-center justify-center text-white`}>저장
+                </button>}
         </div>
     )
 

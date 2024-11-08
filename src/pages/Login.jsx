@@ -2,7 +2,7 @@
 
 import { useAuth } from "../context/AuthContext.jsx";
 import {Navigate, useNavigate} from "react-router-dom";
-import { useState } from "react";
+import {useRef, useState} from "react";
 import useAxios from "../hook/useAxios.js";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 
@@ -13,10 +13,32 @@ const Login = () => {
     usercd: "",
     password: "",
   });
+  const isLogin = useRef(true);
+  const isUsercd = useRef(false);
+  const isPass = useRef(false);
 
   const onChangeInput = (e) => {
     let name = e.target.name;
     let value = e.target.value;
+    console.log(name);
+    console.log(value);
+
+    if(name==='usercd' && value === ''){
+      isLogin.current = true;
+      isUsercd.current = false;
+    }else{
+      isUsercd.current = true;
+    }
+    if(name==='password' && value ===''){
+      isLogin.current = true;
+      isPass.current = false;
+    }else{
+      isPass.current = true;
+    }
+
+    if(isUsercd.current && isPass.current){
+      isLogin.current = false;
+    }
 
     setInput({
       ...input,
@@ -31,9 +53,12 @@ const Login = () => {
         body: input,
       });
       if (resultData) {
-        console.log(resultData.message);
         if(resultData.message === "password does not match"){
           alert("로그인 실패!");
+          return;
+        }
+        if(resultData.message ==="user does not exist"){
+          alert("존재하지 않는 아이디입니다.");
           return;
         }
           setUser({
@@ -43,6 +68,9 @@ const Login = () => {
             accessToken: resultData.data.accessToken,
           });
           saveAccessToken(resultData.data.accessToken);
+          isLogin.current = true;
+          isPass.current = false;
+          isUsercd.current = false;
         if (resultData.data.isInitPw === 'Y') {
           navigator('/passchange');
         }
@@ -92,14 +120,25 @@ const Login = () => {
         onKeyDown={onHandleKeyDown}
         onChange={onChangeInput}
       />
-      <button
-        className={`flex w-96 h-12 my-10 rounded-lg bg-erp-green font-medium items-center justify-center text-white`}
-        onClick={onClickLogin}
-      >
-        로그인
-      </button>
+      {isLogin.current ?
+          <button
+              className={`flex w-96 h-12 my-10 rounded-lg bg-erp-gray font-medium items-center justify-center text-white`}
+              disabled={isLogin.current}
+              onClick={onClickLogin}
+          >
+            로그인
+          </button>
+          :
+          <button
+              className={`flex w-96 h-12 my-10 rounded-lg bg-erp-green font-medium items-center justify-center text-white`}
+              disabled={isLogin.current}
+              onClick={onClickLogin}
+          >
+            로그인
+          </button>
+      }
 
-      {loading && <LoadingSpinner />}
+      {loading && <LoadingSpinner/>}
     </div>
   );
 };
