@@ -33,6 +33,23 @@ function OrderEdit() {
   const location = useLocation();
   const { detailNo } = location.state || {};
 
+  const fetchItemTable = async () => {
+    try {
+      const response = await fetchData({
+        config: {
+          method: "GET",
+          url: `/api/item/price/list?item=${item}&buyer=${detail.buyercd}`,
+        },
+      });
+      if (response) {
+        console.log("검색결과:", response.data);
+        setSearchResult(response.data);
+      }
+    } catch (err) {
+      console.error("Error: ", err);
+    }
+  };
+
   useEffect(() => {
     if (detailNo) {
       const getDetail = async () => {
@@ -50,6 +67,7 @@ function OrderEdit() {
       };
 
       getDetail();
+      fetchItemTable();
     }
   }, [detailNo]);
 
@@ -272,19 +290,34 @@ function OrderEdit() {
   };
   console.log(orderFormInfo);
 
+  const checkDateFormat = (dateString) => {
+    const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+    return datePattern.test(dateString);
+  };
+
   const validateOrderForm = () => {
     for (let i = 0; i < detail.itemList.length; i++) {
       const item = detail.itemList[i];
+
       if (item.orderqty === 0 || item.orderqty <= 0) {
         alert(`${i + 1}번: ${item.itemnm}의 발주 수량을 입력해주세요`);
         return false;
       }
+
       if (item.ordersalesprice === 0) {
         alert(`${i + 1}번: ${item.itemnm}의 공급가를 입력해주세요.`);
         return false;
       }
+
       if (!item.deliverydate) {
         alert(`${i + 1}번: ${item.itemnm}의 납품 요청일을 입력해주세요`);
+        return false;
+      } else if (!checkDateFormat(item.deliverydate)) {
+        alert(
+          `${i + 1}번: ${
+            item.itemnm
+          }의 납품 요청일을 YYYY-MM-DD 형식에 맞춰 입력해주세요`
+        );
         return false;
       }
     }
@@ -373,32 +406,20 @@ function OrderEdit() {
       setInputValue(rawValue);
     };
 
-    // const handleBlur = (e) => {
-    //   const numericValue = parseInt(inputValue) || 0;
-
-    //   if (field === "orderqty" && !checkOrderQty(e, item, item.itemcd)) {
-    //     setInputValue(formatWithCommas(item[field]));
-    //     return;
-    //   }
-
-    //   handleItemChange(index, field, numericValue);
-    //   setInputValue(formatWithCommas(numericValue));
-    // };
-
     const handleBlur = (e) => {
-      const numericValue = parseInt(inputValue) || 0;
+      const numericValue = Number(inputValue.replace(/,/g, "")) || 0;
 
       if (field === "ordersupplyprice") {
         if (numericValue < item.originalSupplyPrice) {
           alert(
-            `입력하신 공급가가 기존 금액: ${item.originalSupplyPrice} 보다 낮습니다.\n 다시 지정해주세요.`
+            `입력하신 공급가${numericValue} 가 기존 금액: ${item.originalSupplyPrice} 보다 낮습니다.\n 다시 지정해주세요.`
           );
           setInputValue(formatWithCommas(item.ordersupplyprice));
           handleItemChange(index, field, item.ordersupplyprice);
           return;
         } else if (numericValue > item.originalSupplyPrice * 1.5) {
           alert(
-            `입력하신 공급가는 기존 금액:${item.originalSupplyPrice}의 50%를 초과할 수 없습니다.\n 다시 지정해주세요.`
+            `입력하신 공급가는${numericValue}는 기존 금액:${item.originalSupplyPrice}의 50%를 초과할 수 없습니다.\n 다시 지정해주세요.`
           );
           setInputValue(formatWithCommas(item.ordersupplyprice));
           handleItemChange(index, field, item.ordersupplyprice);
@@ -418,7 +439,7 @@ function OrderEdit() {
     return (
       <input
         type="text"
-        className="m-auto text-center w-[100%] border border-erp-gray"
+        className="m-auto text-right w-[100%] border border-erp-gray"
         value={inputValue || 0}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -432,7 +453,9 @@ function OrderEdit() {
     if (deliveryDate.length < 8 && deliveryDate.length > 1) {
       console.log(deliveryDate.length);
       alert(
-        `${index}번의 납품요청일을 포맷에 맞춰 다시 입력하여주세요: YYYYMMDD`
+        `${
+          index + 1
+        }번의 납품요청일을 포맷에 맞춰 다시 입력하여주세요: YYYYMMDD`
       );
       const updatedItemList = [...detail.itemList];
       updatedItemList[index] = {
@@ -456,62 +479,62 @@ function OrderEdit() {
     <div className="flex">
       <div className="flex-col items-center justify-center bg-erp-soft-gray p-7 w-[100%] relative ">
         <div className="absolute -top-[20px] left-1/2 -translate-x-1/2 w-[100%]">
-          <div className="flex justify-self-end gap-4 max-w-[200px] my-5 pl-20 ">
+          <div className="flex justify-self-end gap-2 max-w-[300px] my-5 pl-20 ">
             {detail.status === "CREATE" ? (
               <button
-                className="border border-erp-gray px-4 bg-white text-black"
+                className="border border-erp-gray m-2 h-10 px-4 bg-white text-black"
                 onClick={deleteOrderForm}
               >
                 삭제
               </button>
             ) : (
               <button
-                className="border border-erp-gray px-4 bg-white text-black"
+                className="border border-erp-gray px-4 m-2 h-10 bg-white text-black"
                 onClick={setFinishStatus}
               >
                 종결처리
               </button>
             )}
             <button
-              className="border border-erp-gray px-4 bg-erp-green text-white"
+              className="border border-erp-gray px-4 m-2 h-10 bg-erp-green text-white"
               onClick={submitOrderForm}
             >
-              등록
+              승인요청
             </button>
           </div>
           <div className="headerTable">
             <table className="border border-erp-gray border-collapse w-[100%] mt-10 bg-white">
               <tbody>
                 <tr>
-                  <td className="border border-erp-gray bg-erp-mint text-center">
+                  <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                     오더번호
                   </td>
                   <td className="border border-erp-gray">{detail.orderno}</td>
-                  <td className="border border-erp-gray bg-erp-mint text-center">
+                  <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                     주문일자
                   </td>
                   <td className="border border-erp-gray">{detail.orderdate}</td>
-                  <td className="border border-erp-gray bg-erp-mint text-center">
+                  <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                     등록일자
                   </td>
                   <td className="border border-erp-gray">{currentDate}</td>
                 </tr>
                 <tr>
-                  <td className="border border-erp-gray bg-erp-mint text-center">
+                  <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                     직원코드
                   </td>
                   <td>{detail.usercd}</td>
-                  <td className="border border-erp-gray bg-erp-mint text-center ">
+                  <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                     바이어 코드
                   </td>
                   <td className="border border-erp-gray">{detail.buyercd}</td>
-                  <td className="border border-erp-gray bg-erp-mint text-center">
+                  <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                     바이어명
                   </td>
                   <td className="border border-erp-gray ">{detail.buyernm}</td>
                 </tr>
                 <tr className="">
-                  <td className="border border-erp-gray bg-erp-mint text-center">
+                  <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                     상태관리
                   </td>
                   <td className="border border-erp-gray">
@@ -520,7 +543,7 @@ function OrderEdit() {
                   <>
                     {detail.status === "REJECT" ? (
                       <>
-                        <td className="border border-erp-gray bg-erp-mint text-center">
+                        <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                           반려사유
                         </td>
                         <td className="flex gap-5 text-center">
@@ -539,10 +562,12 @@ function OrderEdit() {
           </div>
         </div>
 
-        <div className=" mt-5 absolute top-[150px] left-1/2 -translate-x-1/2 w-[100%] h-[333px] border border-erp-gray pt-5 bg-white">
+        <div className=" mt-5 absolute top-[150px] left-1/2 -translate-x-1/2 w-[100%] h-[333px] shadow-md p-5 rounded-lg bg-white">
           <div className="z-30">
-            <h1 className="text-center text-xl font-bold ">오더 품목 리스트</h1>
-            <div className="relative bg-white h-[250px]  top-10">
+            <h1 className="text-left text-xl font-semibold ml-2">
+              오더 품목 리스트
+            </h1>
+            <div className="relative bg-white h-[250px] top-5">
               <table className="w-[100%] absolute top-0 z-20">
                 <thead className="border border-erp-gray">
                   <tr>
@@ -602,7 +627,7 @@ function OrderEdit() {
                         <td className="text-center border border-erp-gray w-[200px]">
                           {item.itemnm}
                         </td>
-                        <td className="text-center border border-erp-gray  w-[100px]">
+                        <td className="text-right border border-erp-gray  w-[100px]">
                           <OrderFormInput
                             index={index}
                             item={item}
@@ -611,10 +636,10 @@ function OrderEdit() {
                             checkOrderQty={checkOrderQty}
                           />
                         </td>
-                        <td className="text-center border border-erp-gray  w-[100px]">
+                        <td className="text-right border border-erp-gray  w-[100px]">
                           {item.originprice}
                         </td>
-                        <td className="text-center border border-erp-gray  w-[100px]">
+                        <td className="text-right border border-erp-gray  w-[100px]">
                           <OrderFormInput
                             index={index}
                             item={item}
@@ -623,21 +648,21 @@ function OrderEdit() {
                             checkOrderQty={checkOrderQty}
                           />
                         </td>
-                        <td className="text-center border border-erp-gray  w-[100px]">
+                        <td className="text-right border border-erp-gray  w-[100px]">
                           {(item.ordersurtax = Math.round(
                             item.ordersupplyprice / 10
                           )).toLocaleString(undefined, {
                             maximumFractionDigits: 3,
                           })}
                         </td>
-                        <td className="text-center border border-erp-gray  w-[100px]">
+                        <td className="text-right border border-erp-gray  w-[100px]">
                           {(item.ordersalesprice =
                             item.ordersupplyprice +
                             item.ordersurtax).toLocaleString(undefined, {
                             maximumFractionDigits: 3,
                           })}
                         </td>
-                        <td className="text-center border border-erp-gray  w-[100px]">
+                        <td className="text-right border border-erp-gray  w-[100px]">
                           {(
                             item.ordersalesprice * item.orderqty
                           ).toLocaleString(undefined, {
@@ -675,19 +700,19 @@ function OrderEdit() {
                     colSpan={3}
                     className="border border-erp-gray w-[149px]"
                   ></td>
-                  <td className="text-center border border-erp-gray w-[120px]">
+                  <td className="text-right border border-erp-gray w-[120px]">
                     {calculateTotalQuantity()}
                   </td>
-                  <td className="text-center border border-erp-gray w-[120px]">
+                  <td className="text-right border border-erp-gray w-[120px]">
                     {calculateTotalOriginPrice().toLocaleString()}
                   </td>
-                  <td className="text-center border border-erp-gray w-[120px]">
+                  <td className="text-right border border-erp-gray w-[120px]">
                     {calculateTotalSetPrice().toLocaleString()}
                   </td>
-                  <td className="text-center border border-erp-gray w-[120px]">
+                  <td className="text-right border border-erp-gray w-[120px]">
                     {calculateTotalTax().toLocaleString()}
                   </td>
-                  <td className="text-center border border-erp-gray w-[120px]">
+                  <td className="text-right border border-erp-gray w-[120px]">
                     {calculateTotalPrice().toLocaleString()}
                   </td>
 
@@ -717,6 +742,7 @@ function OrderEdit() {
           detail={detail}
           searchResult={searchResult}
           setSearchResult={setSearchResult}
+          fetchItemTable={fetchItemTable}
         />
       </div>
     </div>
@@ -730,29 +756,13 @@ function ItemTable({
   detail,
   searchResult,
   setSearchResult,
+  fetchItemTable,
 }) {
   const search = <FontAwesomeIcon icon={faMagnifyingGlass} />;
   const { error, fetchData } = useAxios();
 
   const handleItem = (e) => {
     setItem(e.target.value);
-  };
-
-  const fetchItemTable = async () => {
-    try {
-      const response = await fetchData({
-        config: {
-          method: "GET",
-          url: `/api/item/price/list?item=${item}&buyer=${detail.buyercd}`,
-        },
-      });
-      if (response) {
-        console.log("검색결과:", response.data);
-        setSearchResult(response.data);
-      }
-    } catch (err) {
-      console.error("Error: ", err);
-    }
   };
 
   const addToOrderTable = (newItem) => {
@@ -783,19 +793,20 @@ function ItemTable({
   };
 
   return (
-    <div className="itemTable absolute top-[560px] left-1/2 -translate-x-1/2 w-[100%]  border border-erp-gray pt-5 bg-white h-[265px]">
-      <h1 className="text-center text-xl mt-1 font-bold">
+    <div className="itemTable absolute top-[560px] left-1/2 -translate-x-1/2 w-[100%] shadow-md p-5 rounded-lg bg-white h-[265px]">
+      <h1 className="text-left text-xl mt-1 font-bold ml-2">
         바이어별 판매가 검색
       </h1>
-      <div className="flex gap-5 items-center mt-2 pl-2">
-        <p className="text-gray-500">판매부번</p>
+      <div className="flex gap-3 items-center mt-5 pl-2">
+        <p className="text-gray-500 font-semibold">판매부번</p>
         <input
           autoFocus
           type="text"
-          className="p-1 border border-erp-gray"
+          className="p-1 border w-[250px] border-erp-gray"
           value={item}
           onChange={handleItem}
           onKeyDown={enterItemTable}
+          placeholder="판매부번명 또는 번호를 입력하세요"
         />
         <button className="-translate-x-12" onClick={fetchItemTable}>
           {search}
@@ -841,17 +852,17 @@ function ItemTable({
                   <td className="border border-erp-gray text-center">
                     {result.buyernm}
                   </td>
-                  <td className="border border-erp-gray text-center">
-                    {result.originprice}
+                  <td className="border border-erp-gray text-right">
+                    {result.originprice.toLocaleString()}
                   </td>
-                  <td className="border border-erp-gray text-center">
-                    {result.buyersupplyprice}
+                  <td className="border border-erp-gray text-right">
+                    {result.buyersupplyprice.toLocaleString()}
                   </td>
-                  <td className="border border-erp-gray text-center">
-                    {result.surtax}
+                  <td className="border border-erp-gray text-right">
+                    {result.surtax.toLocaleString()}
                   </td>
-                  <td className="border border-erp-gray text-center">
-                    {result.salesprice}
+                  <td className="border border-erp-gray text-right">
+                    {result.salesprice.toLocaleString()}
                   </td>
                   <td className="border border-erp-gray text-center">
                     {result.unit}

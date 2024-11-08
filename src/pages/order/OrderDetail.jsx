@@ -113,7 +113,7 @@ function OrderDetail() {
           <div className="flex justify-end ">
             <button
               onClick={cancelOrderForm}
-              className="border border-erp-gray px-4 bg-erp-green text-white"
+              className="border border-erp-gray px-4 m-4 h-10 bg-erp-green text-white"
             >
               승인취소
             </button>
@@ -125,35 +125,35 @@ function OrderDetail() {
           <table className="border border-erp-gray border-collapse w-[100%] mt-10 bg-white">
             <tbody>
               <tr>
-                <td className="border border-erp-gray bg-erp-mint text-center">
+                <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                   오더번호
                 </td>
                 <td className="border border-erp-gray">{detail.orderno}</td>
-                <td className="border border-erp-gray bg-erp-mint text-center">
+                <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                   주문일자
                 </td>
                 <td className="border border-erp-gray">{detail.orderdate}</td>
-                <td className="border border-erp-gray bg-erp-mint text-center">
+                <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                   등록일자
                 </td>
                 <td className="border border-erp-gray">{detail.adddate}</td>
               </tr>
               <tr>
-                <td className="border border-erp-gray bg-erp-mint text-center">
+                <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                   직원코드
                 </td>
                 <td>{detail.usercd}</td>
-                <td className="border border-erp-gray bg-erp-mint text-center ">
+                <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                   바이어 코드
                 </td>
                 <td className="border border-erp-gray">{detail.buyercd}</td>
-                <td className="border border-erp-gray bg-erp-mint text-center">
+                <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                   바이어명
                 </td>
                 <td className="border border-erp-gray ">{detail.buyernm}</td>
               </tr>
               <tr className="">
-                <td className="border border-erp-gray bg-erp-mint text-center">
+                <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                   상태관리
                 </td>
                 {Status.map((stat) =>
@@ -167,7 +167,7 @@ function OrderDetail() {
                 )}
                 {detail.status === "REJECT" ? (
                   <>
-                    <td className="border border-erp-gray bg-erp-mint text-center">
+                    <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                       반려사유
                     </td>
                     <td className="flex gap-5 text-center">

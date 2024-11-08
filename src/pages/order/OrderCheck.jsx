@@ -116,6 +116,10 @@ function OrderCheck() {
 
   /*결제 확인 */
   const setFinishStatus = async () => {
+    if (detail.rejectcode === "ETC" && !detail.rejectreason) {
+      alert("반려사유를 적어주세요");
+      return;
+    }
     const finishStatus = {
       orderno: detail.orderno,
       status: detail.status,
@@ -187,15 +191,15 @@ function OrderCheck() {
     <div className="flex">
       <div className="flex-col bg-erp-soft-gray p-7 w-[100%]">
         {detail.status === "APRV_REQ" ? (
-          <div className="flex justify-self-end gap-5">
+          <div className="flex justify-self-end max-w-[270px] gap-3">
             <button
-              className="border border-erp-gray px-4 bg-erp-green text-white"
+              className="border border-erp-gray px-4  h-10 bg-erp-green text-white"
               onClick={saveAprvStat}
             >
               승인완료
             </button>
             <button
-              className="border border-erp-gray px-4 bg-white"
+              className="border border-erp-gray px-4  h-10 bg-white"
               onClick={() => saveRejStat(setShowModal)}
             >
               반려
@@ -279,8 +283,8 @@ function OrderCheck() {
             />
           </>
         )}
-        <div className="orderListTable mt-10 border border-erp-gray ">
-          <h1 className="text-center font-bold text-2xl mb-10 mt-5">
+        <div className="orderListTable mt-10 shadow-md p-5 rounded-lg bg-white ">
+          <h1 className="text-left font-semibold text-2xl mb-5 mt-2 ml-2">
             오더 품목 리스트
           </h1>
           <div className="max-h-[600px] overflow-y-auto  ">
@@ -323,22 +327,22 @@ function OrderCheck() {
                     <td className="text-center border border-erp-gray">
                       {item.itemnm}
                     </td>
-                    <td className="text-center border border-erp-gray">
+                    <td className="text-right border border-erp-gray">
                       {item.orderqty.toLocaleString()}
                     </td>
-                    <td className="text-center border border-erp-gray">
+                    <td className="text-right border border-erp-gray">
                       {item.originprice.toLocaleString()}
                     </td>
-                    <td className="text-center border border-erp-gray">
+                    <td className="text-right border border-erp-gray">
                       {item.ordersupplyprice.toLocaleString()}
                     </td>
-                    <td className="text-center border border-erp-gray">
+                    <td className="text-right border border-erp-gray">
                       {item.ordersurtax.toLocaleString()}
                     </td>
-                    <td className="text-center border border-erp-gray">
+                    <td className="text-right border border-erp-gray">
                       {item.ordersalesprice.toLocaleString()}
                     </td>
-                    <td className="text-center border border-erp-gray">
+                    <td className="text-right border border-erp-gray">
                       {(item.ordersalesprice * item.orderqty).toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
@@ -355,22 +359,22 @@ function OrderCheck() {
 
                 <tr className="border border-erp-gray-t-2 bg-slate-300">
                   <td colSpan={3} className="border border-erp-gray"></td>
-                  <td className="text-center border border-erp-gray">
+                  <td className="text-right border border-erp-gray">
                     {calculateTotalQuantity()}
                   </td>
-                  <td className="text-center border border-erp-gray">
+                  <td className="text-right border border-erp-gray">
                     {calculateTotalOriginPrice().toLocaleString()}
                   </td>
-                  <td className="text-center border border-erp-gray">
+                  <td className="text-right border border-erp-gray">
                     {calculateTotalSetPrice().toLocaleString()}
                   </td>
-                  <td className="text-center border border-erp-gray">
+                  <td className="text-right border border-erp-gray">
                     {calculateTotalTax().toLocaleString()}
                   </td>
-                  <td className="text-center border border-erp-gray">
+                  <td className="text-right border border-erp-gray">
                     {calculateTotalPrice().toLocaleString()}
                   </td>
-                  <td className="text-center border border-erp-gray">
+                  <td className="text-right border border-erp-gray">
                     {calculateTotalsupplyPrice().toLocaleString()}
                   </td>
                   <td
@@ -457,7 +461,7 @@ const ShowRejectModal = ({
               className="border border-erp-gray w-[200px]"
               type="text"
               placeholder="기타사유를 입력하세요"
-              onChange={handleRejectInfoChange}
+              onChange={(e) => handleRejectInfoChange(e)}
             />
           ) : (
             ""
