@@ -1,6 +1,6 @@
-const TopUsersList = ({topUsersList}) => {
-    const day = new Date();
-    const month = day.getMonth()+1;
+const TopUsersList = ({topUsersList, month}) => {
+    // const day = new Date();
+    // const month = day.getMonth()+1;
     return (
         // <div className={`flex flex-col`}>
         <div className="h-full w-[33%] bg-white mr-10 rounded-lg shadow-lg flex flex-col">

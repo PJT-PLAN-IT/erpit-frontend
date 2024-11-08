@@ -1,4 +1,4 @@
-const Input = ({search , searchData, onKeyDown, data}) => {
+const Input = ({search , searchData, onKeyDown, onClick, data}) => {
 
     const sbj = {
         buyer: '바이어',
@@ -14,6 +14,7 @@ const Input = ({search , searchData, onKeyDown, data}) => {
                        placeholder={'검색어를 입력해주세요'}
                        value={data}
                        onKeyDown={onKeyDown}
+                       onClick={onClick}
                        onChange={(e) => searchData(e.target.value)}>
                 </input>
             </div>
