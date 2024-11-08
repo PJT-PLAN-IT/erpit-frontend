@@ -12,17 +12,34 @@ import gifCount from "../assets/img/count.gif";
 import gifOrderPrice from "../assets/img/orderprice.gif";
 import {months} from "../data/month.js";
 import {year} from "../data/year.js";
+import UserSearch from "../components/modal/UserSearch.jsx";
 
+const initUser = {
+    usercd: ''
+}
 const ReportSub = () => {
-    const initSales = {'1월' : 0, '2월' : 0, '3월' : 0, '4월' : 0, '5월' : 0, '6월' : 0, '7월' : 0, '8월' : 0, '9월' : 0, '10월' : 0, '11월' : 0, '12월' : 0};
+    const initSales = {
+        '1월': 0,
+        '2월': 0,
+        '3월': 0,
+        '4월': 0,
+        '5월': 0,
+        '6월': 0,
+        '7월': 0,
+        '8월': 0,
+        '9월': 0,
+        '10월': 0,
+        '11월': 0,
+        '12월': 0
+    };
     const [sales, setSales] = useState(initSales);
-    const { user } = useAuth();
+    const {user} = useAuth();
     const {error, fetchData} = useAxios();
     let today = new Date();
     const initData = {
         year: today.getFullYear(),
         month: today.getMonth() + 1,
-        user:  user.role ==='ROLE_ADMIN' ? '' : user.usercd
+        user: user.role === 'ROLE_ADMIN' ? '' : user.usercd
     }
     const [chart, setChart] = useState([]);
     const [topBuyerList, setTopBuyerList] = useState([]);
@@ -32,12 +49,24 @@ const ReportSub = () => {
     const [orderCount, setOrderCount] = useState(0);
     const [orderPrice, setOrderPrice] = useState(0);
     const [revenue, setRevenue] = useState(0);
+    const [month, setMonth] = useState(today.getMonth() + 1);
+    const [searchUserModalOpen, setSearchUserModalOpen] = useState(false);
+    const [updateData, setUpdateData] = useState(initUser);
+
     useEffect(() => {
         fetchReportList();
     }, []);
 
+    useEffect(() => {
+        setSearch((prevData) => ({
+            year: prevData.year,
+            month: prevData.month,
+            user: updateData.usercd || prevData.usercd,
+        }));
+    }, [updateData]);
+
     const fetchReportList = async () => {
-        console.log("search",search);
+        console.log("search", search);
         try {
             const resultData = await fetchData({
                 config: {method: "POST", url: "/api/report"},
@@ -45,6 +74,7 @@ const ReportSub = () => {
             });
             if (resultData) {
                 const result = resultData.data;
+                console.log(result);
                 setChart(result.chart);
                 console.log(result.chart);
                 setTopBuyerList(result.topBuyerList);
@@ -54,6 +84,7 @@ const ReportSub = () => {
                 setOrderPrice(result.orderPrice);
                 setRevenue(result.revenue);
                 setSales(initSales);
+                setMonth(search.month);
             } else if (error) {
                 console.error("Error: ", error);
             }
@@ -62,25 +93,23 @@ const ReportSub = () => {
         }
     };
 
-    const onSearchParam = (e) =>{
+    const onSearchParam = (e) => {
         setSearch({
             year: today.getFullYear(),
             month: today.getMonth() + 1,
-            user:  user.role ==='ROLE_ADMIN' ? e : user.usercd
+            user: user.role === 'ROLE_ADMIN' ? e : user.usercd
         })
     }
     const onHandleKeyDown = (e) => {
-        if(e.key === 'Enter'){
+        if (e.key === 'Enter') {
             fetchReportList();
         }
     }
 
     const handleChange = (e) => {
         let {name, value} = e.target;
-        console.log(name,"  ",value);
-        setSearch({...search, [name]:value})
+        setSearch({...search, [name]: value})
     }
-
 
     return (
         <div className="flex flex-col items-center justify-start bg-gray-100 h-full">
@@ -124,7 +153,9 @@ const ReportSub = () => {
                     </select>
                 </div>
                 {user.role === 'ROLE_ADMIN' &&
-                    <Input search={'user'} searchData={onSearchParam} onKeyDown={onHandleKeyDown} data={search.user}/>
+                    <Input search={'user'} searchData={onSearchParam}
+                           onKeyDown={onHandleKeyDown} onClick={() => setSearchUserModalOpen(true)}
+                           data={updateData.usercd}/>
                 }
                 <Buttons style={'green-sm'} word={'search'} onClick={fetchReportList}/>
             </div>
@@ -172,14 +203,16 @@ const ReportSub = () => {
             {/* 세 번째 박스 */}
             <div className="w-full h-[40%] flex items-center justify-center">
                 {/* 테이블 1 */}
-                <TopUsersList topUsersList={topUsersList}/>
+                <TopUsersList topUsersList={topUsersList} month={month}/>
 
                 {/* 테이블 2 */}
-                <TopBuyerList topBuyerList={topBuyerList}/>
+                <TopBuyerList topBuyerList={topBuyerList} month={month}/>
 
                 {/* 테이블 3 */}
-                <TopSalesList topSalesList={topSalesList}/>
+                <TopSalesList topSalesList={topSalesList} month={month}/>
             </div>
+            <UserSearch searchUserModalOpen={searchUserModalOpen} setSearchUserModalOpen={setSearchUserModalOpen}
+                        setUpdateData={setUpdateData}/>
         </div>
 
 

@@ -1,6 +1,6 @@
-const TopBuyerList = ({topBuyerList}) => {
+const TopBuyerList = ({topBuyerList, month}) => {
     const day = new Date();
-    const month = day.getMonth() + 1;
+    // const month = day.getMonth() + 1;
     return (
     <div className="h-full w-[33%] bg-white mr-10 rounded-lg shadow-lg flex flex-col">
         <h1 className="text-center p-3 bg-gray-200 rounded-t-lg font-semibold" >{month}월 바이어별 매출 Top7</h1>

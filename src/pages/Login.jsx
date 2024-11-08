@@ -53,6 +53,11 @@ const Login = () => {
       console.error("Error: ", err);
     }
   };
+  const onHandleKeyDown = (e) => {
+    if(e.key === 'Enter'){
+      onClickLogin();
+    }
+  }
 
   // 이미 로그인한 경우라면 메인 페이지로 이동
   if (localStorage.getItem("Access-Token")) {
@@ -84,6 +89,7 @@ const Login = () => {
         type={`password`}
         className={`flex w-96 h-12 my-1 rounded-lg border border-gray-200 font-medium px-2`}
         placeholder={`비밀번호를 입력해주세요`}
+        onKeyDown={onHandleKeyDown}
         onChange={onChangeInput}
       />
       <button

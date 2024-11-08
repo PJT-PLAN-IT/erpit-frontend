@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import {useAuth} from "../../context/AuthContext.jsx";
 
-const UserTables = ({ data, setUpdateModalOpen, setUpdateData }) => {
+const UserTables = ({ data, setUpdateModalOpen, setUpdateData ,setSearchUserModalOpen}) => {
     const headStyle = 'border border-erp-gray text-center py-2 font-semibold';
     const tdStyle = 'border border-erp-gray text-center py-3';
     const trStyle = 'bg-white cursor-pointer hover:bg-gray-200';
@@ -10,8 +10,16 @@ const UserTables = ({ data, setUpdateModalOpen, setUpdateData }) => {
 
     const onClickTable = (userData) => {
         if(user.role === 'ROLE_ADMIN'){
-            setUpdateData(userData);
-            setUpdateModalOpen(true);
+            if(setUpdateData){
+                setUpdateData(userData);
+            }
+            if(setUpdateModalOpen){
+                setUpdateModalOpen(true);
+            }
+            if(setSearchUserModalOpen){
+                setSearchUserModalOpen(false);
+            }
+
         }
     };
     return (
