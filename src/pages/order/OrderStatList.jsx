@@ -460,7 +460,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     <div
       className={`${
         showModal ? "block" : "hidden"
-      } fixed inset-0  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 bg-white w-[900px] h-[600px] flex-col p-10`}
+      } fixed inset-0  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 bg-white w-[1200px] h-[600px] flex-col p-10`}
     >
       <div className="relative">
         <h1 className="text-center text-2xl  mb-5 font-bold">바이어 검색</h1>
@@ -620,7 +620,7 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
     <div
       className={`${
         showUserModal ? "block" : "hidden"
-      } fixed inset-0  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 bg-white w-[900px] h-[600px] flex-col p-10`}
+      } fixed inset-0  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 bg-white w-[1200px] h-[600px] flex-col p-10`}
     >
       <div className="relative">
         <h1 className="text-center text-2xl  mb-5 font-bold">바이어 검색</h1>

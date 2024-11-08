@@ -782,6 +782,7 @@ function ItemTable({
       ...newItem,
       orderqty: 0,
       ordersupplyprice: newItem.buyersupplyprice,
+      originalSupplyPrice: newItem.buyersupplyprice,
       ordersurtax: 0,
       ordersalesprice: 0,
       originprice: newItem.originprice,
@@ -805,11 +806,11 @@ function ItemTable({
   };
 
   return (
-    <div className="itemTable absolute top-[560px] left-1/2 -translate-x-1/2 w-[100%] shadow-md p-5 rounded-lg bg-white h-[265px]">
+    <div className="itemTable absolute top-[560px] left-1/2 -translate-x-1/2 w-[100%] shadow-md p-5 rounded-lg bg-white h-[280px]">
       <h1 className="text-left text-xl mt-1 font-bold ml-2">
         바이어별 판매가 검색
       </h1>
-      <div className="flex gap-3 items-center mt-5 pl-2">
+      <div className="flex gap-3 items-center mt-5 mb-2 pl-2">
         <p className="text-gray-500 font-semibold">판매부번</p>
         <input
           autoFocus
@@ -824,8 +825,8 @@ function ItemTable({
           {search}
         </button>
       </div>
-      <div className=" max-h-[185px] overflow-y-auto mt-2">
-        <table className="border border-erp-gray border-collapse w-[100%] mt-5 bg-white">
+      <div className=" max-h-[171px] overflow-y-auto mt-5">
+        <table className="border border-erp-gray border-collapse w-[100%] bg-white">
           <thead className="sticky top-0  bg-erp-mint">
             <th className="p-1 border border-erp-gray bg-erp-mint">순번</th>
             <th className="p-1 border border-erp-gray bg-erp-mint">

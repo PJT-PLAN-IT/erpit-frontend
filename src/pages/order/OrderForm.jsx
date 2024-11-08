@@ -1015,7 +1015,7 @@ function ItemTable({
       <h1 className="text-left ml-2 text-xl mt-1 font-bold">
         바이어별 판매가 검색
       </h1>
-      <div className="flex gap-3 items-center mt-5 pl-2">
+      <div className="flex gap-3 items-center mt-5 mb-2 pl-2">
         <p className="text-gray-500 font-semibold">판매부번</p>
         <input
           autoFocus
@@ -1030,8 +1030,8 @@ function ItemTable({
           {search}
         </button>
       </div>
-      <div className="max-h-[185px] overflow-y-auto mt-2">
-        <table className="border border-erp-gray border-collapse w-[100%] my-5 bg-white">
+      <div className="max-h-[171px] overflow-y-auto mt-5">
+        <table className="border border-erp-gray border-collapse w-[100%]  bg-white">
           <thead className="sticky top-0 bg-erp-mint">
             <th className="p-1 border border-erp-gray bg-erp-mint">순번</th>
             <th className="p-1 border border-erp-gray bg-erp-mint">
@@ -1167,7 +1167,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     <div
       className={`${
         showModal ? "block" : "hidden"
-      } fixed inset-0  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 bg-white w-[900px] h-[650px] flex-col p-10`}
+      } fixed inset-0  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 bg-white w-[1200px] h-[650px] flex-col p-10`}
     >
       <div className="relative">
         <h1 className="text-center text-2xl  mb-5 font-bold">바이어 검색</h1>
