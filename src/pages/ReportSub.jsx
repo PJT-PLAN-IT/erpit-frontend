@@ -13,11 +13,14 @@ import gifOrderPrice from "../assets/img/orderprice.gif";
 import {months} from "../data/month.js";
 import {year} from "../data/year.js";
 import UserSearch from "../components/modal/UserSearch.jsx";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faWonSign } from "@fortawesome/free-solid-svg-icons";
 
 const initUser = {
     usercd: ''
 }
 const ReportSub = () => {
+    const WonSign = <FontAwesomeIcon className={`size-6`} icon={faWonSign}/>
     const initSales = {
         '1월': 0,
         '2월': 0,
@@ -175,7 +178,7 @@ const ReportSub = () => {
                             <img src={gifRevenue} className={`h-full w-full`} alt={"revenue"}/>
                         </div>
                         <div className={`flex-row flex-grow justify-center`}>
-                            <p className={`h-20 flex justify-end pr-10 text-5xl text-erp-green`}> \ {revenue.toLocaleString()} </p>
+                            <p className={`h-20 flex justify-end pr-10 text-5xl text-erp-green`}> {WonSign} {revenue.toLocaleString()} </p>
                             <p className={`h-10 flex justify-end items-center pr-10 text-xl text-black`}>연 매출</p>
                         </div>
                     </div>
@@ -193,7 +196,7 @@ const ReportSub = () => {
                             <img src={gifOrderPrice} className={`h-full w-full`} alt={"revenue"}/>
                         </div>
                         <div className={`flex-row flex-grow justify-center`}>
-                            <p className={`h-20 flex justify-end pr-10 text-5xl text-erp-green`}> \ {orderPrice.toLocaleString()}</p>
+                            <p className={`h-20 flex justify-end pr-10 text-5xl text-erp-green align-middle`}> {WonSign} {orderPrice.toLocaleString()}</p>
                             <p className={`h-10 flex justify-end items-center pr-10 text-xl text-black`}>총 주문 금액</p>
                         </div>
                     </div>

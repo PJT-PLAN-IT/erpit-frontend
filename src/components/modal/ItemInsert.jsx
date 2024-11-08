@@ -42,7 +42,11 @@ const ItemInsert = ({insertModalOpen, setInsertModalOpen, fetchItemList}) => {
 
     //판매부번 등록
     const saveItem = async () => {
-        console.log(copyFormData);
+        if(copyFormData.supplyprice < copyFormData.originprice){
+            alert("공급가가 원가보다 적습니다!");
+            return;
+        }
+
         try {
             const result = await fetchData({
                 config: {method: "POST", url: "/api/item"},
@@ -200,11 +204,13 @@ const ItemInsert = ({insertModalOpen, setInsertModalOpen, fetchItemList}) => {
         // 맨 앞자리 0 제거 (단, '0'만 있는 경우는 허용)
         if (inputValue.length > 1 && inputValue.startsWith("0")) {
             inputValue = inputValue.replace(/^0+/, "");
+        }else if (inputValue === "0") {
+            // "0"인 경우 빈 문자열로 변경
+            inputValue = "";
         }
 
         // 정수 부분에 천 단위 콤마 추가
         let integer = inputValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
         return integer;
     }
 
