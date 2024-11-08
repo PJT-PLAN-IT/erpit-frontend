@@ -58,6 +58,14 @@ const PassChange = () => {
         }
     }
 
+    const onHandleKeyDown = (e) => {
+        if(!disabled){
+            if(e.key === 'Enter'){
+                onClickPass();
+            }
+        }
+    }
+
     return (
         <div className={`flex flex-col justify-center items-center h-screen w-screen`}>
             <h1 className={`font-bold text-3xl align-middle items-center mb-10 text-erp-green`}>비밀번호를 설정해주세요</h1>
@@ -65,11 +73,13 @@ const PassChange = () => {
                    className={`flex w-96 h-12 my-1 rounded-lg border border-gray-200 font-medium px-2`}
                    placeholder={`비밀번호 입력`}
                    onChange={onChangePass}
+                   onKeyDown={onHandleKeyDown}
             />
             <input type={`password`}
                    className={`flex w-96 h-12 my-1 rounded-lg border border-gray-200 font-medium px-2`}
                    placeholder={`비밀번호 확인`}
                    onChange={onChangePassSec}
+                   onKeyDown={onHandleKeyDown}
             />
             <div className={`flex text-xs text-erp-green`}>
                 {check}
