@@ -171,6 +171,7 @@ function PriceInsert() {
                         <td className={`${tdStyle}`}>
                             <input
                                 value={insertData.buyersupplyprice}
+                                maxLength={10}
                                 onChange={handleSupplyPriceChange}
                                 className={`${inputStyle}`}></input>
                         </td>
