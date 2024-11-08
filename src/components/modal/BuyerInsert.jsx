@@ -137,7 +137,6 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                 isEmail.current = true;
             }
             if (name === 'tel') {
-                //---------------------
                 if(value.length >= 9){
                     isTel.current = true;
                 }else {
@@ -147,6 +146,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                             .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
             }
             if (name === 'zipcode') {
+                value = value.replace(/[^0-9]/g, '');
                 isZipcode.current = true;
             }
         }
@@ -218,6 +218,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                                             name={sbj}
                                             value={formData[sbj]}
                                             onChange={onChangeForm}
+                                            maxLength={10}
                                             className={`flex-grow px-2 outline-none`}
                                             placeholder={data+' 입력 후 중복체크를 해주세요'}
                                             disabled={!duplicateCheck}
@@ -237,6 +238,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                                         name={sbj}
                                         value={formData[sbj]}
                                         onChange={onChangeForm}
+                                        maxLength={30}
                                         placeholder={data+'을 입력해주세요'}
                                         className={`flex w-full h-full px-2 outline-none`}/>
                                 }
@@ -253,6 +255,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                                         <input
                                             type={'email'}
                                             name={sbj}
+                                            maxLength={40}
                                             value={formData[sbj]}
                                             onChange={onChangeForm}
                                             placeholder={data + '을 입력해주세요'}
@@ -263,6 +266,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                                         name={sbj}
                                         value={formData[sbj]}
                                         onChange={onChangeForm}
+                                        maxLength={6}
                                         placeholder={data + '를 입력해주세요'}
                                         className={`flex w-full h-full px-2 outline-none`}/>
                                 }
@@ -271,6 +275,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                                         name={sbj}
                                         value={formData[sbj]}
                                         onChange={onChangeForm}
+                                        maxLength={25}
                                         placeholder={data+'를 입력해주세요'}
                                         className={`flex w-full h-full px-2 outline-none`}/>
                                 }
@@ -279,6 +284,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                                         name={sbj}
                                         value={formData[sbj]}
                                         onChange={onChangeForm}
+                                        maxLength={25}
                                         placeholder={data+'를 입력해주세요'}
                                         className={`flex w-full h-full px-2 outline-none`}/>
                                 }

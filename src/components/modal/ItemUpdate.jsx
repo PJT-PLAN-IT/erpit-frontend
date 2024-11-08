@@ -258,6 +258,7 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
                                 {sbj === 'stock'
                                     &&
                                     <input name={sbj} value={numberData[sbj] === '' ? updateData[sbj].toLocaleString() : numberData[sbj]} onChange={onChangeForm}
+                                           maxLength={9}
                                            className={`flex w-full h-full px-2 outline-none`}/>}
                                 {
                                     sbj === 'useyn' &&
