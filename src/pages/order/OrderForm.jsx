@@ -36,14 +36,20 @@ function OrderForm() {
 
   useEffect(() => {
     if (buyerInfo?.buyercd) {
+      console.log("buyercode: ", buyerInfo.buyercd);
       setForm((prev) => ({
         ...prev,
         buyercode: buyerInfo.buyercd,
       }));
-      fetchItemTable();
-      console.log("Updated searchForm buyer:", buyerInfo.buyerCd);
+      console.log("Updated searchForm buyer:", buyerInfo.buyerd);
     }
   }, [buyerInfo]);
+
+  useEffect(() => {
+    if (form.buyercode != "") {
+      fetchItemTable();
+    }
+  }, [form.buyercode]);
 
   const fetchItemTable = async () => {
     try {
@@ -188,6 +194,8 @@ function OrderForm() {
       } else {
         const enteredDate = new Date(ymd);
         const limitDate = new Date();
+        enteredDate.setHours(0, 0, 0, 0);
+        limitDate.setHours(0, 0, 0, 0);
 
         if (enteredDate < limitDate) {
           alert(
@@ -271,6 +279,8 @@ function OrderForm() {
       } else {
         const enteredDate = new Date(ymd);
         const limitDate = new Date();
+        enteredDate.setHours(0, 0, 0, 0);
+        limitDate.setHours(0, 0, 0, 0);
 
         if (enteredDate < limitDate) {
           alert(
@@ -429,7 +439,7 @@ function OrderForm() {
 
   console.log("item list before submit: ", filteredItemList);
 
-  /*오더폼 등록 */
+  /*오더폼 저장 */
   const saveOrderForm = async () => {
     const orderFormInfo = {
       orderdate: form.orderdate,
@@ -466,6 +476,7 @@ function OrderForm() {
       return;
     }
   };
+  /*오더폼 승인요청 */
   const submitOrderForm = async () => {
     const orderFormInfo = {
       orderdate: form.orderdate,
@@ -557,19 +568,23 @@ function OrderForm() {
     };
 
     const handleBlur = (e) => {
-      const numericValue = parseInt(inputValue) || 0;
+      const numericValue = Number(inputValue.replace(/,/g, "")) || 0;
 
       if (field === "ordersupplyprice") {
         if (numericValue < item.originalSupplyPrice) {
           alert(
-            `입력하신 공급가가 기존 금액: ${item.originalSupplyPrice} 보다 낮습니다.\n 다시 지정해주세요.`
+            `입력하신 공급가: ${numericValue}원은 기존 금액: ${item.originalSupplyPrice}원보다 낮습니다.\n 다시 지정해주세요.`
           );
           setInputValue(formatWithCommas(item.ordersupplyprice));
           handleItemChange(index, field, item.ordersupplyprice);
           return;
         } else if (numericValue > item.originalSupplyPrice * 1.5) {
           alert(
-            `입력하신 공급가는 기존 금액:${item.originalSupplyPrice}의 50%를 초과할 수 없습니다.\n 다시 지정해주세요.`
+            `입력하신 공급가: ${numericValue}원은 기존 금액:${
+              item.originalSupplyPrice
+            }원의 150%인 \n${
+              item.originalSupplyPrice * 1.5
+            }원을 초과할 수 없습니다. 다시 지정해주세요.`
           );
           setInputValue(formatWithCommas(item.ordersupplyprice));
           handleItemChange(index, field, item.ordersupplyprice);
@@ -631,7 +646,7 @@ function OrderForm() {
                 </td>
                 <td className="border border-erp-gray">
                   <input
-                    className=" w-[100%]  "
+                    className=" w-[100%] focus:outline-none"
                     type="text"
                     placeholder="날짜를 입력하세요"
                     onChange={(e) => handleOrderDateChange(e)}
@@ -654,7 +669,7 @@ function OrderForm() {
                 </td>
                 <td className="border border-erp-gray  w-[434px]">
                   <input
-                    className="hover:cursor-pointer"
+                    className="hover:cursor-pointer focus:outline-none"
                     type="text"
                     placeholder="바이어코드 검색"
                     value={buyerInfo ? `${buyerInfo.buyercd}` : ""}
@@ -680,7 +695,7 @@ function OrderForm() {
                 </td>
                 <td className="border border-erp-gray w-[434px]">
                   <input
-                    className="hover:cursor-pointer "
+                    className="hover:cursor-pointer focus:outline-none"
                     type="text"
                     placeholder="바이어명 검색"
                     value={buyerInfo ? `${buyerInfo.buyernm}` : ""}
@@ -759,7 +774,7 @@ function OrderForm() {
             />
           </>
         )}
-        <div className="mt-5 absolute top-[150px] left-1/2 -translate-x-1/2 w-[100%]  h-[333px] shadow-md p-5 rounded-lg bg-white">
+        <div className="mt-5 absolute top-[175px] left-1/2 -translate-x-1/2 w-[100%]  h-[333px] shadow-md p-5 rounded-lg bg-white">
           <div className="z-30">
             <h1 className="text-left ml-2 font-bold text-xl">
               오더 품목 리스트
@@ -996,7 +1011,7 @@ function ItemTable({
     }
   };
   return (
-    <div className="itemTable absolute top-[560px] left-1/2 -translate-x-1/2 w-[100%] shadow-md p-5 rounded-lg bg-white h-[265px]">
+    <div className="itemTable absolute top-[560px] left-1/2 -translate-x-1/2 w-[100%] shadow-md p-5 rounded-lg bg-white h-[280px]">
       <h1 className="text-left ml-2 text-xl mt-1 font-bold">
         바이어별 판매가 검색
       </h1>

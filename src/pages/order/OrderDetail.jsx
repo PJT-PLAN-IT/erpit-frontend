@@ -184,7 +184,7 @@ function OrderDetail() {
           </table>
         </div>
 
-        <div className="orderListTable mt-10 border border-erp-gray pt-5">
+        <div className="orderListTable mt-16  shadow-md p-5 rounded-lg bg-white">
           <h1 className="text-center font-medium text-xl">오더 품목 리스트</h1>
           <div className="max-h-[600px]  overflow-y-auto">
             <table className="border border-erp-gray border-collapse w-[100%] mt-5 bg-white">

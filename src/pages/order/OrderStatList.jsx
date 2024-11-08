@@ -465,7 +465,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
       <div className="relative">
         <h1 className="text-center text-2xl  mb-5 font-bold">바이어 검색</h1>
         <button
-          className="absolute top-4 right-4"
+          className="absolute top-0 right-0 text-3xl"
           onClick={() => setShowModal(false)}
         >
           ✕
@@ -475,7 +475,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
             <div className="flex justify-between items-center gap-2 ">
               <p>바이어</p>
               <input
-                className="border border-erp-gray w-[200px] text-xs p-1"
+                className="border border-erp-gray w-[200px] text-sm p-1 h-10"
                 type="text"
                 placeholder="검색어를 입력하세요"
                 onChange={storeBuyerValue}
@@ -494,7 +494,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
         </div>
 
         {buyers.length ? (
-          <div className="absolute top-24 max-h-[450px] overflow-y-auto w-[100%]">
+          <div className="absolute top-28 max-h-[432px] overflow-y-auto w-[100%]">
             <table className="border border-erp-gray border-collapse w-[100%]  p-2 ">
               <thead className="sticky top-0 w-[100%] border border-erp-gray">
                 <tr className="border border-erp-gray bg-erp-mint">
@@ -625,7 +625,7 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
       <div className="relative">
         <h1 className="text-center text-2xl  mb-5 font-bold">바이어 검색</h1>
         <button
-          className="absolute top-4 right-4"
+          className="absolute top-0 right-0 text-3xl"
           onClick={() => setShowUserModal(false)}
         >
           ✕
@@ -636,7 +636,7 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
               <p>바이어</p>
               <input
                 autoFocus
-                className="border border-erp-gray w-[200px] text-xs p-1"
+                className="border border-erp-gray w-[200px] text-sm h-10 p-1"
                 type="text"
                 placeholder="검색어를 입력하세요"
                 onChange={storeUserValue}
@@ -654,8 +654,8 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
         </div>
 
         {users.length ? (
-          <div className="absolute top-24 max-h-[450px] overflow-y-auto w-[100%] ">
-            <table className="border border-erp-gray border-collapse w-[100%] mt-10 p-2 ">
+          <div className="absolute top-28 max-h-[432px] overflow-y-auto w-[100%] ">
+            <table className="border border-erp-gray border-collapse w-[100%]  p-2 ">
               <thead className="sticky top-0 w-[100%]">
                 <tr className="border border-erp-gray bg-erp-mint">
                   <th className="border border-erp-gray p-1">순번</th>

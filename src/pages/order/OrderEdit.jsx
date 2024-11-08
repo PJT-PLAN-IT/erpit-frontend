@@ -33,23 +33,6 @@ function OrderEdit() {
   const location = useLocation();
   const { detailNo } = location.state || {};
 
-  const fetchItemTable = async () => {
-    try {
-      const response = await fetchData({
-        config: {
-          method: "GET",
-          url: `/api/item/price/list?item=${item}&buyer=${detail.buyercd}`,
-        },
-      });
-      if (response) {
-        console.log("검색결과:", response.data);
-        setSearchResult(response.data);
-      }
-    } catch (err) {
-      console.error("Error: ", err);
-    }
-  };
-
   useEffect(() => {
     if (detailNo) {
       const getDetail = async () => {
@@ -67,9 +50,31 @@ function OrderEdit() {
       };
 
       getDetail();
-      fetchItemTable();
     }
   }, [detailNo]);
+
+  useEffect(() => {
+    if (detail.buyercd != "") {
+      fetchItemTable();
+    }
+  }, [detail.buyercd]);
+
+  const fetchItemTable = async () => {
+    try {
+      const response = await fetchData({
+        config: {
+          method: "GET",
+          url: `/api/item/price/list?item=${item}&buyer=${detail.buyercd}`,
+        },
+      });
+      if (response) {
+        console.log("검색결과:", response.data);
+        setSearchResult(response.data);
+      }
+    } catch (err) {
+      console.error("Error: ", err);
+    }
+  };
 
   /*아이템 테이블 행 삭제 */
   const deleteRow = (id) => {
@@ -248,6 +253,9 @@ function OrderEdit() {
         const enteredDate = new Date(ymd);
         const limitDate = new Date();
 
+        enteredDate.setHours(0, 0, 0, 0);
+        limitDate.setHours(0, 0, 0, 0);
+
         if (enteredDate < limitDate) {
           alert(
             `${limitDate.toLocaleDateString()} 이전의 날짜는 설정하실 수 없습니다`
@@ -412,14 +420,18 @@ function OrderEdit() {
       if (field === "ordersupplyprice") {
         if (numericValue < item.originalSupplyPrice) {
           alert(
-            `입력하신 공급가${numericValue} 가 기존 금액: ${item.originalSupplyPrice} 보다 낮습니다.\n 다시 지정해주세요.`
+            `입력하신 공급가: ${numericValue}원은 기존 금액: ${item.originalSupplyPrice}원보다 낮습니다.\n 다시 지정해주세요.`
           );
           setInputValue(formatWithCommas(item.ordersupplyprice));
           handleItemChange(index, field, item.ordersupplyprice);
           return;
         } else if (numericValue > item.originalSupplyPrice * 1.5) {
           alert(
-            `입력하신 공급가는${numericValue}는 기존 금액:${item.originalSupplyPrice}의 50%를 초과할 수 없습니다.\n 다시 지정해주세요.`
+            `입력하신 공급가: ${numericValue}원은 기존 금액: ${
+              item.originalSupplyPrice
+            }원의 150%인 \n${
+              item.originalSupplyPrice * 1.5
+            }원을 초과할 수 없습니다. 다시 지정해주세요.`
           );
           setInputValue(formatWithCommas(item.ordersupplyprice));
           handleItemChange(index, field, item.ordersupplyprice);
@@ -562,7 +574,7 @@ function OrderEdit() {
           </div>
         </div>
 
-        <div className=" mt-5 absolute top-[150px] left-1/2 -translate-x-1/2 w-[100%] h-[333px] shadow-md p-5 rounded-lg bg-white">
+        <div className=" mt-5 absolute top-[175px] left-1/2 -translate-x-1/2 w-[100%] h-[333px] shadow-md p-5 rounded-lg bg-white">
           <div className="z-30">
             <h1 className="text-left text-xl font-semibold ml-2">
               오더 품목 리스트
@@ -677,7 +689,7 @@ function OrderEdit() {
                         </td>
                         <td className="text-center border border-erp-gray w-[150px]">
                           <input
-                            className="border w-[100%] border-erp-gray"
+                            className="border text-center w-[100%] border-erp-gray"
                             type="text"
                             onChange={(event) => handleDateChange(index, event)}
                             onBlur={() => checkDateLength(index)}
