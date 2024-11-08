@@ -912,20 +912,20 @@ function OrderForm() {
                     colSpan={3}
                     className="border border-erp-gray w-[149px]"
                   ></td>
-                  <td className="text-right border border-erp-gray w-[120px]">
+                  <td className="text-right border border-erp-gray w-[118px]">
                     {calculateTotalQuantity()}
                   </td>
-                  <td className="text-right border border-erp-gray w-[120px]">
+                  <td className="text-right border border-erp-gray w-[118px]">
                     {calculateTotalOriginPrice().toLocaleString()}
                   </td>
-                  <td className="text-right border border-erp-gray w-[120px]">
+                  <td className="text-right border border-erp-gray w-[118px]">
                     {calculateTotalSetPrice().toLocaleString()}
                   </td>
-                  <td className="text-right border border-erp-gray w-[120px]">
+                  <td className="text-right border border-erp-gray w-[118px]">
                     {calculateTotalTax().toLocaleString()}
                   </td>
 
-                  <td className="text-right border border-erp-gray w-[120px]">
+                  <td className="text-right border border-erp-gray w-[118px]">
                     {calculateTotalsupplyPrice().toLocaleString()}
                   </td>
                   <td
