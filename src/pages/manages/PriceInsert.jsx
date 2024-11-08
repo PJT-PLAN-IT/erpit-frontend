@@ -61,11 +61,14 @@ function PriceInsert() {
 
     const handleSupplyPriceChange = (e) => {
         const value = parseFloat(e.target.value) || 0; // Convert to number
+        const buyersupplyprice = Math.trunc(value); // 소수점 이하 제거
+        const surtax = Math.trunc(value * 0.1);     // 소수점 이하 제거
+        const salesprice = Math.trunc(value + (value * 0.1)); // 소수점 이하 제거
         setInsertData((prevData) => ({
             ...prevData,
-            buyersupplyprice: value,
-            surtax: value * 0.1,
-            salesprice: value + (value * 0.1),
+            buyersupplyprice: buyersupplyprice,
+            surtax: surtax,
+            salesprice: salesprice,
         }));
     };
 
