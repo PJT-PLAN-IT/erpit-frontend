@@ -465,7 +465,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
       <div className="relative">
         <h1 className="text-center text-2xl  mb-5 font-bold">바이어 검색</h1>
         <button
-          className="absolute top-0 right-0 text-3xl"
+          className="absolute top-0 right-0 text-2xl"
           onClick={() => setShowModal(false)}
         >
           ✕
@@ -625,7 +625,7 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
       <div className="relative">
         <h1 className="text-center text-2xl  mb-5 font-bold">바이어 검색</h1>
         <button
-          className="absolute top-0 right-0 text-3xl"
+          className="absolute top-0 right-0 text-2xl"
           onClick={() => setShowUserModal(false)}
         >
           ✕
@@ -690,7 +690,7 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
                       {user.joindate}
                     </td>
                     <td className="border border-erp-gray text-center truncate w-48">
-                      {user.auth}
+                      {user.auth === "ROLE_ADMIN" ? "관리자" : "일반"}
                     </td>
                     <td className="border border-erp-gray text-center">
                       {user.adddate}
