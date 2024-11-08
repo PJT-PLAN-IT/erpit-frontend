@@ -6,7 +6,7 @@ import ItemList from "../pages/manages/ItemList.jsx";
 import PriceList from "../pages/manages/PriceList.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import NotFound from "../pages/error/Notfound.jsx";
-import Report from "../pages/Report.jsx";
+import ReportSub from "../pages/ReportSub.jsx";
 import {useAuth} from "../context/AuthContext.jsx";
 import OrderForm from "../pages/order/OrderForm.jsx";
 import OrderList from "../pages/order/OrderList.jsx";
@@ -32,12 +32,12 @@ const AppRoutes = () => {
 
             {/* 메인 */}
             <Route path={`/`} element={<PrivateRoute sidebar={true}/>}>
-                <Route index={true} element={<Report/>}/>
+                <Route index={true} element={<ReportSub/>}/>
             </Route>
 
             {/* 리포트 */}
             <Route path={`/report`} element={<PrivateRoute sidebar={true}/>}>
-                <Route index={true} element={<Report/>}/>
+                <Route index={true} element={<ReportSub/>}/>
             </Route>
 
             {/* 직원관리 */}

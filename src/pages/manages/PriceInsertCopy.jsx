@@ -2,39 +2,43 @@ import Buttons from "../../components/items/Buttons.jsx";
 import BuyerSearch from "../../components/modal/BuyerSearch.jsx";
 import {useEffect, useState} from "react";
 import ItemSearch from "../../components/modal/ItemSearch.jsx";
+import useAxios from "../../hook/useAxios.js";
+import {useNavigate} from "react-router-dom";
 
 const price = ['순번', '판매부번코드', '품명', '바이어코드', '바이어명', '공급가', '부가세', '판매가격', '단위'];
 const headStyle = 'border border-erp-gray text-center py-2 font-semibold';
-const tdStyle = 'border border-erp-gray text-center text-sm py-3';
+const tdStyle = 'border border-erp-gray text-center text-sm h-10 p-0 ';
 const trStyle = 'bg-white';
-const inputStyle = 'text-erp-gray mx-3 w-32 h-8 border border-erp-gray pl-2';
+const inputStyle = 'text-erp-gray h-full w-full cursor-pointer';
 const initUpdateData = {
     itemcd: '',
     itemnm: '',
     buyercd: '',
     buyernm: '',
-    supplyprice: 0,
+    buyersupplyprice: 0,
     surtax: 0,
     salesprice: 0,
     unit: '',
 };
+
 function PriceInsert() {
-    // const {error, fetchData} = useAxios();
+    const {error, fetchData} = useAxios();
     const [searchBuyerModalOpen, setSearchBuyerModalOpen] = useState(false);
     const [searchItemModalOpen, setSearchItemModalOpen] = useState(false);
-    const [updateData , setUpdateData] = useState(initUpdateData);
+    const [updateData, setUpdateData] = useState(initUpdateData);
     const [insertData, setInsertData] = useState({});
+    const [confirmData, setConfirmData] = useState([]);
 
     useEffect(() => {
 
-        setInsertData((prevData) =>({
+        setInsertData((prevData) => ({
             itemcd: updateData.itemcd || prevData.itemcd,
             itemnm: updateData.itemnm || prevData.itemnm,
             buyercd: updateData.buyercd || prevData.buyercd,
             buyernm: updateData.buyernm || prevData.buyernm,
-            supplyprice: updateData.supplyprice || prevData.supplyprice,
-            surtax: (updateData.supplyprice)*0.1 || prevData.surtax,
-            salesprice: ((updateData.supplyprice) + (updateData.supplyprice)*0.1) || prevData.salesprice,
+            buyersupplyprice: updateData.supplyprice || prevData.buyersupplyprice,
+            surtax: (updateData.supplyprice) * 0.1 || prevData.surtax,
+            salesprice: ((updateData.supplyprice) + (updateData.supplyprice) * 0.1) || prevData.salesprice,
             unit: updateData.unit || prevData.unit,
         }));
     }, [updateData]);
@@ -43,21 +47,43 @@ function PriceInsert() {
         const value = parseFloat(e.target.value) || 0; // Convert to number
         setInsertData((prevData) => ({
             ...prevData,
-            supplyprice: value,
+            buyersupplyprice: value,
             surtax: value * 0.1,
             salesprice: value + (value * 0.1),
         }));
     };
 
+
     const onPlusData = () => {
 
+        const newData = {
+            id: Date.now(),
+            ...insertData
+        };
+        setConfirmData((prevData) => [...prevData, newData]);
+        setInsertData({});
     };
-
+    const navigator = useNavigate();
+    const onClickSave = async () => {
+        console.log("confirmData",confirmData);
+        try {
+            const resultData = await fetchData({
+                config: { method: "POST", url: "/api/item/price" },
+                body: confirmData
+            });
+            if (resultData) {
+                alert("등록완료");
+                navigator('/price');
+            }
+        } catch (error) {
+            console.error("Error: ", error);
+        }
+    }
 
     return (
-        <div className={`flex flex-col p-10`}>
-            <div className={`flex justify-between mb-2 mt-10`}>
-                <Buttons style={`green-sm`} word={`add`}/>
+        <div className={`flex flex-col `}>
+            <div className={`flex justify-between mb-2`}>
+                <Buttons style={`green-sm`} word={`add`} onClick={onClickSave}/>
             </div>
             <div className={`h-[620px] overflow-y-auto mt-20`}>
                 <table className={`w-full`}>
@@ -99,7 +125,7 @@ function PriceInsert() {
                         </td>
                         <td className={`${tdStyle}`}>
                             <input
-                                value={insertData.supplyprice || ''}
+                                value={insertData.buyersupplyprice || ''}
                                 onChange={handleSupplyPriceChange}
                                 className={`${inputStyle}`}></input>
                         </td>
@@ -122,14 +148,31 @@ function PriceInsert() {
                                 className={`${inputStyle}`}></input>
                         </td>
                     </tr>
+                    {confirmData.map((data, index) => (
+                        <tr className={`${trStyle}`} key={index}>
+                            <td className={`${tdStyle}`}>{index}</td>
+                            <td className={`${tdStyle}`}>{data.itemcd}</td>
+                            <td className={`${tdStyle}`}>{data.itemnm}</td>
+                            <td className={`${tdStyle}`}>{data.buyercd}</td>
+                            <td className={`${tdStyle}`}>{data.buyernm}</td>
+                            <td className={`${tdStyle}`}>{data.buyersupplyprice}</td>
+                            <td className={`${tdStyle}`}>{data.surtax}</td>
+                            <td className={`${tdStyle}`}>{data.salesprice}</td>
+                            <td className={`${tdStyle}`}>{data.unit}</td>
+                        </tr>
+                    ))}
+
+
                     </tbody>
                 </table>
             </div>
 
             {/*    바이어모달    */}
-            <BuyerSearch searchBuyerModalOpen={searchBuyerModalOpen} setSearchBuyerModalOpen={setSearchBuyerModalOpen} setUpdateData={setUpdateData}/>
+            <BuyerSearch searchBuyerModalOpen={searchBuyerModalOpen} setSearchBuyerModalOpen={setSearchBuyerModalOpen}
+                         setUpdateData={setUpdateData}/>
             {/*    판매부번모달    */}
-            <ItemSearch searchItemModalOpen={searchItemModalOpen} setSearchItemModalOpen={setSearchItemModalOpen} setUpdateData={setUpdateData}/>
+            <ItemSearch searchItemModalOpen={searchItemModalOpen} setSearchItemModalOpen={setSearchItemModalOpen}
+                        setUpdateData={setUpdateData}/>
 
 
         </div>

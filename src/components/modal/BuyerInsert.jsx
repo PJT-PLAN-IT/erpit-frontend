@@ -138,8 +138,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
             }
             if (name === 'tel') {
                 //---------------------
-                if(value.length < 9){
-                    console.log(value.length);
+                if(value.length >= 9){
                     isTel.current = true;
                 }else {
                     isTel.current = false;

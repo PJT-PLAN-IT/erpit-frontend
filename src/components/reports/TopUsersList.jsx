@@ -3,58 +3,30 @@ const TopUsersList = ({topUsersList}) => {
     const month = day.getMonth()+1;
     return (
         // <div className={`flex flex-col`}>
-        <div className="w-1/3 mr-10 p-5 bg-white shadow-lg rounded flex flex-col h-[335px]">
-            <h1 className={`font-semibold text-2xl text-erp-green pb-5`}>{month}월 영업사원 매출 Top7</h1>
-            <div className={`h-full`}>
-            <table className={`mx-5 table-fixed`}>
-                <tbody>
-                {topUsersList.map((data, index) => (
-                    <tr key={index}
-                        className={`border-b border-erp-soft-gray text-center`}>
-                        <td className={`py-3`}> {index + 1} </td>
-                        <td className={`py-3`}> {data.userCd} </td>
-                        <td className={`py-3`}> {data.userNm} </td>
-                        <td className={`py-3 text-end`}> {data.userSales.toLocaleString()} 원</td>
+        <div className="h-full w-[33%] bg-white mr-10 rounded-lg shadow-lg flex flex-col">
+            <h1 className="text-center p-3 bg-gray-200 rounded-t-lg font-semibold">{month}월 영업사원 매출 Top7</h1>
+            <div>
+                <table className="flex-1 w-full text-center">
+                    <thead>
+                    <tr className="h-3"> {/* 각 tr의 높이를 고정 */}
+                        <th className="border p-2">NO</th>
+                        <th className="border p-2">직원코드</th>
+                        <th className="border p-2">직원이름</th>
+                        <th className="border p-2">매출액</th>
                     </tr>
-                ))}
-                <tr
-                    className={`border-b border-erp-soft-gray text-center`}>
-                    <td className={`py-3`}> index</td>
-                    <td className={`py-3`}> data.userCd</td>
-                    <td className={`py-3`}> data.userNm</td>
-                    <td className={`py-3 text-end`}> data.userSales.toLocaleString() 원</td>
-                </tr>
-                <tr
-                    className={`border-b border-erp-soft-gray text-center`}>
-                    <td className={`py-3`}> index</td>
-                    <td className={`py-3`}> data.userCd</td>
-                    <td className={`py-3`}> data.userNm</td>
-                    <td className={`py-3 text-end`}> data.userSales.toLocaleString() 원</td>
-                </tr>
-                <tr
-                    className={`border-b border-erp-soft-gray text-center`}>
-                    <td className={`py-3`}> index</td>
-                    <td className={`py-3`}> data.userCd</td>
-                    <td className={`py-3`}> data.userNm</td>
-                    <td className={`py-3 text-end`}> data.userSales.toLocaleString() 원</td>
-                </tr>
-                <tr
-                    className={`border-b border-erp-soft-gray text-center`}>
-                    <td className={`py-3`}> index</td>
-                    <td className={`py-3`}> data.userCd</td>
-                    <td className={`py-3`}> data.userNm</td>
-                    <td className={`py-3 text-end`}> data.userSales.toLocaleString() 원</td>
-                </tr>
-                <tr
-                    className={`border-b border-erp-soft-gray text-center`}>
-                    <td className={`py-3`}> index</td>
-                    <td className={`py-3`}> data.userCd</td>
-                    <td className={`py-3`}> data.userNm</td>
-                    <td className={`py-3 text-end`}> data.userSales.toLocaleString() 원</td>
-                </tr>
-
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {topUsersList.map((data, index) => (
+                        <tr key={index}
+                            className="h-3">
+                            <td className="border p-2"> {index + 1} </td>
+                            <td className="border p-2"> {data.userCd} </td>
+                            <td className="border p-2"> {data.userNm} </td>
+                            <td className="border p-2"> {data.userSales.toLocaleString()} 원</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
             </div>
         </div>
     )

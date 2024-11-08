@@ -3,6 +3,7 @@
 import {unit} from "../../data/unit.js";
 import Buttons from "../items/Buttons.jsx";
 import useAxios from "../../hook/useAxios.js";
+import {useRef, useState} from "react";
 
 const itemSbj = {
     itemcd: '판매부번코드',
@@ -13,15 +14,26 @@ const itemSbj = {
     stock: '재고',
     useyn: '비활성화'
 };
+const numberData = {
+    originprice: '',
+    supplyprice: '',
+    stock: '',
+};
 
 const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateData, setUpdateData}) => {
     const {error, fetchData} = useAxios();
+    const isItennm = useRef(true);
+    const isOriginprice = useRef(true);
+    const isSupplyprice = useRef(true);
+    const isStock = useRef(true);
+    const isUnit = useRef(true);
+    const isSave = useRef(true);
 
     if (!updateModalOpen) return false;
 
     //아이템 수정
     const updateFunction = async () => {
-        if(updateData.originprice >= updateData.supplyprice){
+        if (updateData.originprice >= updateData.supplyprice) {
             alert("공급가가 원가보다 적습니다. 다시 설정해주세요");
             return;
         }
@@ -35,6 +47,12 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
                 alert('등록되었습니다.');
                 setUpdateModalOpen(false);
                 fetchItemList(true);
+                isItennm.current = true;
+                isOriginprice.current = true;
+                isSupplyprice.current = true;
+                isStock.current = true;
+                isUnit.current = true;
+                isSave.current = true;
             }
             if (error) {
                 console.error("Error: ", error);
@@ -61,7 +79,13 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
                 }
             });
             if (result) {
-                fetchItemList();
+                fetchItemList(true);
+                isItennm.current = true;
+                isOriginprice.current = true;
+                isSupplyprice.current = true;
+                isStock.current = true;
+                isUnit.current = true;
+                isSave.current = true;
                 setUpdateModalOpen(false);
             }
             if (error) {
@@ -72,36 +96,105 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
         }
     };
     const onChangeForm = (e) => {
-        const { name, value } = e.target;
-        let numericValue = 0;
-        const regex = /\D/;
+        let {name, value} = e.target;
+        console.log('name', name);
+        console.log('value', value);
+        if (value === '') {
+            if (name === 'itemnm') {
+                isItennm.current = false;
+            }
+            if (name === 'originprice') {
+                isOriginprice.current = false;
+            }
+            if (name === 'supplyprice') {
+                isSupplyprice.current = false;
+            }
+            if (name === 'stock') {
+                isStock.current = false;
+            }
+            if (name === 'unit') {
+                isUnit.current = false;
+            }
+        } else {
+            if (name === 'itemnm') {
+                isItennm.current = true;
+            }
+            if (name === 'originprice') {
+                isOriginprice.current = true;
+                value = checkNumber(value);
+            }
+            if (name === 'supplyprice') {
+                isSupplyprice.current = true;
+                value = checkNumber(value);
+            }
+            if (name === 'stock') {
+                isStock.current = true;
+                value = checkNumber(value);
+            }
+            if (name === 'unit') {
+                if (value === 'none') {
+                    isUnit.current = false;
+                } else {
+                    isUnit.current = true;
+                }
+            }
+        }
 
-        // if (name === 'originprice' || name === 'supplyprice' || name === 'stock') {
-        //     if(regex.test(value)){
-        //         console.log("qpffb",value);
-        //         numericValue = value.replace(/[^0-9]/g, '');
-        //     }else {
-        //         console.log("dkr",value);
-        //         numericValue = value;
-        //     }
-        //
-        //     if (numericValue) {
-        //         const formattedValue = new Intl.NumberFormat().format(numericValue);
-        //
-        //         setUpdateData(prevData => ({ ...prevData, [name]: formattedValue }));
-        //     }
-        //     else {
-        //         setUpdateData(prevData => ({ ...prevData, [name]: '' }));
-        //     }
-        // }
+
+        checkSave();
         // 단위 선택 처리
-        if (e.target.tagName === 'SELECT') {
-            setUpdateData(prevData => ({ ...prevData, ['unit']: value }));
+        if (name==='unit') {
+            setUpdateData(prevData => ({...prevData, ['unit']: value}));
+        } else if(name === 'originprice' || name === 'supplyprice' || name === 'stock'){
+            numberData[name] = value;
+            console.log("데이터확인", numberData[name]);
+            value = deleteComma(value);
+            setUpdateData({...updateData, [name]:value})
+        }else {
+            setUpdateData(prevData => ({...prevData, [name]: value}));
         }
-        else {
-            setUpdateData(prevData => ({ ...prevData, [name]: value }));
-        }
+        console.log("updateData",updateData);
     };
+    const checkSave = () => {
+        const saveCheck = (isItennm.current && isOriginprice.current && isSupplyprice.current && isStock.current && isUnit.current);
+        console.log("saveCheck",saveCheck);
+        if (!saveCheck) {
+            isSave.current = true;
+        } else {
+            isSave.current = false
+        }
+    }
+    const deleteComma = (value) => {
+        const formValue = value.replace(/,/g, "");
+        return formValue;
+    }
+    const checkNumber = (value) => {
+        let inputValue = value;
+
+        // 숫자만 허용하고, 소수점은 제거
+        inputValue = inputValue.replace(/[^0-9]/g, "");
+
+        // 맨 앞자리 0 제거 (단, '0'만 있는 경우는 허용)
+        if (inputValue.length > 1 && inputValue.startsWith("0")) {
+            inputValue = inputValue.replace(/^0+/, "");
+        }
+
+        // 정수 부분에 천 단위 콤마 추가
+        let integer = inputValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+        return integer;
+    }
+
+
+    const cancelClick = () => {
+        setUpdateModalOpen(false);
+        isItennm.current = false;
+        isOriginprice.current = false;
+        isSupplyprice.current = false;
+        isStock.current = false;
+        isUnit.current = false;
+        isSave.current = true;
+    }
 
     return (
         <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center`}>
@@ -115,28 +208,32 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
 
                             <td className={`bg-white flex-grow flex items h-12`}>
                                 {sbj === 'itemcd' &&
-                                    <input disabled={true} name={sbj} value={updateData[sbj]} className={`flex-grow px-2 outline-none`}/>}
+                                    <input disabled={true} name={sbj} value={updateData[sbj]}
+                                           className={`flex-grow px-2 outline-none`}/>}
 
                                 {sbj === 'itemnm' &&
-                                    <input name={sbj} value={updateData[sbj]} onChange={onChangeForm} className={`flex w-full h-full px-2 outline-none`}/>}
+                                    <input name={sbj} value={updateData[sbj]} onChange={onChangeForm}
+                                           className={`flex w-full h-full px-2 outline-none`}/>}
 
                                 {sbj === 'originprice' &&
-                                    <input name={sbj} value={updateData[sbj].toLocaleString()} onChange={onChangeForm} className={`flex w-full h-full px-2 outline-none`}/>}
+                                    <input name={sbj} value={numberData[sbj] === '' ? updateData[sbj].toLocaleString() : numberData[sbj]} onChange={onChangeForm}
+                                           className={`flex w-full h-full px-2 outline-none`}/>}
 
                                 {sbj === 'supplyprice' &&
-                                    <input name={sbj} value={updateData[sbj].toLocaleString()} onChange={onChangeForm} className={`flex w-full h-full px-2 outline-none`}/>}
+                                    <input name={sbj} value={numberData[sbj] === '' ? updateData[sbj].toLocaleString() : numberData[sbj]} onChange={onChangeForm}
+                                           className={`flex w-full h-full px-2 outline-none`}/>}
                                 {sbj === 'unit'
                                     &&
                                     // <select name={sbj} value={updateData[sbj]} onChange={onChangeForm} className={`flex w-full h-full px-2 outline-none`}/>
                                     <select
                                         className="px-10 border border-erp-gray"
                                         onChange={onChangeForm}
+                                        name="unit"
                                         defaultValue={updateData[sbj]}
                                     >
                                         {unit.map((unit) => (
                                             <option
                                                 key={unit.id}
-                                                name={unit.id}
                                                 value={unit.id}
                                             >
                                                 {unit.name}
@@ -147,7 +244,7 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
                                 }
                                 {sbj === 'stock'
                                     &&
-                                    <input name={sbj} value={updateData[sbj].toLocaleString()} onChange={onChangeForm}
+                                    <input name={sbj} value={numberData[sbj] === '' ? updateData[sbj].toLocaleString() : numberData[sbj]} onChange={onChangeForm}
                                            className={`flex w-full h-full px-2 outline-none`}/>}
                                 {
                                     sbj === 'useyn' &&
@@ -166,8 +263,9 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
                     </tbody>
                 </table>
                 <div className={`flex justify-center my-5`}>
-                    <Buttons style={'white-sm'} word={'cancel'} onClick={() => setUpdateModalOpen(false)}/>
-                    <Buttons style={'green-sm'} word={'save'} onClick={updateFunction}/>
+                    <Buttons style={'white-sm'} word={'cancel'} onClick={cancelClick}/>
+                    <Buttons style={isSave.current ? 'disable-sm' : 'green-sm'} word={'save'} onClick={updateFunction}
+                             disabled={isSave.current}/>
                 </div>
             </div>
         </div>

@@ -71,17 +71,23 @@ function PriceList() {
         }
     };
 
+    const onHandleKeyDown = (e) => {
+        if(e.key === 'Enter'){
+            fetchPriceList();
+        }
+    }
+
     const navigator = useNavigate();
     const goInsert = () => {
         navigator('/price/add');
     }
 
     return (
-        <div className={`flex flex-col px-10 pb-10`}>
+        <div className={`flex flex-col px-10`}>
             <div className={`flex justify-between mb-2 mt-10`}>
                 <div className={`flex`}>
-                    <Input search={'item'} searchData={onSearchItem} data={item}/>
-                    <Input search={'buyer'} searchData={onSearchBuyer} data={buyer}/>
+                    <Input search={'item'} searchData={onSearchItem} onKeyDown={onHandleKeyDown} data={item}/>
+                    <Input search={'buyer'} searchData={onSearchBuyer} onKeyDown={onHandleKeyDown} data={buyer}/>
                     <Buttons style={`green-sm`} word={`search`} onClick={searchPrice}/>
                     <Buttons style={`white-sm`} word={`reset`} onClick={reset}/>
                 </div>

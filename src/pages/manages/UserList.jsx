@@ -41,7 +41,11 @@ function UserList() {
     const searchUser = () => {
         fetchUserList();
     }
-
+    const onHandleKeyDown = (e) => {
+        if(e.key === 'Enter'){
+            fetchUserList();
+        }
+    }
 
     const fetchUserList = async (isReset) => {
         try {
@@ -60,10 +64,10 @@ function UserList() {
     };
 
     return (
-        <div className={`flex flex-col p-10`}>
+        <div className={`flex flex-col px-10`}>
             <div className={`flex justify-between mb-2 mt-10`}>
                 <div className={`flex`}>
-                    <Input search={'user'} searchData={onSearchParam} data={emp}/>
+                    <Input search={'user'} searchData={onSearchParam} onKeyDown={onHandleKeyDown} data={emp}/>
                     <Buttons style={`green-sm`} word={`search`} onClick={searchUser}/>
                     <Buttons style={`green-sm`} word={`reset`} onClick={reset}/>
                 </div>

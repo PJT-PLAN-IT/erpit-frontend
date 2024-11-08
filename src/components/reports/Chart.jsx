@@ -6,11 +6,11 @@ import {useEffect, useState} from "react";
 
 // Chart.js 설정
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-const Chart = ({chart}) => {
+const Chart = ({chart, sales, setSales}) => {
 
     const labels = [];
-    const initSales = {'1월' : 0, '2월' : 0, '3월' : 0, '4월' : 0, '5월' : 0, '6월' : 0, '7월' : 0, '8월' : 0, '9월' : 0, '10월' : 0, '11월' : 0, '12월' : 0};
-    const [sales, setSales] = useState(initSales);
+    // const initSales = {'1월' : 0, '2월' : 0, '3월' : 0, '4월' : 0, '5월' : 0, '6월' : 0, '7월' : 0, '8월' : 0, '9월' : 0, '10월' : 0, '11월' : 0, '12월' : 0};
+    // const [sales, setSales] = useState(initSales);
     const chartData = () => {
         const chartData = {...sales};
         chart.forEach(data => {

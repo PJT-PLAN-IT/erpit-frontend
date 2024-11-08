@@ -58,41 +58,46 @@ const Report = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-start bg-gray-100 h-full">
-            {/* 첫 번째 박스 */}
-            <div
-                className="w-full h-[5%] bg-amber-300 text-white flex items-center justify-center rounded-lg shadow-lg mb-4">
-                첫 번째 박스 (5%)
-            </div>
-
-            {/* 두 번째 박스 */}
-            <div className="w-full h-[50%] bg-blue-500 text-white flex mb-10">
-                {/* 왼쪽 60% 차지하는 div */}
-                <div className="w-[60%] h-full bg-green-900 flex items-center justify-center">
-                    왼쪽 박스 (60%)
-                </div>
-
-                {/* 오른쪽 40% 차지하는 div, 내부에 3개의 세로 정렬된 div */}
-                <div className="w-[40%] h-full flex flex-col justify-between">
-                    <div className="w-full h-[33%] bg-red-300 text-white flex items-center justify-center">
-                        세로 박스 1
-                    </div>
-                    <div className="w-full h-[33%] bg-red-400 text-white flex items-center justify-center">
-                        세로 박스 2
-                    </div>
-                    <div className="w-full h-[33%] bg-red-500 text-white flex items-center justify-center">
-                        세로 박스 3
-                    </div>
+        <div className={`flex flex-col h-full`}>
+            <div className={`h-[55px] flex flex-row`}>
+                <div className={`flex flex-row justify-center items-center`}>
+                    <Input search={'user'}/>
+                    <Buttons style={'green-sm'} word={'search'}/>
                 </div>
             </div>
+            <div className={`flex flex-row pb-10 h-[50%]`}>
+                <div className={`w-[70%] mr-20 px-10 py-5 h-full bg-white shadow-lg rounded`}>
+                    <Chart chart={chart}/>
+                </div>
+                <div className={`flex flex-col flex-grow`}>
+                    <div className={`border-2 border-lime-300 h-1/3 mb-4 `}>
+                        <img src={gifRevenue} alt={"revenue"} className={`h-[80%]`}/>
+                        <p className={`text-lg`}>{revenue.toLocaleString()} 원</p>
+                        <p className={`text-lg`}> 매출(연누계) </p>
+                    </div>
 
-            {/* 세 번째 박스 */}
-            <div
-                className="w-full h-[40%] bg-red-500 text-white flex items-center justify-center rounded-lg shadow-lg">
-                세 번째 박스 (45%)
+                    <div className={` border-2 border-amber-400 h-1/3 mb-4`}>
+                        <p className={`text-lg`}> 총 주문 건수 </p>
+                        <p className={`text-lg`}>{orderCount.toLocaleString()} 회</p>
+                    </div>
+                    <div className={` border-2 border-lime-500 h-1/3`}>
+                        <p className={`text-lg`}> 총 주문 금액 </p>
+                        <p className={`text-lg`}>{orderPrice.toLocaleString()} 원</p>
+                    </div>
+                </div>
+            </div>
+            <div className={`flex flex-row border-lime-500 border-2`}>
+                {/*<div className={`w-1/3 mr-10 p-5 bg-white shadow-lg rounded`}>*/}
+                    <TopUsersList topUsersList={topUsersList}/>
+                {/*</div>*/}
+                {/*<div className={`w-1/3 bg-white shadow-lg rounded mr-10`}>*/}
+                    <TopBuyerList topBuyerList={topBuyerList}/>
+                {/*</div>*/}
+                {/*<div className={`w-1/3 bg-white shadow-lg rounded`}>*/}
+                    <TopSalesList topSalesList={topSalesList}/>
+                {/*</div>*/}
             </div>
         </div>
-
     );
 };
 
