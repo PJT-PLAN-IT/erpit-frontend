@@ -26,11 +26,11 @@ function OrderList() {
     year: currentYear,
   });
 
-  console.log("searchForm:", searchForm);
   const navigate = useNavigate();
   const { fetchData } = useAxios();
   const { user } = useAuth();
 
+  /*오더리스트 초기값 get */
   useEffect(() => {
     const getOrderList = async () => {
       const finalData = {
@@ -40,14 +40,12 @@ function OrderList() {
         month: currentMonth,
         year: currentYear,
       };
-      console.log("initial load Data: ", finalData);
       try {
         const result = await fetchData({
           config: { method: "POST", url: "/api/order/list" },
           body: finalData,
         });
         if (result) {
-          console.log("result data from init: ", result.data);
           setTableList(result.data);
         }
       } catch (error) {
@@ -59,19 +57,18 @@ function OrderList() {
     if (isInitialLoad) getOrderList();
   }, [isInitialLoad]);
 
+  /*바이어 선택시 검색폼 저장 */
   useEffect(() => {
     if (buyerInfo?.buyerCd) {
       setSearchForm((prev) => ({
         ...prev,
         buyer: buyerInfo.buyerCd,
       }));
-      console.log("Updated searchForm buyer:", buyerInfo.buyerCd);
     }
   }, [buyerInfo]);
 
   /*요청상태 검색 변화 저장 */
   const handleStatusChange = (e) => {
-    console.log(e.target.value);
     setSearchForm((prev) => ({
       ...prev,
       orderStatus: e.target.value,
@@ -80,7 +77,6 @@ function OrderList() {
 
   /*월별 검색 변화 저장 */
   const handleMonthChange = (e) => {
-    console.log(e.target.value);
     setSearchForm((prev) => ({
       ...prev,
       month: e.target.value,
@@ -89,7 +85,6 @@ function OrderList() {
 
   /*년도 검색 변화 저장 */
   const handleYearChange = (e) => {
-    console.log(e.target.value);
     setSearchForm((prev) => ({
       ...prev,
       year: e.target.value,
@@ -120,7 +115,6 @@ function OrderList() {
       month: searchForm.month,
       year: searchForm.year,
     };
-    console.log("new search req: ", searchOrders);
 
     try {
       const result = await fetchData({
@@ -128,7 +122,6 @@ function OrderList() {
         body: searchOrders,
       });
       if (result) {
-        console.log(result);
         setTableList(result.data);
       }
       setIsInitialLoad(true);
@@ -162,7 +155,6 @@ function OrderList() {
         body: searchOrders,
       });
       if (result) {
-        console.log(result);
         setTableList(result.data);
       }
     } catch (error) {
@@ -172,6 +164,7 @@ function OrderList() {
     }
   };
 
+  /*상태 코드 한글로 변환 */
   const getStatName = (statusId) => {
     const statusObj = Status.find((status) => status.id === statusId);
     return statusObj ? statusObj.name : statusId;
@@ -363,6 +356,7 @@ function OrderList() {
   );
 }
 
+/*바이어 코드 검색 모달 */
 const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
   const { fetchData } = useAxios();
   const [buyerValue, setBuyerValue] = useState("");
@@ -373,8 +367,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     setBuyerValue(e.target.value);
   };
 
-  console.log(buyerValue);
-
+  /*바이어 검색 get */
   const searchBuyerCode = async () => {
     if (buyerValue) {
       try {
@@ -385,7 +378,6 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
           },
         });
         if (result) {
-          console.log(result.data);
           setBuyers(result.data);
         }
       } catch (error) {
@@ -394,6 +386,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     }
   };
 
+  /*모달 오픈시 바이어 리스트 로딩 */
   useEffect(() => {
     const searchBuyerCode = async () => {
       try {
@@ -404,7 +397,6 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
           },
         });
         if (result) {
-          console.log(result.data);
           setBuyers(result.data);
         }
       } catch (error) {
@@ -415,6 +407,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     setInitLoad(false);
   }, [initLoad]);
 
+  /*바이어 검색 엔터키 적용 */
   const FindBuyerCode = (e) => {
     {
       if (e.key == "Enter") {
@@ -424,8 +417,8 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     }
   };
 
+  /*바이어 선택시 바이어 정보 저장 및 모달 닫기 */
   const addBuyer = (buyer) => {
-    console.log("Selected Buyer:", buyer);
     setBuyerInfo(buyer);
     setShowModal(false);
   };

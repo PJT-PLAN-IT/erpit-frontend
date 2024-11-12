@@ -28,10 +28,10 @@ function OrderList() {
     year: currentYear,
   });
 
-  console.log("searchForm:", searchForm);
   const navigate = useNavigate();
   const { fetchData } = useAxios();
 
+  /*오더리스트 초기값 get */
   useEffect(() => {
     const getOrderList = async () => {
       const finalData = {
@@ -41,14 +41,12 @@ function OrderList() {
         month: currentMonth,
         year: currentYear,
       };
-      console.log("initial load Data: ", finalData);
       try {
         const result = await fetchData({
           config: { method: "POST", url: "/api/order/list" },
           body: finalData,
         });
         if (result) {
-          console.log("result data from init: ", result.data);
           setTableList(result.data);
         }
       } catch (error) {
@@ -60,19 +58,18 @@ function OrderList() {
     if (isInitialLoad) getOrderList();
   }, [isInitialLoad]);
 
+  /*바이어 선택시 검색폼 저장 */
   useEffect(() => {
     if (buyerInfo?.buyerCd) {
       setSearchForm((prev) => ({
         ...prev,
         buyer: buyerInfo.buyerCd,
       }));
-      console.log("Updated searchForm buyer:", buyerInfo.buyerCd);
     }
   }, [buyerInfo]);
 
   /*요청상태 검색 변화 저장 */
   const handleStatusChange = (e) => {
-    console.log(e.target.value);
     setSearchForm((prev) => ({
       ...prev,
       orderStatus: e.target.value,
@@ -81,7 +78,6 @@ function OrderList() {
 
   /*월별 검색 변화 저장 */
   const handleMonthChange = (e) => {
-    console.log(e.target.value);
     setSearchForm((prev) => ({
       ...prev,
       month: e.target.value,
@@ -90,7 +86,6 @@ function OrderList() {
 
   /*년도 검색 변화 저장 */
   const handleYearChange = (e) => {
-    console.log(e.target.value);
     setSearchForm((prev) => ({
       ...prev,
       year: e.target.value,
@@ -113,7 +108,6 @@ function OrderList() {
       month: searchForm.month,
       year: searchForm.year,
     };
-    console.log("new search req: ", searchOrders);
 
     try {
       const result = await fetchData({
@@ -121,7 +115,6 @@ function OrderList() {
         body: searchOrders,
       });
       if (result) {
-        console.log(result);
         setTableList(result.data);
       }
       setIsInitialLoad(true);
@@ -157,7 +150,6 @@ function OrderList() {
         body: searchOrders,
       });
       if (result) {
-        console.log(result);
         setTableList(result.data);
       }
     } catch (error) {
@@ -167,6 +159,7 @@ function OrderList() {
     }
   };
 
+  /*상태 코드 한글로 변환 */
   const getStatName = (statusId) => {
     const statusObj = Status.find((status) => status.id === statusId);
     return statusObj ? statusObj.name : statusId;
@@ -389,6 +382,7 @@ function OrderList() {
   );
 }
 
+/*바이어 코드 검색 모달 */
 const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
   const { fetchData } = useAxios();
   const [buyerValue, setBuyerValue] = useState("");
@@ -399,8 +393,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     setBuyerValue(e.target.value);
   };
 
-  console.log(buyerValue);
-
+  /*바이어 검색 get */
   const searchBuyerCode = async () => {
     if (buyerValue) {
       try {
@@ -411,7 +404,6 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
           },
         });
         if (result) {
-          console.log(result.data);
           setBuyers(result.data);
         }
       } catch (error) {
@@ -420,6 +412,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     }
   };
 
+  /*모달 오픈시 바이어 리스트 로딩 */
   useEffect(() => {
     const searchBuyerCode = async () => {
       try {
@@ -430,7 +423,6 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
           },
         });
         if (result) {
-          console.log(result.data);
           setBuyers(result.data);
         }
       } catch (error) {
@@ -441,6 +433,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     setInitLoad(false);
   }, [initLoad]);
 
+  /*바이어 검색 엔터키 적용 */
   const FindBuyerCode = (e) => {
     {
       if (e.key == "Enter") {
@@ -450,8 +443,8 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     }
   };
 
+  /*바이어 선택시 바이어 정보 저장 및 모달 닫기 */
   const addBuyer = (buyer) => {
-    console.log("Selected Buyer:", buyer);
     setBuyerInfo(buyer);
     setShowModal(false);
   };
@@ -549,6 +542,8 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     </div>
   );
 };
+
+/*영업사원 검색 모달 */
 const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
   const { fetchData } = useAxios();
   const [userValue, setUserValue] = useState("");
@@ -559,8 +554,7 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
     setUserValue(e.target.value);
   };
 
-  console.log(userValue);
-
+  /*영업 사원 코드 검색 */
   const searchUserCode = async () => {
     if (userValue) {
       try {
@@ -571,7 +565,6 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
           },
         });
         if (result) {
-          console.log(result.data);
           setUsers(result.data);
         }
       } catch (error) {
@@ -580,6 +573,7 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
     }
   };
 
+  /*모달 오픈시 영업 사원 리스트 로딩 */
   useEffect(() => {
     const searchUserCode = async () => {
       try {
@@ -590,7 +584,6 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
           },
         });
         if (result) {
-          console.log(result.data);
           setUsers(result.data);
         }
       } catch (error) {
@@ -601,6 +594,7 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
     setInitLoad(false);
   }, [initLoad]);
 
+  /*모달 검색 엔터키  */
   const FindUserCode = (e) => {
     {
       if (e.key == "Enter") {
@@ -610,8 +604,8 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
     }
   };
 
+  /*사원 선택시 검색폼 저장 및 모달 닫기 */
   const addUser = (user) => {
-    console.log("Selected user:", user);
     setUserInfo(user);
     setShowUserModal(false);
   };
@@ -623,7 +617,7 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
       } fixed inset-0  top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50 bg-white w-[1200px] h-[600px] flex-col p-10`}
     >
       <div className="relative">
-        <h1 className="text-center text-2xl  mb-5 font-bold">바이어 검색</h1>
+        <h1 className="text-center text-2xl  mb-5 font-bold">영업사원 검색</h1>
         <button
           className="absolute top-0 right-0 text-2xl"
           onClick={() => setShowUserModal(false)}
@@ -633,7 +627,7 @@ const ShowUserModal = ({ showUserModal, setShowUserModal, setUserInfo }) => {
         <div className=" flex justify-start mb-14">
           <form onSubmit={(e) => e.preventDefault()}>
             <div className="flex justify-between items-center gap-2 ">
-              <p>바이어</p>
+              <p>영업사원</p>
               <input
                 autoFocus
                 className="border border-erp-gray w-[200px] text-sm h-10 p-1"

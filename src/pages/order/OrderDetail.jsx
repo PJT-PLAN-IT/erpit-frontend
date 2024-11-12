@@ -13,6 +13,7 @@ function OrderDetail() {
   const [leavePage, setleavepage] = useState(false);
   const { error, fetchData } = useAxios();
 
+  /*오더 상세 GET */
   useEffect(() => {
     if (detailNo) {
       const getDetail = async () => {
@@ -21,7 +22,6 @@ function OrderDetail() {
             config: { method: "GET", url: `/api/order/detail/${detailNo}` },
           });
           if (result) {
-            console.log(result.data);
             setDetail(result.data);
           }
         } catch (error) {
@@ -59,7 +59,6 @@ function OrderDetail() {
           config: { method: "PUT", url: "/api/order" },
           body: orderFormInfo,
         });
-        console.log(resultData);
         if (resultData?.status === "OK") {
           setRedirect(true);
         } else {
@@ -185,9 +184,7 @@ function OrderDetail() {
         </div>
 
         <div className="orderListTable mt-16  shadow-md p-5 rounded-lg bg-white">
-          <h1 className="text-left font-medium text-xl font-semibold">
-            오더 품목 리스트
-          </h1>
+          <h1 className="text-left text-xl font-semibold">오더 품목 리스트</h1>
           <div className="max-h-[600px]  overflow-y-auto">
             <table className="border border-erp-gray border-collapse w-[100%] mt-5 bg-white">
               <thead>

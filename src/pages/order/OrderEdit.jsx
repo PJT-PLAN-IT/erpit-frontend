@@ -13,6 +13,7 @@ import { faCircleMinus } from "@fortawesome/free-solid-svg-icons";
 
 function OrderEdit() {
   const { user } = useAuth();
+
   const [detail, setDetail] = useState({
     orderid: null,
     orderno: null,
@@ -24,7 +25,7 @@ function OrderEdit() {
     rejectreason: "",
     itemList: [],
   });
-  console.log(detail);
+
   const [leavePage, setleavepage] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const [item, setItem] = useState("");
@@ -33,6 +34,7 @@ function OrderEdit() {
   const location = useLocation();
   const { detailNo } = location.state || {};
 
+  /*오더 상세 GET */
   useEffect(() => {
     if (detailNo) {
       const getDetail = async () => {
@@ -41,7 +43,6 @@ function OrderEdit() {
             config: { method: "GET", url: `/api/order/detail/${detailNo}` },
           });
           if (result) {
-            console.log(result.data);
             setDetail(result.data);
           }
         } catch (error) {
@@ -53,12 +54,12 @@ function OrderEdit() {
     }
   }, [detailNo]);
 
+  /*바이어별 판매가 리스트 GET */
   useEffect(() => {
     if (detail.buyercd != "") {
       fetchItemTable();
     }
   }, [detail.buyercd]);
-
   const fetchItemTable = async () => {
     try {
       const response = await fetchData({
@@ -68,7 +69,6 @@ function OrderEdit() {
         },
       });
       if (response) {
-        console.log("검색결과:", response.data);
         setSearchResult(response.data);
       }
     } catch (err) {
@@ -78,7 +78,6 @@ function OrderEdit() {
 
   /*아이템 테이블 행 삭제 */
   const deleteRow = (id) => {
-    console.log(id);
     setDetail((prevForm) => ({
       ...prevForm,
       itemList: prevForm.itemList.filter((_, index) => index !== id),
@@ -128,7 +127,7 @@ function OrderEdit() {
       0
     );
 
-  /*반려처리 */
+  /*종결처리 */
   const setFinishStatus = async () => {
     const setFinish = window.confirm(
       "종결처리 하시겠습니까? 종결처리시 수정불가합니다"
@@ -141,7 +140,6 @@ function OrderEdit() {
         rejectcode: detail.rejectcode || "",
         rejectreason: detail.rejectreason || "",
       };
-      console.log("반려처리:", finishStatus);
       try {
         const resultData = await fetchData({
           config: {
@@ -150,7 +148,6 @@ function OrderEdit() {
           },
           body: finishStatus,
         });
-        console.log(resultData);
         if (resultData?.status === "OK") {
           setRedirect(true);
         }
@@ -186,6 +183,7 @@ function OrderEdit() {
     return <Navigate to="/order/list" replace />;
   }
 
+  /*납품요청일 날짜 변경 */
   const handleDateChange = (index, event) => {
     const input = event.target;
     let value = input.value;
@@ -283,11 +281,13 @@ function OrderEdit() {
   /*아이콘  */
   const deleteIcon = <FontAwesomeIcon icon={faCircleMinus} />;
 
+  /*오더폼 승인요청 전 아이템 리스트 필터링 */
   const filteredItemList = detail.itemList.map(
     ({ itemnm, originprice, stock, unit, orderno, ...remainingFields }) =>
       remainingFields
   );
 
+  /*JSON body */
   const orderFormInfo = {
     orderno: String(detail.orderno),
     orderdate: detail.orderdate,
@@ -296,13 +296,14 @@ function OrderEdit() {
     status: detail.status,
     orderItemList: filteredItemList,
   };
-  console.log(orderFormInfo);
 
+  /*오더폼 제어용 날짜 확인 */
   const checkDateFormat = (dateString) => {
     const datePattern = /^\d{4}-\d{2}-\d{2}$/;
     return datePattern.test(dateString);
   };
 
+  /*오더폼 제어 */
   const validateOrderForm = () => {
     for (let i = 0; i < detail.itemList.length; i++) {
       const item = detail.itemList[i];
@@ -352,7 +353,6 @@ function OrderEdit() {
         config: { method: "PUT", url: "/api/order" },
         body: orderFormInfo,
       });
-      console.log(resultData);
       if (resultData?.status === "OK") {
         setRedirect(true);
       } else {
@@ -363,6 +363,7 @@ function OrderEdit() {
     }
   };
 
+  /*발주수량 제어 */
   const checkOrderQty = (e, item, id) => {
     const newOrderQty = parseInt(e.target.value.replace(/,/g, "")) || 0;
 
@@ -394,12 +395,14 @@ function OrderEdit() {
     return true;
   };
 
+  /*쉼표 추가 */
   function formatWithCommas(value) {
     if (!value) return "";
     const number = Number(value);
     return number.toLocaleString();
   }
 
+  /*발주수량, 공급가용 컴포넌트 */
   function OrderFormInput({
     index,
     item,
@@ -459,11 +462,11 @@ function OrderEdit() {
     );
   }
 
+  /*날짜 길이 제어 */
   const checkDateLength = (index) => {
     const deliveryDate = detail.itemList[index]?.deliverydate || "";
 
     if (deliveryDate.length < 8 && deliveryDate.length > 1) {
-      console.log(deliveryDate.length);
       alert(
         `${
           index + 1
@@ -478,6 +481,7 @@ function OrderEdit() {
     }
   };
 
+  /*상태 한국어로 변경 */
   const getStatName = (statusId) => {
     const statusObj = Status.find((status) => status.id === statusId);
     return statusObj ? statusObj.name : statusId;
@@ -761,6 +765,7 @@ function OrderEdit() {
   );
 }
 
+/*아이템 테이블 컴포넌트 */
 function ItemTable({
   item,
   setItem,
@@ -771,12 +776,13 @@ function ItemTable({
   fetchItemTable,
 }) {
   const search = <FontAwesomeIcon icon={faMagnifyingGlass} />;
-  const { error, fetchData } = useAxios();
 
+  /*아이템 변경사항 detail에 저장 */
   const handleItem = (e) => {
     setItem(e.target.value);
   };
 
+  /*바이어별 판매가 테이블에서 오더 품목 리스트로 아이템 추가 */
   const addToOrderTable = (newItem) => {
     const updatedItem = {
       ...newItem,
@@ -798,6 +804,7 @@ function ItemTable({
     }));
   };
 
+  /*addToOrderTable 엔터키 적용 */
   const enterItemTable = (e) => {
     if (e.key == "Enter") {
       e.preventDefault();

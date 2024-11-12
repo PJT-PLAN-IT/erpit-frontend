@@ -21,6 +21,7 @@ function OrderForm() {
   const [searchResult, setSearchResult] = useState([]);
   const { error, fetchData } = useAxios();
   const { user } = useAuth();
+
   const [form, setForm] = useState({
     usercd: user.usercd,
     orderdate: "",
@@ -29,28 +30,27 @@ function OrderForm() {
     items: [],
   });
 
-  console.log("form: ", form);
-
   /*테이블에 오더가 추가 될때마다 새로고침 */
   useEffect(() => {}, [form.items]);
 
+  /*바이어코드 선택시 form에 바이어코드 저장 */
   useEffect(() => {
     if (buyerInfo?.buyercd) {
-      console.log("buyercode: ", buyerInfo.buyercd);
       setForm((prev) => ({
         ...prev,
         buyercode: buyerInfo.buyercd,
       }));
-      console.log("Updated searchForm buyer:", buyerInfo.buyerd);
     }
   }, [buyerInfo]);
 
+  /*폼에 바이어코드가 있을시 판매부번테이블 자동 로딩 */
   useEffect(() => {
     if (form.buyercode != "") {
       fetchItemTable();
     }
   }, [form.buyercode]);
 
+  /*판매부번테이블 GET */
   const fetchItemTable = async () => {
     try {
       const response = await fetchData({
@@ -60,7 +60,6 @@ function OrderForm() {
         },
       });
       if (response) {
-        console.log("검색결과:", response.data);
         setSearchResult(response.data);
       }
     } catch (err) {
@@ -70,7 +69,6 @@ function OrderForm() {
 
   /*아이템 테이블 행 삭제 */
   const deleteRow = (id) => {
-    console.log("delete row: ", id);
     setForm((prevForm) => ({
       ...prevForm,
       items: prevForm.items.filter((_, index) => index !== id),
@@ -123,6 +121,7 @@ function OrderForm() {
       0
     );
 
+  /*페이지 이동 */
   if (leavePage) {
     return <Navigate to="/order/list" replace />;
   }
@@ -299,11 +298,11 @@ function OrderForm() {
     setForm({ ...form, items: updatedItemList });
   };
 
+  /*헤더 날짜 길이 확인  */
   const checkDateLength = (index) => {
     const deliveryDate = form.items[index]?.deliverydate || "";
 
     if (deliveryDate.length < 8 && deliveryDate.length > 1) {
-      console.log(deliveryDate.length);
       alert(
         `${index}번의 납품요청일을 포맷에 맞춰 다시 입력하여주세요: YYYYMMDD`
       );
@@ -315,11 +314,12 @@ function OrderForm() {
       setForm({ ...form, items: updatedItemList });
     }
   };
+
+  /*오더 날짜 길이 확인  */
   const checkOrderDateLength = () => {
     const orderdate = form.orderdate || "";
 
     if (orderdate.length < 8 && orderdate.length > 1) {
-      console.log(orderdate.length);
       alert(`주문일자를 포맷에 맞춰 다시 입력하여주세요: YYYYMMDD`);
 
       setForm({ ...form, orderdate: "" });
@@ -353,17 +353,7 @@ function OrderForm() {
   /*아이콘  */
   const deleteIcon = <FontAwesomeIcon icon={faCircleMinus} />;
 
-  function checkDeliveryDates(form) {
-    for (let i = 0; i < form.items.length; i++) {
-      const item = form.items[i];
-      if (item.deliverydate === "") {
-        alert(` 주문일을 입력해주세요`);
-        return false;
-      }
-    }
-    return true;
-  }
-
+  /*날짜 길이 확인(오더폼 확인에서 사용) */
   const checkDateFormat = (dateString) => {
     const datePattern = /^\d{4}-\d{2}-\d{2}$/;
     return datePattern.test(dateString);
@@ -376,7 +366,6 @@ function OrderForm() {
       return false;
     }
     if (!checkDateFormat(form.orderdate)) {
-      console.log(form.orderdate);
       alert(" 주문일자을 YYYY-MM-DD 형식에 맞춰 입력해주세요");
       return false;
     }
@@ -419,6 +408,7 @@ function OrderForm() {
     return true;
   };
 
+  /*오더폼 post용 데이터 적출 */
   const filteredItemList = form.items.map(
     ({
       itemcd,
@@ -437,8 +427,6 @@ function OrderForm() {
     })
   );
 
-  console.log("item list before submit: ", filteredItemList);
-
   /*오더폼 저장 */
   const saveOrderForm = async () => {
     const orderFormInfo = {
@@ -448,8 +436,6 @@ function OrderForm() {
       status: form.status,
       orderItemList: filteredItemList,
     };
-
-    console.log("submitting details:", orderFormInfo);
 
     if (!validateOrderForm(form)) {
       return;
@@ -462,7 +448,6 @@ function OrderForm() {
           config: { method: "POST", url: "/api/order" },
           body: orderFormInfo,
         });
-        console.log("Response from backend:", resultData);
         if (resultData?.status === "OK") {
           setRedirect(true);
         } else if (error) {
@@ -488,9 +473,9 @@ function OrderForm() {
 
     console.log("submitting details:", orderFormInfo);
 
-    if (!validateOrderForm(form)) {
-      return;
-    }
+    // if (!validateOrderForm(form)) {
+    //   return;
+    // }
 
     const isApproved = window.confirm("결제요청을 하시겠습니까?");
     if (isApproved) {
@@ -504,7 +489,6 @@ function OrderForm() {
         config: { method: "POST", url: "/api/order" },
         body: orderFormInfo,
       });
-      console.log("Response from backend:", resultData);
       if (resultData?.status === "OK") {
         setRedirect(true);
       } else if (error) {
@@ -516,6 +500,7 @@ function OrderForm() {
     }
   };
 
+  /*발주수량 확인 */
   const checkOrderQty = (e, item, id) => {
     const newOrderQty = parseInt(e.target.value.replace(/,/g, "")) || 0;
 
@@ -547,12 +532,14 @@ function OrderForm() {
     return true;
   };
 
+  /*쉼표 적용 */
   function formatWithCommas(value) {
     if (!value) return "";
     const number = Number(value);
     return number.toLocaleString();
   }
 
+  /*발주수량, 공급가 컴포넌트  */
   function OrderFormInput({
     index,
     item,
@@ -567,6 +554,7 @@ function OrderForm() {
       setInputValue(rawValue);
     };
 
+    /*공급가 최저,최상 가격 제어 함수 */
     const handleBlur = (e) => {
       const numericValue = Number(inputValue.replace(/,/g, "")) || 0;
 
@@ -961,6 +949,7 @@ function OrderForm() {
   );
 }
 
+/*아이템 테이블 컴포넌트 */
 function ItemTable({
   item,
   setItem,
@@ -972,8 +961,7 @@ function ItemTable({
 }) {
   const search = <FontAwesomeIcon icon={faMagnifyingGlass} />;
 
-  const { error, fetchData } = useAxios();
-
+  /*바이어 정보 없을시 제어 */
   const handleItem = (e) => {
     if (!form.buyercode) {
       alert("바이어 정보를 입력해주세요");
@@ -983,6 +971,7 @@ function ItemTable({
     setItem(e.target.value);
   };
 
+  /*바이어별 판매가 검색에서 오더품목리스트로 아이템 추가 */
   const addToOrderTable = (newItem) => {
     const updatedItem = {
       ...newItem,
@@ -1004,6 +993,7 @@ function ItemTable({
     }));
   };
 
+  /*엔터키 적용 함수 */
   const enterItemTable = (e) => {
     if (e.key == "Enter") {
       e.preventDefault();
@@ -1098,6 +1088,7 @@ function ItemTable({
   );
 }
 
+/*바이어 모달 */
 const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
   const { fetchData } = useAxios();
   const [buyerValue, setBuyerValue] = useState("");
@@ -1108,6 +1099,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     setBuyerValue(e.target.value);
   };
 
+  /*바이어 검색 */
   const searchBuyerCode = async () => {
     if (buyerValue) {
       try {
@@ -1118,7 +1110,6 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
           },
         });
         if (result) {
-          console.log("buyer:", result.data);
           setBuyers(result.data);
         }
       } catch (error) {
@@ -1127,6 +1118,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     }
   };
 
+  /*처음 모달 오픈시 바이어 리스트 GET*/
   useEffect(() => {
     const searchBuyerCode = async () => {
       try {
@@ -1137,7 +1129,6 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
           },
         });
         if (result) {
-          console.log(result.data);
           setBuyers(result.data);
         }
       } catch (error) {
@@ -1148,6 +1139,7 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     setInitLoad(false);
   }, [initLoad]);
 
+  /*바이어 검색 엔터키 적용 */
   const FindBuyerCode = (e) => {
     {
       if (e.key == "Enter") {
@@ -1157,8 +1149,8 @@ const ShowBuyerModal = ({ showModal, setShowModal, setBuyerInfo }) => {
     }
   };
 
+  /*바이어 클릭시 바이어 내용 form에 추가 및 모달 닫기 */
   const addBuyer = (buyer) => {
-    console.log("Selected Buyer:", buyer);
     setBuyerInfo(buyer);
     setShowModal(false);
   };

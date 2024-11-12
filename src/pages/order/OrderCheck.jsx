@@ -14,12 +14,12 @@ function OrderCheck() {
   const [detail, setDetail] = useState({});
   const [loading, setLoading] = useState(true);
   const [redirect, setRedirect] = useState(false);
-  const [statusChange, setStatusChange] = useState(false);
   const [leavePage, setleavepage] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [reject, setReject] = useState("");
   const { error, fetchData } = useAxios();
 
+  /*디테일 페이지 상세내용 GET */
   useEffect(() => {
     if (detailNo) {
       const getDetail = async () => {
@@ -28,7 +28,6 @@ function OrderCheck() {
             config: { method: "GET", url: `/api/order/detail/${detailNo}` },
           });
           if (result) {
-            console.log(result.data);
             setDetail(result.data);
           }
         } catch (error) {
@@ -41,7 +40,7 @@ function OrderCheck() {
       getDetail();
     }
   }, [detailNo]);
-  console.log(detail);
+
   const calculateTotalQuantity = () =>
     detail.itemList?.reduce((sum, item) => sum + item.orderqty, 0) || 0;
 
@@ -126,7 +125,6 @@ function OrderCheck() {
       rejectcode: detail.rejectcode || "",
       rejectreason: detail.rejectreason || "",
     };
-    console.log("finish status", finishStatus);
     try {
       const resultData = await fetchData({
         config: {
@@ -135,7 +133,6 @@ function OrderCheck() {
         },
         body: finishStatus,
       });
-      console.log(resultData);
       if (resultData?.status === "OK") {
         setRedirect(true);
       }
@@ -156,7 +153,6 @@ function OrderCheck() {
           rejectcode: detail.rejectcode || "",
           rejectreason: detail.rejectreason || "",
         };
-        console.log("finish status", finishStatus);
         try {
           const resultData = await fetchData({
             config: {
@@ -165,7 +161,6 @@ function OrderCheck() {
             },
             body: finishStatus,
           });
-          console.log(resultData);
           if (resultData?.status === "OK") {
             setRedirect(true);
           }
@@ -178,6 +173,7 @@ function OrderCheck() {
     }
   };
 
+  /*상태코드를 한글로 변환 */
   const getStatName = (statusId) => {
     const statusObj = Status.find((status) => status.id === statusId);
     return statusObj ? statusObj.name : statusId;
@@ -403,6 +399,7 @@ function OrderCheck() {
   );
 }
 
+/*반려 모달을 중간에 닫을시 (취소) */
 const closeModal = (setShowModal, setDetail) => {
   setShowModal(false);
   setDetail((prev) => ({
@@ -415,6 +412,7 @@ const closeModal = (setShowModal, setDetail) => {
   return false;
 };
 
+/*반려 사유 모달 */
 const ShowRejectModal = ({
   showModal,
   setShowModal,
