@@ -69,8 +69,7 @@ function OrderForm() {
   };
 
   /*아이템 테이블 행 삭제 */
-  const deleteRow = (id) => {
-    console.log("delete row: ", id);
+  const deleteRow = (event, id) => {
     setForm((prevForm) => ({
       ...prevForm,
       items: prevForm.items.filter((_, index) => index !== id),
@@ -197,9 +196,9 @@ function OrderForm() {
         enteredDate.setHours(0, 0, 0, 0);
         limitDate.setHours(0, 0, 0, 0);
 
-        if (enteredDate < limitDate) {
+        if (enteredDate > limitDate) {
           alert(
-            `${limitDate.toLocaleDateString()} 이전의 날짜는 설정하실 수 없습니다`
+            `${limitDate.toLocaleDateString()} 이후 날짜는 설정하실 수 없습니다`
           );
           ymd = "";
         }
@@ -305,7 +304,7 @@ function OrderForm() {
     if (deliveryDate.length < 8 && deliveryDate.length > 1) {
       console.log(deliveryDate.length);
       alert(
-        `${index}번의 납품요청일을 포맷에 맞춰 다시 입력하여주세요: YYYYMMDD`
+        `${index}번의 납품요청일을 형식에 맞추어 다시 입력하여주세요. 예)20240101`
       );
       const updatedItemList = [...form.items];
       updatedItemList[index] = {
@@ -320,7 +319,7 @@ function OrderForm() {
 
     if (orderdate.length < 8 && orderdate.length > 1) {
       console.log(orderdate.length);
-      alert(`주문일자를 포맷에 맞춰 다시 입력하여주세요: YYYYMMDD`);
+      alert(`주문일자를 형식에 맞춰 다시 입력하여주세요. 예)20240101`);
 
       setForm({ ...form, orderdate: "" });
     }
@@ -377,7 +376,7 @@ function OrderForm() {
     }
     if (!checkDateFormat(form.orderdate)) {
       console.log(form.orderdate);
-      alert(" 주문일자을 YYYY-MM-DD 형식에 맞춰 입력해주세요");
+      alert(" 주문일자를 형식에 맞춰 입력해주세요. 예)2024-01-01");
       return false;
     }
 
@@ -409,7 +408,7 @@ function OrderForm() {
           alert(
             `${i + 1}번: ${
               item.itemnm
-            }의 납품 요청일을 YYYY-MM-DD 형식에 맞춰 입력해주세요`
+            }의 납품 요청일을 형식에 맞춰 입력해주세요. 예)2024-01-01`
           );
           return false;
         }
@@ -467,7 +466,7 @@ function OrderForm() {
           setRedirect(true);
         } else if (error) {
           console.error("Error: ", error);
-          alert("오더폼을 등록할수 없습니다. 다시 시도해주세요");
+          alert("오더를 등록할수 없습니다. 다시 시도해주세요");
         }
       } catch (err) {
         console.error("Error: ", err);
@@ -492,7 +491,7 @@ function OrderForm() {
       return;
     }
 
-    const isApproved = window.confirm("결제요청을 하시겠습니까?");
+    const isApproved = window.confirm("결재요청을 하시겠습니까?");
     if (isApproved) {
       orderFormInfo.status = "APRV_REQ";
     } else {
@@ -509,7 +508,7 @@ function OrderForm() {
         setRedirect(true);
       } else if (error) {
         console.error("Error: ", error);
-        alert("오더폼을 등록할수 없습니다. 다시 시도해주세요");
+        alert("오더를 등록할수 없습니다. 다시 시도해주세요");
       }
     } catch (err) {
       console.error("Error: ", err);
@@ -528,7 +527,7 @@ function OrderForm() {
 
     if (totalRequestedQty > item.stock) {
       alert(
-        `${item.itemnm}: 품목 재고량을 초과하셨습니다. 현재 재고: ${
+        `${item.itemnm}: 납품 가능 재고를 초과하셨습니다. 현재 재고: ${
           item.stock - (totalRequestedQty - newOrderQty)
         }`
       );
@@ -573,14 +572,14 @@ function OrderForm() {
       if (field === "ordersupplyprice") {
         if (numericValue < item.originalSupplyPrice) {
           alert(
-            `입력하신 공급가: ${numericValue}원은 기존 금액: ${item.originalSupplyPrice}원보다 낮습니다.\n 다시 지정해주세요.`
+            `입력하신 공급가: ${numericValue}원은 원가 ${item.originalSupplyPrice}원보다 낮습니다.\n 다시 지정해주세요.`
           );
           setInputValue(formatWithCommas(item.ordersupplyprice));
           handleItemChange(index, field, item.ordersupplyprice);
           return;
         } else if (numericValue > item.originalSupplyPrice * 1.5) {
           alert(
-            `입력하신 공급가: ${numericValue}원은 기존 금액:${
+            `입력하신 공급가: ${numericValue}원은 원가:${
               item.originalSupplyPrice
             }원의 150%인 \n${
               item.originalSupplyPrice * 1.5
@@ -604,7 +603,7 @@ function OrderForm() {
     return (
       <input
         type="text"
-        className="m-auto text-right w-[100%] border border-erp-gray"
+        className="m-auto text-right pr-2 w-[100%] border border-erp-gray"
         value={inputValue || 0}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -614,6 +613,15 @@ function OrderForm() {
 
   if (redirect) {
     return <Navigate to="/order/list" replace />;
+  }
+
+  const deleteBuyer = (event) => {
+    event.stopPropagation();
+    setBuyerInfo("");
+    setForm((prev) => ({ ...prev, buyercode: "" }));
+    setSearchResult([]);
+    setItem("");
+    setForm((prev) => ({ ...prev, items: [] }));
   }
 
   return (
@@ -646,9 +654,10 @@ function OrderForm() {
                 </td>
                 <td className="border border-erp-gray">
                   <input
+                    autoFocus
                     className=" w-[100%] focus:outline-none"
                     type="text"
-                    placeholder="날짜를 입력하세요"
+                    placeholder="날짜를 입력하세요. 예)20240101"
                     onChange={(e) => handleOrderDateChange(e)}
                     value={form.orderdate || ""}
                     onBlur={() => checkOrderDateLength()}
@@ -667,24 +676,18 @@ function OrderForm() {
                 <td className="border border-erp-gray bg-erp-mint text-center font-semibold">
                   바이어 코드
                 </td>
-                <td className="border border-erp-gray  w-[434px]">
+                <td className="border border-erp-gray  w-[434px] cursor-pointer"
+                    onClick={() => setShowModal(true)}>
                   <input
-                    className="hover:cursor-pointer focus:outline-none"
+                    className="hover:cursor-pointer focus:outline-none w-[94%]"
                     type="text"
-                    placeholder="바이어코드 검색"
+                    placeholder="바이어 정보 입력을 원하시면 클릭해주세요"
                     value={buyerInfo ? `${buyerInfo.buyercd}` : ""}
-                    onClick={() => setShowModal(true)}
                   />
                   {buyerInfo.buyercd && (
                     <button
-                      onClick={() => {
-                        setBuyerInfo("");
-                        setForm((prev) => ({ ...prev, buyercode: "" }));
-                        setSearchResult([]);
-                        setItem("");
-                        setForm((prev) => ({ ...prev, items: [] }));
-                      }}
-                      className=" px-2 text-black hover:text-gray-600"
+                      onClick={deleteBuyer}
+                      className="px-2 text-black hover:text-gray-600"
                     >
                       ✕
                     </button>
@@ -695,26 +698,10 @@ function OrderForm() {
                 </td>
                 <td className="border border-erp-gray w-[434px]">
                   <input
-                    className="hover:cursor-pointer focus:outline-none"
+                    className="hover:cursor-pointer focus:outline-none w-full"
                     type="text"
-                    placeholder="바이어명 검색"
                     value={buyerInfo ? `${buyerInfo.buyernm}` : ""}
-                    onClick={() => setShowModal(true)}
                   />
-                  {buyerInfo.buyernm && (
-                    <button
-                      onClick={() => {
-                        setBuyerInfo("");
-                        setForm((prev) => ({ ...prev, buyer: "" }));
-                        setSearchResult([]);
-                        setItem("");
-                        setForm((prev) => ({ ...prev, items: [] }));
-                      }}
-                      className=" px-2 text-black hover:text-gray-600"
-                    >
-                      ✕
-                    </button>
-                  )}
                 </td>
               </tr>
               <tr className="">
@@ -849,7 +836,7 @@ function OrderForm() {
                           />
                         </td>
                         <td className="text-right border border-erp-gray  w-[100px]">
-                          {item.originprice}
+                          {item.originprice.toLocaleString()}
                         </td>
                         <td className="text-right border border-erp-gray  w-[100px]">
                           <OrderFormInput
@@ -882,7 +869,7 @@ function OrderForm() {
                           })}
                         </td>
                         <td className="text-center border border-erp-gray  w-[100px]">
-                          {item.stock}
+                          {item.stock.toLocaleString()}
                         </td>
                         <td className="text-center border border-erp-gray  w-[100px]">
                           {item.unit}
@@ -930,9 +917,9 @@ function OrderForm() {
                   </td>
                   <td
                     colSpan={3}
-                    className="text-center border border-erp-gray bg-erp-mint w-[87px]"
+                    className="text-center border border-erp-gray bg-erp-mint w-[87px] font-semibold"
                   >
-                    합계:
+                    합계
                   </td>
                   <td
                     colSpan={3}
@@ -1018,13 +1005,12 @@ function ItemTable({
       <div className="flex gap-3 items-center mt-5 mb-2 pl-2">
         <p className="text-gray-500 font-semibold">판매부번</p>
         <input
-          autoFocus
           type="text"
           className="p-1 border border-erp-gray w-[250px]"
           value={item}
           onChange={handleItem}
           onKeyDown={enterItemTable}
-          placeholder="판매부번명 또는 번호를 입력하세요"
+          placeholder="품명 또는 판매부번코드를 입력해주세요"
         />
         <button className="-translate-x-12" onClick={fetchItemTable}>
           {search}

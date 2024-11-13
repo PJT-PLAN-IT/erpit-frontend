@@ -278,9 +278,9 @@ function OrderDetail() {
 
                   <td
                     colSpan={3}
-                    className="text-center border border-erp-gray bg-erp-mint"
+                    className="text-center border border-erp-gray bg-erp-mint font-semibold"
                   >
-                    합계:
+                    합계
                   </td>
                   <td
                     colSpan={3}

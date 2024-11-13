@@ -77,7 +77,7 @@ const PriceInsert = ({insertModalOpen, setInsertModalOpen, fetchItemList}) => {
                 const resultData = result.data;
                 const isDuplication = resultData.isDuplication;
                 if (isDuplication) {
-                    alert("판매부번코드가 중복입니다. 다시 입력하세요.");
+                    alert("판매부번코드가 중복입니다. 다시 입력해주세요.");
                 } else {
                     alert("사용 가능한 판매부번코드 입니다.");
                 }
@@ -110,7 +110,7 @@ const PriceInsert = ({insertModalOpen, setInsertModalOpen, fetchItemList}) => {
                                             className={`flex-grow px-2 outline-none`}
                                             disabled={!duplicateCheck}
                                         />
-                                        <div className={`flex items-center`}>
+                                        <div className={`items-center`}>
                                             <Buttons
                                                 word={'dup'}
                                                 style={'white-sm-mg-none'}

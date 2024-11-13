@@ -339,7 +339,7 @@ function OrderEdit() {
       return;
     }
     /*axios */
-    const isApproved = window.confirm("결제요청을 하시겠습니까? ");
+    const isApproved = window.confirm("결재요청을 하시겠습니까? ");
 
     if (isApproved) {
       orderFormInfo.status = "APRV_REQ";
@@ -375,7 +375,7 @@ function OrderEdit() {
 
     if (totalRequestedQty > item.stock) {
       alert(
-        `${item.itemnm}: 품목 재고량을 초과하셨습니다. 현재 재고: ${
+        `품목 ${item.itemnm}의 납품 가능 재고를 초과하셨습니다. 현재 재고: ${
           item.stock - (totalRequestedQty - newOrderQty)
         }`
       );
@@ -420,14 +420,14 @@ function OrderEdit() {
       if (field === "ordersupplyprice") {
         if (numericValue < item.originalSupplyPrice) {
           alert(
-            `입력하신 공급가: ${numericValue}원은 기존 금액: ${item.originalSupplyPrice}원보다 낮습니다.\n 다시 지정해주세요.`
+            `공급가를 원가보다 낮게 지정할 수 없습니다.`
           );
           setInputValue(formatWithCommas(item.ordersupplyprice));
           handleItemChange(index, field, item.ordersupplyprice);
           return;
         } else if (numericValue > item.originalSupplyPrice * 1.5) {
           alert(
-            `입력하신 공급가: ${numericValue}원은 기존 금액: ${
+            `공급가는 원가 ${
               item.originalSupplyPrice
             }원의 150%인 \n${
               item.originalSupplyPrice * 1.5
@@ -451,7 +451,7 @@ function OrderEdit() {
     return (
       <input
         type="text"
-        className="m-auto text-right w-[100%] border border-erp-gray"
+        className="m-auto text-right pr-2 w-[100%] border border-erp-gray"
         value={inputValue || 0}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -467,7 +467,7 @@ function OrderEdit() {
       alert(
         `${
           index + 1
-        }번의 납품요청일을 포맷에 맞춰 다시 입력하여주세요: YYYYMMDD`
+        }번의 납품요청일을 형식에 맞추어 다시 입력하여주세요. 예)20240101`
       );
       const updatedItemList = [...detail.itemList];
       updatedItemList[index] = {
@@ -649,7 +649,7 @@ function OrderEdit() {
                           />
                         </td>
                         <td className="text-right border border-erp-gray  w-[100px]">
-                          {item.originprice}
+                          {item.originprice.toLocaleString()}
                         </td>
                         <td className="text-right border border-erp-gray  w-[100px]">
                           <OrderFormInput
@@ -682,7 +682,7 @@ function OrderEdit() {
                           })}
                         </td>
                         <td className="text-center border border-erp-gray  w-[100px]">
-                          {item.stock}
+                          {item.stock.toLocaleString()}
                         </td>
                         <td className="text-center border border-erp-gray  w-[100px]">
                           {item.unit}
@@ -730,9 +730,9 @@ function OrderEdit() {
 
                   <td
                     colSpan={3}
-                    className="text-center border border-erp-gray bg-erp-mint w-[87px]"
+                    className="text-center border border-erp-gray bg-erp-mint w-[87px] font-semibold"
                   >
-                    합계:
+                    합계
                   </td>
                   <td
                     colSpan={3}
@@ -819,7 +819,7 @@ function ItemTable({
           value={item}
           onChange={handleItem}
           onKeyDown={enterItemTable}
-          placeholder="판매부번명 또는 번호를 입력하세요"
+          placeholder="품명 또는 판매부번코드를 입력해주세요"
         />
         <button className="-translate-x-12" onClick={fetchItemTable}>
           {search}

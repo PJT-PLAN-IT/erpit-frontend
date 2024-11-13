@@ -90,6 +90,7 @@ function OrderCheck() {
 
   /*반려 사유 저장 */
   const handleRejectInfoChange = (e) => {
+    console.log("확인",e.target);
     setDetail((prev) => ({
       ...prev,
       rejectreason: e.target.value,
@@ -98,7 +99,7 @@ function OrderCheck() {
 
   /*반려 선택시 */
   const saveRejStat = (setShowModal) => {
-    const setFinish = window.confirm("오더를 반려하시겠습니까?");
+    const setFinish = window.confirm("해당 요청을 반려하시겠습니까?");
     if (setFinish) {
       setDetail((prevDetail) => ({
         ...prevDetail,
@@ -114,7 +115,7 @@ function OrderCheck() {
     setShowModal(true);
   };
 
-  /*결제 확인 */
+  /*결재 확인 */
   const setFinishStatus = async () => {
     if (detail.rejectcode === "ETC" && !detail.rejectreason) {
       alert("반려사유를 적어주세요");
@@ -126,7 +127,6 @@ function OrderCheck() {
       rejectcode: detail.rejectcode || "",
       rejectreason: detail.rejectreason || "",
     };
-    console.log("finish status", finishStatus);
     try {
       const resultData = await fetchData({
         config: {
@@ -147,7 +147,7 @@ function OrderCheck() {
 
   /*승인완료 선택시 */
   const saveAprvStat = () => {
-    const setFinish = window.confirm("오더를 승인하시겠습니까?");
+    const setFinish = window.confirm("해당 요청을 승인하시겠습니까?");
     if (setFinish) {
       const setFinishStatus = async () => {
         const finishStatus = {
@@ -442,14 +442,15 @@ const ShowRejectModal = ({
         <h1 className="text-center text-2xl font-bold">반려사유</h1>
         <div className=" flex justify-center my-5">
           <select
-            className="px-10 border border-erp-gray p-1"
+            className="border border-erp-gray p-1"
             onChange={handleRejectChange}
+            defaultValue={detail.rejectcode ? detail.rejectcode : 'none'}
+            name="reject"
           >
             {rejects.map((reject) => (
               <option
                 key={reject.id}
                 value={reject.id}
-                selected={detail.rejectcode === reject.id}
                 className="border border-erp-gray hover:bg-gray-400"
               >
                 {reject.name}
@@ -458,7 +459,7 @@ const ShowRejectModal = ({
           </select>
           {detail.rejectcode === "ETC" ? (
             <input
-              className="border border-erp-gray w-[200px]"
+              className="pl-2 border border-erp-gray w-[200px]"
               type="text"
               placeholder="기타사유를 입력하세요"
               onChange={(e) => handleRejectInfoChange(e)}
@@ -469,7 +470,7 @@ const ShowRejectModal = ({
         </div>
         <div className="flex justify-center items-center my-10">
           <button
-            className="border border-erp-gray px-4 bg-erp-green text-white"
+            className="border border-erp-gray px-4 bg-erp-green text-white py-2"
             onClick={setFinishStatus}
           >
             승인 반려
