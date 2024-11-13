@@ -42,7 +42,10 @@ const ItemInsert = ({insertModalOpen, setInsertModalOpen, fetchItemList}) => {
 
     //판매부번 등록
     const saveItem = async () => {
-        if(copyFormData.supplyprice < copyFormData.originprice){
+        let supplyprice = parseInt(copyFormData.supplyprice);
+        let originprice = parseInt(copyFormData.originprice);
+
+        if(supplyprice < originprice){
             alert("공급가가 원가보다 적습니다!");
             return;
         }

@@ -186,7 +186,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                 const resultData = result.data;
                 const isDuplication = resultData.isDuplication;
                 if (isDuplication) {
-                    alert("바이어코드가 중복입니다. 다시 입력하세요.");
+                    alert("바이어코드가 중복입니다. 다시 입력해주세요.");
                 } else {
                     alert("사용 가능한 바이어코드입니다.");
                     isBuyercd.current = true;

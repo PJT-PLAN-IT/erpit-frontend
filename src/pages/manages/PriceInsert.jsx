@@ -79,7 +79,7 @@ function PriceInsert() {
         });
 
         if (isDuplicate) {
-            alert("중복입니다!");
+            alert("중복된 코드입니다. 사용 불가능합니다.");
             setInsertData(initUpdateData); // 입력 필드 초기화
             isBuyer.current = true;
             isItem.current = true;
@@ -100,7 +100,6 @@ function PriceInsert() {
 
     const navigator = useNavigate();
     const onClickSave = async () => {
-        console.log("confirmData",confirmData);
         try {
             const resultData = await fetchData({
                 config: { method: "POST", url: "/api/item/price" },
