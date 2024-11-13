@@ -74,9 +74,7 @@ function ItemList() {
                     <Buttons style={`green-sm`} word={`search`} onClick={searchItem}/>
                     <Buttons style={`white-sm`} word={`reset`} onClick={reset}/>
                 </div>
-                {user.role ==='ROLE_ADMIN'&& (
                     <Buttons style={`green-sm`} word={`add`} onClick={() => setInsertModalOpen(true)}/>
-                ) }
             </div>
             <ItemTables data={result} setUpdateModalOpen={setUpdateModalOpen} setUpdateData={setUpdateData}/>
             <ItemInsert insertModalOpen={insertModalOpen} setInsertModalOpen={setInsertModalOpen}

@@ -71,10 +71,7 @@ function UserList() {
                     <Buttons style={`green-sm`} word={`search`} onClick={searchUser}/>
                     <Buttons style={`green-sm`} word={`reset`} onClick={reset}/>
                 </div>
-                {user.role ==='ROLE_ADMIN'&& (
                     <Buttons style={`green-sm`} word={`add`} onClick={() => setInsertModalOpen(true)}/>
-                ) }
-
             </div>
             <UserTables  data={result} setUpdateModalOpen={setUpdateModalOpen} setUpdateData={setUpdateData}/>
             <UserInsert insertModalOpen={insertModalOpen} setInsertModalOpen={setInsertModalOpen} fetchUserList={fetchUserList}/>

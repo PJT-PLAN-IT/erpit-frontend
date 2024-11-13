@@ -77,9 +77,7 @@ function BuyerList() {
                     <Buttons style={`green-sm`} word={`search`} onClick={searchBuyer}/>
                     <Buttons style={`white-sm`} word={`reset`} onClick={reset}/>
                 </div>
-                {user.role ==='ROLE_ADMIN'&& (
                     <Buttons style={`green-sm`} word={`add`} onClick={() => setInsertModalOpen(true)}/>
-                )}
             </div>
             <BuyerTables data={result} setUpdateModalOpen={setUpdateModalOpen} setUpdateData={setUpdateData}/>
             <BuyerInsert insertModalOpen={insertModalOpen} setInsertModalOpen={setInsertModalOpen} fetchBuyerList={fetchBuyerList}/>
