@@ -35,9 +35,9 @@ const PriceTables = ({ data, setUpdateModalOpen, setUpdateData }) => {
                         <td className={`${tdStyle}`}>{price.itemnm}</td>
                         <td className={`${tdStyle}`}>{price.buyercd}</td>
                         <td className={`${tdStyle}`}>{price.buyernm}</td>
-                        <td className={`${tdStyle}`}>{(price.buyersupplyprice).toLocaleString()}</td>
-                        <td className={`${tdStyle}`}>{(price.surtax).toLocaleString()}</td>
-                        <td className={`${tdStyle}`}>{(price.salesprice).toLocaleString()}</td>
+                        <td className={`${tdStyle} text-right pr-3`}>{(price.buyersupplyprice).toLocaleString()}</td>
+                        <td className={`${tdStyle} text-right pr-3`}>{(price.surtax).toLocaleString()}</td>
+                        <td className={`${tdStyle} text-right pr-3`}>{(price.salesprice).toLocaleString()}</td>
                         <td className={`${tdStyle}`}>{price.unit}</td>
                         <td className={`${tdStyle}`}>{price.adddate}</td>
                     </tr>

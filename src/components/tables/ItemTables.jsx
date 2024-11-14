@@ -44,7 +44,7 @@ const ItemTables = ({ data, setUpdateModalOpen, setUpdateData, setSearchItemModa
                         <td className={`${tdStyle} text-end pr-2`}>{(item.originprice).toLocaleString()}</td>
                         <td className={`${tdStyle} text-end pr-2`}>{(item.supplyprice).toLocaleString()}</td>
                         <td className={`${tdStyle}`}>{item.unit}</td>
-                        <td className={`${tdStyle} text-end pr-2`}>{(item.stock).toLocaleString()}</td>
+                        <td className={`${tdStyle}`}>{(item.stock).toLocaleString()}</td>
                         <td className={`${tdStyle}`}>{item.adddate}</td>
                     </tr>
                 ))}

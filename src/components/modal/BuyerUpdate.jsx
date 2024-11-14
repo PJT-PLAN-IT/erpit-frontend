@@ -168,7 +168,7 @@ const BuyerUpdate = ({updateModalOpen, setUpdateModalOpen, fetchBuyerList, updat
                                             name={sbj}
                                             value={updateData[sbj]}
                                             onChange={onChangeForm}
-                                            className={`flex-grow px-2 outline-none`}/>
+                                            className={`flex-grow px-2 outline-none disabled:bg-white`}/>
                                     </>
                                 }
                                 {sbj === 'buyernm' &&
@@ -176,7 +176,8 @@ const BuyerUpdate = ({updateModalOpen, setUpdateModalOpen, fetchBuyerList, updat
                                         name={sbj}
                                         value={updateData[sbj]}
                                         onChange={onChangeForm}
-                                        className={`flex w-full h-full px-2 outline-none`}/>
+                                        autoFocus
+                                        className={`flex w-full h-full px-2 bg-erp-soft-gray`}/>
                                 }
                                 {sbj === 'tel' &&
                                     <input
@@ -185,35 +186,35 @@ const BuyerUpdate = ({updateModalOpen, setUpdateModalOpen, fetchBuyerList, updat
                                         maxLength={13}
                                         minLength={12}
                                         onChange={onChangeForm}
-                                        className={`flex w-full h-full px-2 outline-none`}/>
+                                        className={`flex w-full h-full px-2 bg-erp-soft-gray`}/>
                                 }
                                 {sbj === 'email' &&
                                     <input
                                         name={sbj}
                                         value={updateData[sbj]}
                                         onChange={onChangeForm}
-                                        className={`flex w-full h-full px-2 outline-none`}/>
+                                        className={`flex w-full h-full px-2 bg-erp-soft-gray`}/>
                                 }
                                 {sbj === 'zipcode' &&
                                     <input
                                         name={sbj}
                                         value={updateData[sbj]}
                                         onChange={onChangeForm}
-                                        className={`flex w-full h-full px-2 outline-none`}/>
+                                        className={`flex w-full h-full px-2 bg-erp-soft-gray`}/>
                                 }
                                 {sbj === 'address' &&
                                     <input
                                         name={sbj}
                                         value={updateData[sbj]}
                                         onChange={onChangeForm}
-                                        className={`flex w-full h-full px-2 outline-none`}/>
+                                        className={`flex w-full h-full px-2 bg-erp-soft-gray`}/>
                                 }
                                 {sbj === 'addressdetail' &&
                                     <input
                                         name={sbj}
                                         value={updateData[sbj]}
                                         onChange={onChangeForm}
-                                        className={`flex w-full h-full px-2 outline-none`}/>
+                                        className={`flex w-full h-full px-2 bg-erp-soft-gray`}/>
                                 }
 
                             </td>

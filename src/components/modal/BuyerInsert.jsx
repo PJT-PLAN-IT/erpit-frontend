@@ -71,6 +71,10 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
         if(!emailcheck()){
           return;
         }
+        if(duplicateCheck === false){
+            alert("중복 체크를 해주세요");
+            return;
+        }
 
         try {
             const result = await fetchData({
@@ -219,7 +223,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                                             value={formData[sbj]}
                                             onChange={onChangeForm}
                                             maxLength={10}
-                                            className={`flex-grow px-2 outline-none`}
+                                            className={`flex-grow px-2`}
                                             placeholder={data+' 입력 후 중복체크를 해주세요'}
                                             disabled={!duplicateCheck}
                                         />
@@ -240,7 +244,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                                         onChange={onChangeForm}
                                         maxLength={30}
                                         placeholder={data+'을 입력해주세요'}
-                                        className={`flex w-full h-full px-2 outline-none`}/>
+                                        className={`flex w-full h-full px-2 `}/>
                                 }
                                 {sbj === 'tel' &&
                                     <input
@@ -249,7 +253,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                                         maxLength={13}
                                         onChange={onChangeForm}
                                         placeholder={data+'를 입력해주세요'}
-                                        className={`flex w-full h-full px-2 outline-none`}/>
+                                        className={`flex w-full h-full px-2 `}/>
                                 }
                                 {sbj === 'email' &&
                                         <input
@@ -259,7 +263,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                                             value={formData[sbj]}
                                             onChange={onChangeForm}
                                             placeholder={data + '을 입력해주세요'}
-                                            className={`flex w-full h-full px-2 outline-none`}/>
+                                            className={`flex w-full h-full px-2`}/>
                                 }
                                 {sbj === 'zipcode' &&
                                     <input
@@ -268,7 +272,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                                         onChange={onChangeForm}
                                         maxLength={6}
                                         placeholder={data + '를 입력해주세요'}
-                                        className={`flex w-full h-full px-2 outline-none`}/>
+                                        className={`flex w-full h-full px-2`}/>
                                 }
                                 {sbj === 'address' &&
                                     <input
@@ -277,7 +281,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                                         onChange={onChangeForm}
                                         maxLength={25}
                                         placeholder={data+'를 입력해주세요'}
-                                        className={`flex w-full h-full px-2 outline-none`}/>
+                                        className={`flex w-full h-full px-2`}/>
                                 }
                                 {sbj === 'addressdetail' &&
                                     <input
@@ -286,7 +290,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                                         onChange={onChangeForm}
                                         maxLength={25}
                                         placeholder={data+'를 입력해주세요'}
-                                        className={`flex w-full h-full px-2 outline-none`}/>
+                                        className={`flex w-full h-full px-2`}/>
                                 }
                             </td>
                         </tr>

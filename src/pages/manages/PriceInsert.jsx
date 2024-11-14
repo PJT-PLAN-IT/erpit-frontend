@@ -35,6 +35,7 @@ function PriceInsert() {
     const isBuyer = useRef(true);
     const isItem = useRef(true);
     const isSave = useRef(true);
+    const [isHover,setIsHover] = useState(false);
 
     useEffect(() => {
         setInsertData((prevData) => ({
@@ -79,7 +80,7 @@ function PriceInsert() {
         });
 
         if (isDuplicate) {
-            alert("중복된 코드입니다. 사용 불가능합니다.");
+            alert("중복되었습니다. 사용 불가능합니다.");
             setInsertData(initUpdateData); // 입력 필드 초기화
             isBuyer.current = true;
             isItem.current = true;
@@ -100,6 +101,12 @@ function PriceInsert() {
 
     const navigator = useNavigate();
     const onClickSave = async () => {
+
+        if(isSave.current === true){
+            alert("바이어별 가격을 추가해주셔야 등록이 가능합니다! \n추가 버튼을 눌려주세요");
+            return;
+        }
+
         try {
             const resultData = await fetchData({
                 config: { method: "POST", url: "/api/item/price" },
@@ -116,6 +123,7 @@ function PriceInsert() {
         }
     }
 
+
     return (
         <div className={`flex flex-col px-10`}>
             <div className={`flex justify-between items-center mt-10 bg-white rounded border border-erp-soft-gray shadow-lg pt-2`}>
@@ -123,9 +131,9 @@ function PriceInsert() {
                     <h1 className={`ml-5 text-2xl`}> 바이어별 아이템 등록 </h1>
                 </div>
                 <div className={`flex justify-end items-center`}>
-                <Buttons word={'buyer'} style={'white-lg-mg-none'} onClick={() => setSearchBuyerModalOpen(true)}/>
-                <Buttons word={'item'} style={'white-lg-mg-none'} onClick={() => setSearchItemModalOpen(true)}/>
-                <Buttons style={isSave.current ? `disable-sm` : `green-sm`} word={`save`} disabled={isSave.current}
+                {/*</!*Buttons word={'buyer'} style={'white-lg-mg-none'} onClick={() => setSearchBuyerModalOpen(true)}/>*/}
+                {/*<Buttons word={'item'} style={'white-lg-mg-none'} onClick={() => setSearchItemModalOpen(true)}/>*!/*/}
+                <Buttons style={isSave.current ? `disable-sm` : `green-sm`} word={`save`}
                          onClick={onClickSave}/>
                 </div>
             </div>
@@ -146,46 +154,50 @@ function PriceInsert() {
                             <input
                                 value={insertData.buyercd}
                                 placeholder={'정보를 검색해서 입력해주세요'}
-                                disabled={true}
+                                disabled={false}
+                                onClick={() => setSearchBuyerModalOpen(true)}
                                 className={`${noinputStyle}`}></input>
                         </td>
                         <td className={`${tdStyle}`}>
                             <input
                                 value={insertData.buyernm}
                                 placeholder={'정보를 검색해서 입력해주세요'}
-                                disabled={true}
+                                disabled={false}
+                                onClick={() => setSearchBuyerModalOpen(true)}
                                 className={`${noinputStyle}`}></input>
                         </td>
                         <td className={`${tdStyle}`}>
                             <input
                                 value={insertData.itemcd}
-                                disabled={true}
+                                disabled={false}
+                                onClick={() => setSearchItemModalOpen(true)}
                                 placeholder={'정보를 검색해서 입력해주세요'}
                                 className={`${noinputStyle}`}></input>
                         </td>
                         <td className={`${tdStyle}`}>
                             <input
                                 value={insertData.itemnm}
-                                disabled={true}
+                                disabled={false}
+                                onClick={() => setSearchItemModalOpen(true)}
                                 placeholder={'정보를 검색해서 입력해주세요'}
                                 className={`${noinputStyle}`}></input>
                         </td>
                         <td className={`${tdStyle}`}>
                             <input
-                                value={insertData.buyersupplyprice}
+                                value={insertData.buyersupplyprice.toLocaleString()}
                                 maxLength={10}
                                 onChange={handleSupplyPriceChange}
                                 className={`${inputStyle}`}></input>
                         </td>
                         <td className={`${tdStyle}`}>
                             <input
-                                value={insertData.surtax}
+                                value={insertData.surtax.toLocaleString()}
                                 disabled={true}
                                 className={`${noinputStyle}`}></input>
                         </td>
                         <td className={`${tdStyle}`}>
                             <input
-                                value={insertData.salesprice}
+                                value={insertData.salesprice.toLocaleString()}
                                 disabled={true}
                                 className={`${noinputStyle}`}></input>
                         </td>

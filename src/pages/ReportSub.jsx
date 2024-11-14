@@ -94,7 +94,6 @@ const ReportSub = () => {
     }, [updateData]);
 
     const fetchReportList = async () => {
-        console.log("search보냄",search);
         try {
             const resultData = await fetchData({
                 config: {method: "POST", url: "/api/report"},
@@ -126,7 +125,6 @@ const ReportSub = () => {
             month: today.getMonth() + 1,
             user: user.role === 'ROLE_ADMIN' ? e : user.usercd
         })
-        console.log(user.usercd, "확인");
     }
     const onHandleKeyDown = (e) => {
         if (e.key === 'Enter') {
@@ -135,8 +133,6 @@ const ReportSub = () => {
     }
 
     const handleChange = (e) => {
-        console.log("search",search);
-        console.log(e);
         let {name, value} = e.target;
         setSearch({...search, [name]: value})
     }
@@ -187,7 +183,7 @@ const ReportSub = () => {
                            onKeyDown={onHandleKeyDown} onClick={() => setSearchUserModalOpen(true)}
                            data={updateData.usercd}/>
                 }
-                <Buttons style={'green-sm'} word={'reset'} onClick={fetchReportList}/>
+                {/*<Buttons style={'green-sm'} word={'reset'} onClick={reset}/>*/}
             </div>
 
             <div className="w-full h-[50%] text-white flex mb-10">

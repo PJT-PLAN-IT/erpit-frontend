@@ -220,21 +220,21 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
                             <td className={`bg-white flex-grow flex items h-12`}>
                                 {sbj === 'itemcd' &&
                                     <input disabled={true} name={sbj} value={updateData[sbj]}
-                                           className={`flex-grow px-2 outline-none`}/>}
+                                           className={`flex-grow px-2 outline-none disabled:bg-white`}/>}
 
                                 {sbj === 'itemnm' &&
                                     <input name={sbj} value={updateData[sbj]} onChange={onChangeForm}
-                                           className={`flex w-full h-full px-2 outline-none`}/>}
+                                           className={`flex w-full h-full px-2 outline-none bg-erp-soft-gray`}/>}
 
                                 {sbj === 'originprice' &&
                                     <input name={sbj} value={numberData[sbj] === '' ? updateData[sbj].toLocaleString() : numberData[sbj]} onChange={onChangeForm}
                                            maxLength={9}
-                                           className={`flex w-full h-full px-2 outline-none`}/>}
+                                           className={`flex w-full h-full px-2 outline-none bg-erp-soft-gray`}/>}
 
                                 {sbj === 'supplyprice' &&
                                     <input name={sbj} value={numberData[sbj] === '' ? updateData[sbj].toLocaleString() : numberData[sbj]} onChange={onChangeForm}
                                            maxLength={9}
-                                           className={`flex w-full h-full px-2 outline-none`}/>}
+                                           className={`flex w-full h-full px-2 outline-none bg-erp-soft-gray`}/>}
 
                                 {sbj === 'unit'
                                     &&
@@ -259,7 +259,7 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
                                     &&
                                     <input name={sbj} value={numberData[sbj] === '' ? updateData[sbj].toLocaleString() : numberData[sbj]} onChange={onChangeForm}
                                            maxLength={9}
-                                           className={`flex w-full h-full px-2 outline-none`}/>}
+                                           className={`flex w-full h-full px-2 outline-none bg-erp-soft-gray`}/>}
                                 {
                                     sbj === 'useyn' &&
                                     <div className={`flex items-center`}>

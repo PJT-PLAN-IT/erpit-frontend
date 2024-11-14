@@ -123,7 +123,7 @@ const UserUpdate = ({updateModalOpen, setUpdateModalOpen, fetchUserList, updateD
                                         onChange={onChangeForm}
                                         maxLength={5}
                                         autoFocus
-                                        className={`flex-grow px-2 `}/>
+                                        className={`flex-grow px-2 bg-erp-soft-gray`}/>
                                 }
                                 {sbj === 'birthdate' &&
                                     <input

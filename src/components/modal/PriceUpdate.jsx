@@ -3,13 +3,12 @@
 
 import Buttons from "../items/Buttons.jsx";
 import useAxios from "../../hook/useAxios.js";
-import {useState} from "react";
 
 const priceSbj = {
     itemcd: '판매부번코드',
     itemnm: '품명',
-    buyercd:'바이어코드',
-    buyernm:'바이어명',
+    buyercd: '바이어코드',
+    buyernm: '바이어명',
     buyersupplyprice: '공급가',
     surtax: '부가세',
     salesprice: '판매가격',
@@ -22,8 +21,8 @@ const PriceUpdate = ({updateModalOpen, setUpdateModalOpen, fetchPriceList, updat
 
     if (!updateModalOpen) return false;
 
-    const onCheckDisabled = () =>{
-        if(confirm("비활성화처리 하시겠습니까? ")) {
+    const onCheckDisabled = () => {
+        if (confirm("비활성화처리 하시겠습니까? ")) {
             onDeactivateCheck();
         }
     }
@@ -60,13 +59,66 @@ const PriceUpdate = ({updateModalOpen, setUpdateModalOpen, fetchPriceList, updat
                         <tr key={sbj} className={`flex border-erp-gray border-b`}>
                             <td className={`border-erp-gray border-r bg-erp-mint p-2 flex w-32 justify-center items-center`}> {data} </td>
                             <td className={`bg-white flex-grow flex items h-12`}>
-                                {sbj === 'useyn' ?
+
+                                {sbj === 'itemcd' &&
+                                    <input
+                                        name={sbj}
+                                        value={updateData[sbj]}
+                                        disabled={true}
+                                        className={`flex w-full h-full px-2 outline-none disabled:bg-white`}/>
+                                }
+                                {sbj === 'itemnm' &&
+                                    <input
+                                        name={sbj}
+                                        value={updateData[sbj]}
+                                        disabled={true}
+                                        className={`flex w-full h-full px-2 outline-none disabled:bg-white`}/>
+                                }
+                                {sbj === 'buyercd' &&
+                                    <input
+                                        name={sbj}
+                                        value={updateData[sbj]}
+                                        disabled={true}
+                                        className={`flex w-full h-full px-2 outline-none disabled:bg-white`}/>
+                                }
+                                {sbj === 'buyernm' &&
+                                    <input
+                                        name={sbj}
+                                        value={updateData[sbj]}
+                                        disabled={true}
+                                        className={`flex w-full h-full px-2 outline-none disabled:bg-white`}/>
+                                }
+                                {sbj === 'buyersupplyprice' &&
+                                    <input
+                                        name={sbj}
+                                        value={updateData[sbj].toLocaleString()}
+                                        disabled={true}
+                                        className={`flex w-full h-full px-2 outline-none disabled:bg-white`}/>
+                                }
+                                {sbj === 'surtax' &&
+                                    <input
+                                        name={sbj}
+                                        value={updateData[sbj].toLocaleString()}
+                                        disabled={true}
+                                        className={`flex w-full h-full px-2 outline-none disabled:bg-white`}/>
+                                }
+                                {sbj === 'salesprice' &&
+                                    <input
+                                        name={sbj}
+                                        value={updateData[sbj].toLocaleString()}
+                                        disabled={true}
+                                        className={`flex w-full h-full px-2 outline-none disabled:bg-white`}/>
+                                }
+                                {sbj === 'unit' &&
+                                    <input
+                                        name={sbj}
+                                        value={updateData[sbj]}
+                                        disabled={true}
+                                        className={`flex w-full h-full px-2 outline-none disabled:bg-white`}/>
+                                }
+
+                                {sbj === 'useyn' &&
                                     <>
-                                        <input
-                                            disabled={true}
-                                            name={sbj}
-                                            value={updateData[sbj]}
-                                            className={`flex-grow px-2 outline-none`}/>
                                         <div className={`flex items-center`}>
                                             <Buttons
                                                 word={'disabled'}
@@ -75,12 +127,6 @@ const PriceUpdate = ({updateModalOpen, setUpdateModalOpen, fetchPriceList, updat
                                             />
                                         </div>
                                     </>
-                                    :
-                                    <input
-                                        name={sbj}
-                                        value={updateData[sbj]}
-                                        disabled={true}
-                                        className={`flex w-full h-full px-2 outline-none`}/>
                                 }
                             </td>
                         </tr>
