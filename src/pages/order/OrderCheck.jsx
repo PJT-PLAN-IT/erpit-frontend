@@ -346,7 +346,7 @@ function OrderCheck() {
                       {(item.ordersalesprice * item.orderqty).toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
-                      {item.stock}
+                      {item.stock.toLocaleString()}
                     </td>
                     <td className="text-center border border-erp-gray">
                       {item.unit}

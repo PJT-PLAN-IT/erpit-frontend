@@ -4,7 +4,7 @@ const TopUsersList = ({topUsersList, month}) => {
     return (
         // <div className={`flex flex-col`}>
         <div className="h-full w-[33%] bg-white mr-10 rounded-lg shadow-lg flex flex-col">
-            <h1 className="text-center p-3 bg-gray-200 rounded-t-lg font-semibold">{month}월 영업사원 매출 Top7</h1>
+            <h1 className="text-center p-3 bg-gray-200 rounded-t-lg font-semibold">{month}월 전체 영업사원 매출 Top7</h1>
             <div>
                 <table className="flex-1 w-full text-center">
                     <thead>

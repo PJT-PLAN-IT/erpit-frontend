@@ -13,77 +13,39 @@ import gifOrderPrice from "../assets/img/orderprice.gif";
 import {months} from "../data/month.js";
 import {year} from "../data/year.js";
 import UserSearch from "../components/modal/UserSearch.jsx";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faWonSign} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faWonSign } from "@fortawesome/free-solid-svg-icons";
 
 const initUser = {
     usercd: ''
 }
-const initSales = {
-    '1월': 0,
-    '2월': 0,
-    '3월': 0,
-    '4월': 0,
-    '5월': 0,
-    '6월': 0,
-    '7월': 0,
-    '8월': 0,
-    '9월': 0,
-    '10월': 0,
-    '11월': 0,
-    '12월': 0
-};
+const initSales = { '1월': 0,'2월': 0,'3월': 0,'4월': 0, '5월': 0,'6월': 0, '7월': 0,'8월': 0,'9월': 0, '10월': 0,'11월': 0,'12월': 0 };
 const ReportSub = () => {
+    const WonSign = <FontAwesomeIcon className={`size-6`} icon={faWonSign}/>
+    const [sales, setSales] = useState(initSales);
     const {user} = useAuth();
     const {error, fetchData} = useAxios();
-
     let today = new Date();
-    const [month, setMonth] = useState(today.getMonth() + 1);
     const initData = {
         year: today.getFullYear(),
         month: today.getMonth() + 1,
         user: user.role === 'ROLE_ADMIN' ? '' : user.usercd
     }
-
     const [chart, setChart] = useState([]);
-    const [sales, setSales] = useState(initSales);
-    const [revenue, setRevenue] = useState(0);
-    const [orderCount, setOrderCount] = useState(0);
-    const [orderPrice, setOrderPrice] = useState(0);
     const [topBuyerList, setTopBuyerList] = useState([]);
     const [topSalesList, setTopSalesList] = useState([]);
     const [topUsersList, setTopUsersList] = useState([]);
-
     const [search, setSearch] = useState(initData);
-
+    const [orderCount, setOrderCount] = useState(0);
+    const [orderPrice, setOrderPrice] = useState(0);
+    const [revenue, setRevenue] = useState(0);
+    const [month, setMonth] = useState(today.getMonth() + 1);
     const [searchUserModalOpen, setSearchUserModalOpen] = useState(false);
     const [updateData, setUpdateData] = useState(initUser);
-    const WonSign = <FontAwesomeIcon className={`size-6`} icon={faWonSign}/>
 
     useEffect(() => {
-        if (user.role === 'ROLE_ADMIN') {
-            fetchReportList();
-        } else if (user.role === 'ROLE_USER' && search.user) {
-            fetchReportList();
-        }
+        fetchReportList();
     }, []);
-
-    useEffect(() => {
-        if (user.usercd) {
-            setSearch({
-                ...search,
-                user: user.role === 'ROLE_ADMIN' ? '' : user.usercd
-            });
-        }
-    }, [user]);
-
-    useEffect(() => {
-        if (user.role === 'ROLE_ADMIN') {
-            fetchReportList();
-        } else if (user.role === 'ROLE_USER' && search.user) {
-            fetchReportList();
-        }
-    }, [search]);
 
     useEffect(() => {
         setSearch((prevData) => ({
@@ -94,7 +56,7 @@ const ReportSub = () => {
     }, [updateData]);
 
     const fetchReportList = async () => {
-        console.log("search보냄",search);
+        console.log("search", search);
         try {
             const resultData = await fetchData({
                 config: {method: "POST", url: "/api/report"},
@@ -102,7 +64,7 @@ const ReportSub = () => {
             });
             if (resultData) {
                 const result = resultData.data;
-                console.log("결과데이터", result);
+                console.log("결과데이터",result);
                 setChart(result.chart);
                 setTopBuyerList(result.topBuyerList);
                 setTopSalesList(result.topSalesList);
@@ -126,7 +88,6 @@ const ReportSub = () => {
             month: today.getMonth() + 1,
             user: user.role === 'ROLE_ADMIN' ? e : user.usercd
         })
-        console.log(user.usercd, "확인");
     }
     const onHandleKeyDown = (e) => {
         if (e.key === 'Enter') {
@@ -135,8 +96,6 @@ const ReportSub = () => {
     }
 
     const handleChange = (e) => {
-        console.log("search",search);
-        console.log(e);
         let {name, value} = e.target;
         setSearch({...search, [name]: value})
     }
@@ -187,7 +146,7 @@ const ReportSub = () => {
                            onKeyDown={onHandleKeyDown} onClick={() => setSearchUserModalOpen(true)}
                            data={updateData.usercd}/>
                 }
-                {/*<Buttons style={'green-sm'} word={'search'} onClick={fetchReportList}/>*/}
+                <Buttons style={'green-sm'} word={'search'} onClick={fetchReportList}/>
             </div>
 
             <div className="w-full h-[50%] text-white flex mb-10">

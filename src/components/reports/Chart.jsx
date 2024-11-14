@@ -21,6 +21,7 @@ const Chart = ({chart, sales, setSales}) => {
         setSales(chartData);
     }
     useEffect(() => {
+        // console.log('chart: ', chart);
         chartData();
     }, [chart]);
 

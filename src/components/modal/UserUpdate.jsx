@@ -114,7 +114,7 @@ const UserUpdate = ({updateModalOpen, setUpdateModalOpen, fetchUserList, updateD
                                         value={updateData[sbj]}
                                         onChange={onChangeForm}
                                         disabled={true}
-                                        className={`flex-grow px-2 outline-none`}/>
+                                        className={`flex-grow px-2 outline-none disabled:bg-white`}/>
                                 }
                                 {sbj === 'usernm' &&
                                     <input
@@ -122,7 +122,8 @@ const UserUpdate = ({updateModalOpen, setUpdateModalOpen, fetchUserList, updateD
                                         value={updateData[sbj]}
                                         onChange={onChangeForm}
                                         maxLength={5}
-                                        className={`flex-grow px-2 outline-none`}/>
+                                        autoFocus
+                                        className={`flex-grow px-2 `}/>
                                 }
                                 {sbj === 'birthdate' &&
                                     <input
@@ -130,7 +131,7 @@ const UserUpdate = ({updateModalOpen, setUpdateModalOpen, fetchUserList, updateD
                                         value={updateData[sbj]}
                                         onChange={onChangeForm}
                                         disabled={true}
-                                        className={`flex-grow px-2 outline-none`}/>
+                                        className={`flex-grow px-2 outline-none disabled:bg-white`}/>
                                 }
                                 {sbj === 'password' &&
                                     <>
@@ -174,7 +175,7 @@ const UserUpdate = ({updateModalOpen, setUpdateModalOpen, fetchUserList, updateD
                                         value={updateData[sbj]}
                                         onChange={onChangeForm}
                                         disabled={true}
-                                        className={`flex-grow px-2 outline-none`}/>
+                                        className={`flex-grow px-2 outline-none disabled:bg-white`}/>
                                 }
                                 {sbj === 'adddate' &&
                                     <input
@@ -182,7 +183,7 @@ const UserUpdate = ({updateModalOpen, setUpdateModalOpen, fetchUserList, updateD
                                         value={updateData[sbj]}
                                         onChange={onChangeForm}
                                         disabled={true}
-                                        className={`flex-grow px-2 outline-none`}/>
+                                        className={`flex-grow px-2 outline-none disabled:bg-white`}/>
                                 }
                             </td>
                         </tr>

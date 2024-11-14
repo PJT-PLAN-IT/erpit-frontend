@@ -126,23 +126,25 @@ const UserInsert = ({insertModalOpen, setInsertModalOpen, fetchUserList}) => {
                                            onChange={onChangeForm}
                                            maxLength={5}
                                            placeholder={'직원명을 입력해주세요'}
-                                           className={`flex w-full h-full px-2 outline-none`}/>
+                                           className={`flex w-full h-full px-2`}
+                                           autoFocus
+                                    />
                                 }
                                 {sbj === 'birthdate' &&
                                     <input name={sbj}
                                            value={formData[sbj]}
                                            onChange={onChangeForm}
                                            maxLength={10}
-                                           placeholder={'YYYYMMDD 형식으로 입력해주세요'}
-                                           className={`flex w-full h-full px-2 outline-none`}/>
+                                           placeholder={'입력예시) 20240101'}
+                                           className={`flex w-full h-full px-2`}/>
                                 }
                                 {sbj === 'joindate' &&
                                     <input name={sbj}
                                            value={formData[sbj]}
                                            onChange={onChangeForm}
                                            maxLength={10}
-                                           placeholder={'YYYYMMDD 형식으로 입력해주세요'}
-                                           className={`flex w-full h-full px-2 outline-none`}/>
+                                           placeholder={'입력예시) 20240101'}
+                                           className={`flex w-full h-full px-2`}/>
                                 }
                             </td>
                         </tr>

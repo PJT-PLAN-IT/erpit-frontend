@@ -69,7 +69,7 @@ function OrderForm() {
   };
 
   /*아이템 테이블 행 삭제 */
-  const deleteRow = (event, id) => {
+  const deleteRow = (id) => {
     setForm((prevForm) => ({
       ...prevForm,
       items: prevForm.items.filter((_, index) => index !== id),
