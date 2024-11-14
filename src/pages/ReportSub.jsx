@@ -187,7 +187,7 @@ const ReportSub = () => {
                            onKeyDown={onHandleKeyDown} onClick={() => setSearchUserModalOpen(true)}
                            data={updateData.usercd}/>
                 }
-                {/*<Buttons style={'green-sm'} word={'search'} onClick={fetchReportList}/>*/}
+                <Buttons style={'green-sm'} word={'reset'} onClick={fetchReportList}/>
             </div>
 
             <div className="w-full h-[50%] text-white flex mb-10">
