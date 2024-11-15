@@ -212,7 +212,7 @@ const ReportSub = () => {
                         </div>
                         <div className={`flex-row flex-grow justify-center`}>
                             <p className={`h-20 flex justify-end pr-10 text-5xl text-erp-green`}> {orderCount.toLocaleString()} 회 </p>
-                            <p className={`h-10 flex justify-end items-center pr-10 text-xl text-black`}>총 주문 건수</p>
+                            <p className={`h-10 flex justify-end items-center pr-10 text-xl text-black`}> {month}월 총 주문 건수</p>
                         </div>
                     </div>
                     <div className="w-full h-[33%] flex items-center rounded-lg shadow-lg bg-white pl-7">
@@ -221,7 +221,7 @@ const ReportSub = () => {
                         </div>
                         <div className={`flex-row flex-grow justify-center`}>
                             <p className={`h-20 flex justify-end pr-10 text-5xl text-erp-green align-middle`}> {WonSign} {orderPrice.toLocaleString()}</p>
-                            <p className={`h-10 flex justify-end items-center pr-10 text-xl text-black`}>총 주문 금액</p>
+                            <p className={`h-10 flex justify-end items-center pr-10 text-xl text-black`}>{month}월 총 주문 금액</p>
                         </div>
                     </div>
                 </div>
