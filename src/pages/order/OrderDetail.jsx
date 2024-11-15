@@ -204,7 +204,7 @@ function OrderDetail() {
                   <th className="border border-erp-gray bg-erp-mint">공급가</th>
                   <th className="border border-erp-gray bg-erp-mint">부가세</th>
                   <th className="border border-erp-gray bg-erp-mint">
-                    공급대가
+                    판매가
                   </th>
                   <th className="border border-erp-gray bg-erp-mint">
                     합계금액

@@ -134,7 +134,11 @@ const ReportSub = () => {
 
     const handleChange = (e) => {
         let {name, value} = e.target;
-        setSearch({...search, [name]: value})
+        if (user.role === 'ROLE_USER'){
+            setSearch({...search, [name]: value, ['user']: user.usercd});
+        }else{
+            setSearch({...search, [name]: value});
+        }
     }
 
     return (

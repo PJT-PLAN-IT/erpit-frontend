@@ -71,7 +71,8 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
         if(!emailcheck()){
           return;
         }
-        if(duplicateCheck === false){
+        console.log("dup",duplicateCheck);
+        if(duplicateCheck === true){
             alert("중복 체크를 해주세요");
             return;
         }
@@ -161,6 +162,7 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
     const onCheckSave = () => {
         const check = isAddress.current && isAddressdetail.current && isBuyercd.current && isBuyernm.current && isEmail.current && isTel.current && isZipcode.current;
 
+
         if (check) {
             if (isBuyercd.current) {
                 setIsSave(false);
@@ -194,9 +196,9 @@ const BuyerInsert = ({insertModalOpen, setInsertModalOpen, fetchBuyerList}) => {
                 } else {
                     alert("사용 가능한 바이어코드입니다.");
                     isBuyercd.current = true;
+                    setDuplicateCheck(isDuplication);
                     onCheckSave();
                 }
-                setDuplicateCheck(isDuplication);
             }
             if (error) {
                 console.error("Error: ", error);

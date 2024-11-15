@@ -792,7 +792,7 @@ function OrderForm() {
                       부가세
                     </th>
                     <th className="border border-erp-gray bg-erp-mint w-[100px]">
-                      공급대가
+                      판매가
                     </th>
                     <th className="border border-erp-gray bg-erp-mint w-[100px]">
                       합계금액
@@ -1031,7 +1031,7 @@ function ItemTable({
             <th className="p-1 border border-erp-gray bg-erp-mint">원가</th>
             <th className="p-1 border border-erp-gray bg-erp-mint">공급가</th>
             <th className="p-1 border border-erp-gray bg-erp-mint">부가세</th>
-            <th className="p-1 border border-erp-gray bg-erp-mint">공급대가</th>
+            <th className="p-1 border border-erp-gray bg-erp-mint">판매가</th>
             <th className="p-1 border border-erp-gray bg-erp-mint">단위</th>
           </thead>
           {searchResult && searchResult.length > 0 ? (

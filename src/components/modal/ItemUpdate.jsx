@@ -33,7 +33,9 @@ const ItemUpdate = ({updateModalOpen, setUpdateModalOpen, fetchItemList, updateD
 
     //아이템 수정
     const updateFunction = async () => {
-        if (updateData.originprice >= updateData.supplyprice) {
+        let supplyprice = parseInt(updateData.supplyprice);
+        let originprice = parseInt(updateData.originprice);
+        if (originprice >= supplyprice) {
             alert("공급가가 원가보다 적습니다. 다시 설정해주세요");
             return;
         }
