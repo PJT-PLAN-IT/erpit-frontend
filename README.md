@@ -40,8 +40,7 @@
 
 
 **frontend**<br>
-<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&amp;logo=React&amp;logoColor=black"> <img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&amp;logo=Node.js&amp;logoColor=white"> <img src="https://img.shields.io/badge/Vite-646CFF?style=flat-square&amp;logo=Vite&amp;logoColor=white"> <img src="https://img.shields.io/badge/Tailwind CSS-06B6D4?style=flat-square&amp;logo=TailwindCSS&amp;logoColor=white"> <img src="https://img.shields.io/badge/Axios-5A29E4?style=flat-square&amp;logo=Axios&amp;logoColor=white">  <img src="https://img.shields.io/badge/Kakao Map-FFCD00?style=flat-square&amp;logo=Kakao&amp;logoColor=white"> <img src="https://img.shields.io/badge/Tour API-6DA252?style=flat-square&amp;logo=Tour API&amp;logoColor=white">
-
+<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&amp;logo=React&amp;logoColor=black"> <img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&amp;logo=Node.js&amp;logoColor=white"> <img src="https://img.shields.io/badge/Vite-646CFF?style=flat-square&amp;logo=Vite&amp;logoColor=white"> <img src="https://img.shields.io/badge/Tailwind CSS-06B6D4?style=flat-square&amp;logo=TailwindCSS&amp;logoColor=white"> <img src="https://img.shields.io/badge/Axios-5A29E4?style=flat-square&amp;logo=Axios&amp;logoColor=white"> 
 <br><br>
 
 ## ⚙️프로젝트 아키텍처
