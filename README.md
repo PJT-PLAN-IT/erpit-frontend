@@ -41,16 +41,17 @@
 <br><br>
 
 ## ⚙️프로젝트 아키텍처
+![image](https://github.com/user-attachments/assets/c636747b-1f51-4b87-b4dd-fef2428a05ab)
 
 <br><br>
 
-## 🗒️DB 설계
-### My SQL
+<!-- ## 🗒️DB 설계 -->
+<!-- ### My SQL -->
 
 <br><br>
 
 ## 기능 소개
-
+![image](https://github.com/user-attachments/assets/02664856-5bf1-4fbd-b83f-5128b8fb8180)
     
 
 
