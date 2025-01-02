@@ -41,7 +41,7 @@
 <br><br>
 
 ## ⚙️프로젝트 아키텍처
-![image](https://github.com/user-attachments/assets/c636747b-1f51-4b87-b4dd-fef2428a05ab)
+![image](https://github.com/user-attachments/assets/75dba174-89ae-49d2-9140-96b69abe678d)
 
 <br><br>
 
